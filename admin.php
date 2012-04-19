@@ -2,9 +2,9 @@
 
 /**
  * Back-end of Cryptographp_XH.
- * Copyright (c) 2011 Christoph M. Becker (see license.txt)
+ * Copyright (c) 2011-2012 Christoph M. Becker (see license.txt)
  */
- 
+
 
 // utf-8 marker: äöüß
 
@@ -29,7 +29,7 @@ function cryptographp_version() {
 	    .'<p>Cryptographp_XH is powered by '
 	    .'<a href="http://www.captcha.fr/" target="_blank">'
 	    .'cryptographp</a>.</p>'."\n"
-	    .'<p>Copyright &copy; 2011 Christoph M. Becker</p>'."\n"
+	    .'<p>Copyright &copy; 2011-2012 Christoph M. Becker</p>'."\n"
 	    .'<p style="text-align:justify">This program is free software: you can redistribute it and/or modify'
 	    .' it under the terms of the GNU General Public License as published by'
 	    .' the Free Software Foundation, either version 3 of the License, or'
@@ -51,7 +51,7 @@ if (isset($cryptographp)) {
     // check requirements // RELEASE-TODO
     if (version_compare(PHP_VERSION, CRYPTOGRAPHP_PHP_VERSION) < 0)
 	$e .= '<li>'.sprintf($plugin_tx['cryptographp']['error_phpversion'], CRYPTOGRAPHP_PHP_VERSION).'</li>'."\n";
-    foreach (array('date', 'gd', 'session') as $ext) { 
+    foreach (array('date', 'gd', 'session') as $ext) {
 	if (!extension_loaded($ext))
 	    $e .= '<li>'.sprintf($plugin_tx['cryptographp']['error_extension'], $ext).'</li>'."\n";
     }
@@ -61,9 +61,9 @@ if (isset($cryptographp)) {
 
     initvar('admin');
     initvar('action');
-    
+
     $o .= print_plugin_admin('off');
-    
+
     switch ($admin) {
 	case '':
 	    $o .= cryptographp_version();

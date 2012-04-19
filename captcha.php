@@ -3,9 +3,9 @@
 /**
  * Captcha of Cryptographp_XH.
  *
- * Copyright (c) 2011 Christoph M. Becker (see license.txt)
+ * Copyright (c) 2011-2012 Christoph M. Becker (see license.txt)
  */
- 
+
 
 // utf-8-marker: äöüß
 
@@ -26,7 +26,7 @@ if (isset($plugin_tx['cryptographp'])) {
     trigger_error('Cryptograph_XH not yet loaded', E_USER_WARNING);
 }
 
-    
+
 /**
  * Returns (x)html block element displaying the captcha.
  *
@@ -34,9 +34,9 @@ if (isset($plugin_tx['cryptographp'])) {
  */
 function cryptographp_captcha_display() {
     global $plugin_tx;
-    
+
     $ptx =& $plugin_tx['cryptographp'];
-    
+
     cryptographp_update_config();
     return '<div class="captcha">'.dsp_crypt('cmsimple.cfg.php', $ptx['message_reload'])
 	    .'<div>'.$ptx['message_enter_code'].'</div>'
