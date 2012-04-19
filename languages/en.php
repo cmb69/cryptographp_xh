@@ -7,6 +7,9 @@ $plugin_tx['cryptographp']['message_enter_code']="Enter the anti spam code!<br>(
 
 $plugin_tx['cryptographp']['error_use_max']="Too many reloads!";
 $plugin_tx['cryptographp']['error_user_time']="Too quickly reloaded!";
+$plugin_tx['cryptographp']['error_phpversion']="Cryptographp_XH requires at least PHP version %s!";
+$plugin_tx['cryptographp']['error_extension']="Cryptographp_XH requires PHP's %s extension!";
+$plugin_tx['cryptographp']['error_encoding']="Cryptographp_XH requires UTF-8 encoding!";
 
 $plugin_tx['cryptographp']['cf_crypt_width']="Width of cryptogram in pixels";
 $plugin_tx['cryptographp']['cf_crypt_height']="Height of cryptogram in pixels";

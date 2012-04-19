@@ -15,6 +15,8 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
     exit;
 }
 
+// TODO declare globals
+
 
 $cryptinstall = $pth['folder']['plugins'].'cryptographp/crypt/cryptographp.fct.php';
 include $cryptinstall;

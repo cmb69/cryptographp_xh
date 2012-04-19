@@ -50,13 +50,13 @@ function cryptographp_version() {
 if (isset($cryptographp)) {
     // check requirements // RELEASE-TODO
     if (version_compare(PHP_VERSION, CRYPTOGRAPHP_PHP_VERSION) < 0)
-	$e .= '<li>'.sprintf($plugin_tx['tetris']['error_phpversion'], CRYPTOGRAPHP_PHP_VERSION).'</li>'."\n";
-    foreach (array() as $ext) { 
+	$e .= '<li>'.sprintf($plugin_tx['cryptographp']['error_phpversion'], CRYPTOGRAPHP_PHP_VERSION).'</li>'."\n";
+    foreach (array('date', 'gd', 'session') as $ext) { 
 	if (!extension_loaded($ext))
-	    $e .= '<li>'.sprintf($plugin_tx['tetris']['error_extension'], $ext).'</li>'."\n";
+	    $e .= '<li>'.sprintf($plugin_tx['cryptographp']['error_extension'], $ext).'</li>'."\n";
     }
     if (strtoupper($tx['meta']['codepage']) != 'UTF-8') {
-	$e .= '<li>'.$plugin_tx['tetris']['error_encoding'].'</li>'."\n";
+	$e .= '<li>'.$plugin_tx['cryptographp']['error_encoding'].'</li>'."\n";
     }
 
     initvar('admin');
