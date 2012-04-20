@@ -232,18 +232,12 @@ if (function_exists('imagefilter')) {
    }
 
 
-// Conversion du cryptogramme en Majuscule si insensibilité à la casse
-$word = ($difuplow?$word:strtoupper($word));
 
 
 // Retourne 2 informations dans la session:
 // - Le code du cryptogramme (crypté ou pas)
 // - La Date/Heure de la création du cryptogramme au format integer "TimeStamp"
-switch (strtoupper($cryptsecure)) {
-       case "MD5"  : $_SESSION['cryptcode'] = md5($word); break;
-       case "SHA1" : $_SESSION['cryptcode'] = sha1($word); break;
-       default     : $_SESSION['cryptcode'] = $word; break;
-       }
+$_SESSION['cryptcode'] = $word;
 $_SESSION['crypttime'] = time();
 $_SESSION['cryptcptuse']++;
 

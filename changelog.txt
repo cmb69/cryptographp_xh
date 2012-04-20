@@ -10,6 +10,7 @@ cmb	extended copyright to 2012
 cmb	changed usage of original cryptographp: instead of using it as library, it's now fully integrated
 cmb	fixed cryptographps local file inclusion bug
 cmb	implemented audio captcha
+cmb	removed config options char_case_sensitive and crypt_secure
 
 Version 1beta1 - released 2011-09-19
 cmb	initial release

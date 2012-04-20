@@ -57,24 +57,17 @@ function cryptographp_captcha_display() {
  */
 function cryptographp_captcha_check() {
     $code = stsl($_POST['cryptographp-captcha']);
- include ($_SESSION['configfile']);
- $code = addslashes ($code);
- $code = str_replace(' ','',$code);  // supprime les espaces saisis par erreur.
- $code = ($difuplow?$code:strtoupper($code));
- switch (strtoupper($cryptsecure)) {
-        case "MD5"  : $code = md5($code); break;
-        case "SHA1" : $code = sha1($code); break;
-        }
- if ($_SESSION['cryptcode'] and ($_SESSION['cryptcode'] == $code))
-    {
-    unset($_SESSION['cryptreload']);
-    if ($cryptoneuse) unset($_SESSION['cryptcode']);
-    return true;
+    include ($_SESSION['configfile']);
+    $code = addslashes($code);
+    $code = str_replace(' ', '', $code);  // supprime les espaces saisis par erreur.
+    if (isset($_SESSION['cryptcode']) && $_SESSION['cryptcode'] == $code) {
+	unset($_SESSION['cryptreload']);
+	if ($cryptoneuse) {unset($_SESSION['cryptcode']);}
+	return true;
+    } else {
+	$_SESSION['cryptreload'] = true;
+	return false;
     }
-    else {
-         $_SESSION['cryptreload']= true;
-         return false;
-         }
 }
 
 ?>
