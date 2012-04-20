@@ -40,10 +40,10 @@ function cryptographp_captcha_display() {
     $dir = $pth['folder']['plugins'].'cryptographp/';
     $_SESSION['cryptdir'] = $dir;
     $ptx = $plugin_tx['cryptographp'];
-    return '<div class="captcha">'
+    return '<div class="cryptographp">'
 	    .tag('img id="cryptogram" src="'.$dir.'cryptographp.php"')."\n"
 	    .'<a href="'.$dir.'audio.php">'.tag('img src="'.$dir.'images/audio.png"').'</a>'."\n"
-	    .'<a href="javascript:document.images.cryptogram.src = \''.$dir.'cryptographp.php\'">'
+	    .'<a href="javascript:void(0)" onclick="document.getElementById(\'cryptogram\').src = \''.$dir.'cryptographp.php?\' + new Date().getTime()">'
 	    .tag('img src="'.$dir.'images/reload.png"').'</a>'."\n"
 	    .'<div>'.$ptx['message_enter_code'].'</div>'
 	    .tag('input type="text" name="cryptographp-captcha"').'</div>'."\n";

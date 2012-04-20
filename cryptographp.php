@@ -7,7 +7,7 @@
 // www.cryptographp.com
 // cryptographp@alphpa.com
 //
-// Licence CeCILL modifiÃ©e
+// Licence CeCILL modifiée
 // => Voir fichier Licence_CeCILL_V2-fr.txt)
 // -----------------------------------------------
 
@@ -28,13 +28,13 @@ error_reporting(0);
 //if (isset($_GET[$_GET['sn']]) && $_GET[$_GET['sn']]=="") unset ($_GET['sn']);
 session_start();
 
-// N'accepte que les fichiers de config du meme rÃ©pertoire
+// N'accepte que les fichiers de config du meme répertoire
 //if (is_file($_GET['cfg']) and dirname($_GET['cfg'])=='.' ) $_SESSION['configfile']=$_GET['cfg'];
    /*else*/  $_SESSION['configfile']="cmsimple.cfg.php";
 
 include($_SESSION['configfile']);
 
-// VÃ©rifie si l'utilisateur a le droit de (re)gÃ©nÃ©rer un cryptogramme
+// Vérifie si l'utilisateur a le droit de (re)générer un cryptogramme
 if ($_SESSION['cryptcptuse']>=$cryptusemax) {
    header('Location: error.php?text='.urlencode($_SESSION['cryptographp_tx']['error_use_max']));
    exit;
@@ -52,7 +52,7 @@ if ($delai < $cryptusetimer) {
           }
    }
 
-// CrÃ©ation du cryptogramme temporaire
+// Création du cryptogramme temporaire
 $imgtmp = imagecreatetruecolor($cryptwidth,$cryptheight);
 $blank  = imagecolorallocate($imgtmp,255,255,255);
 $black   = imagecolorallocate($imgtmp,0,0,0);
@@ -108,8 +108,8 @@ $xvariation = round(($cryptwidth/2)-(($xend-$xbegin)/2));
 imagedestroy ($imgtmp);
 
 
-// CrÃ©ation du cryptogramme dÃ©finitif
-// CrÃ©ation du fond
+// Création du cryptogramme définitif
+// Création du fond
 $img = imagecreatetruecolor($cryptwidth,$cryptheight);
 
 if ($bgimg and is_dir($bgimg)) {
@@ -138,7 +138,7 @@ if ($bgimg) {
 
 function ecriture()
 {
-// CrÃ©ation de l'Ã©criture
+// Création de l'écriture
 global  $img, $ink, $charR, $charG, $charB, $charclear, $xvariation, $charnb, $charcolorrnd, $charcolorrndlevel, $tword, $charspace;
 if (function_exists ('imagecolorallocatealpha')) $ink = imagecolorallocatealpha($img,$charR,$charG,$charB,$charclear);
    else $ink = imagecolorallocate ($img,$charR,$charG,$charB);
@@ -155,7 +155,7 @@ for ($i=1;$i<=$charnb;$i++) {
                  case 1  : if ($rndcolor<200) $ok=true; break; // tres sombre
                  case 2  : if ($rndcolor<400) $ok=true; break; // sombre
                  case 3  : if ($rndcolor>500) $ok=true; break; // claires
-                 case 4  : if ($rndcolor>650) $ok=true; break; // trÃ¨s claires
+                 case 4  : if ($rndcolor>650) $ok=true; break; // très claires
                  default : $ok=true;
                  }
           } while (!$ok);
@@ -173,7 +173,7 @@ for ($i=1;$i<=$charnb;$i++) {
 
 
 function noisecolor()
-// Fonction permettant de dÃ©terminer la couleur du bruit et la forme du pinceau
+// Fonction permettant de déterminer la couleur du bruit et la forme du pinceau
  {
  global $img, $noisecolorchar, $ink, $bg, $brushsize;
  switch ($noisecolorchar) {
@@ -195,7 +195,7 @@ function noisecolor()
 
 
 function bruit()
-// Ajout de bruits: point, lignes et cercles alÃ©atoires
+// Ajout de bruits: point, lignes et cercles aléatoires
 {
 global $noisepxmin, $noisepxmax, $noiselinemin, $noiselinemax, $nbcirclemin, $nbcirclemax,$img, $cryptwidth, $cryptheight, $brushsize;
 $nbpx = rand($noisepxmin,$noisepxmax);
@@ -217,28 +217,28 @@ if ($noiseup) {
           }
 
 
-// CrÃ©ation du cadre
+// Création du cadre
 if ($bgframe) {
    $framecol = imagecolorallocate($img,($bgR*3+$charR)/4,($bgG*3+$charG)/4,($bgB*3+$charB)/4);
    imagerectangle($img,0,0,$cryptwidth-1,$cryptheight-1,$framecol);
    }
 
 
-// Transformations supplÃ©mentaires: Grayscale et Brouillage
-// VÃ©rifie si la fonction existe dans la version PHP installÃ©e
+// Transformations supplémentaires: Grayscale et Brouillage
+// Vérifie si la fonction existe dans la version PHP installée
 if (function_exists('imagefilter')) {
    if ($cryptgrayscal) imagefilter ( $img,IMG_FILTER_GRAYSCALE);
    if ($cryptgaussianblur) imagefilter ( $img,IMG_FILTER_GAUSSIAN_BLUR);
    }
 
 
-// Conversion du cryptogramme en Majuscule si insensibilitÃ© Ã  la casse
+// Conversion du cryptogramme en Majuscule si insensibilité à la casse
 $word = ($difuplow?$word:strtoupper($word));
 
 
 // Retourne 2 informations dans la session:
-// - Le code du cryptogramme (cryptÃ© ou pas)
-// - La Date/Heure de la crÃ©ation du cryptogramme au format integer "TimeStamp"
+// - Le code du cryptogramme (crypté ou pas)
+// - La Date/Heure de la création du cryptogramme au format integer "TimeStamp"
 switch (strtoupper($cryptsecure)) {
        case "MD5"  : $_SESSION['cryptcode'] = md5($word); break;
        case "SHA1" : $_SESSION['cryptcode'] = sha1($word); break;

@@ -1,7 +1,7 @@
 <?php
 
 $plugin_tx['cryptographp']['message_reload']="Reload CAPTCHA";
-$plugin_tx['cryptographp']['message_enter_code']="Enter the anti spam code!<br>(Cookies must be enabled)";
+$plugin_tx['cryptographp']['message_enter_code']="Enter the anti spam code:";
 
 $plugin_tx['cryptographp']['syscheck_title']="System check";
 $plugin_tx['cryptographp']['syscheck_phpversion']="PHP version &ge; %s";
