@@ -2,7 +2,9 @@ TODO:
     add translations
     add alt attribute to captcha
     valid captcha output?
+
     improve joinwav()
+    get rid of cryptographp.cfg.php (use config.php directly)
 
 Version 1beta2 - released TODO
 cmb	fixed buggy requirement check
@@ -11,6 +13,7 @@ cmb	changed usage of original cryptographp: instead of using it as library, it's
 cmb	fixed cryptographps local file inclusion bug
 cmb	implemented audio captcha
 cmb	removed config options char_case_sensitive and crypt_secure
+cmb	moved cryptographp config to config/
 
 Version 1beta1 - released 2011-09-19
 cmb	initial release

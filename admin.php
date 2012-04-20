@@ -67,7 +67,7 @@ function cryptographp_system_check() { // RELEASE-TODO
 	    .'&nbsp;&nbsp;'.$ptx['syscheck_magic_quotes'].tag('br').tag('br')."\n";
     $o .= (strtoupper($tx['meta']['codepage']) == 'UTF-8' ? $ok : $warn)
 	    .'&nbsp;&nbsp;'.$ptx['syscheck_encoding'].tag('br').tag('br')."\n";
-    foreach (array('config/', 'crypt', 'css/', 'languages/') as $folder) {
+    foreach (array('config/', 'css/', 'languages/') as $folder) {
 	$folder = $pth['folder']['plugins'].'cryptographp/'.$folder;
 	$o .= (is_writable($folder) ? $ok : $warn)
 		.'&nbsp;&nbsp;'.sprintf($ptx['syscheck_writable'], $folder).tag('br')."\n";

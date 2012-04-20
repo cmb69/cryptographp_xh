@@ -30,7 +30,7 @@ session_start();
 
 // N'accepte que les fichiers de config du meme répertoire
 //if (is_file($_GET['cfg']) and dirname($_GET['cfg'])=='.' ) $_SESSION['configfile']=$_GET['cfg'];
-   /*else*/  $_SESSION['configfile']="cmsimple.cfg.php";
+   /*else*/  $_SESSION['configfile']="config/cryptographp.cfg.php";
 
 include($_SESSION['configfile']);
 
