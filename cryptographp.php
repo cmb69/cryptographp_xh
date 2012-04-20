@@ -2,10 +2,10 @@
 
 // -----------------------------------------------
 // Cryptographp v1.4
-// (c) 2006-2007 Sylvain BRISON 
+// (c) 2006-2007 Sylvain BRISON
 //
-// www.cryptographp.com 
-// cryptographp@alphpa.com 
+// www.cryptographp.com
+// cryptographp@alphpa.com
 //
 // Licence CeCILL modifiée
 // => Voir fichier Licence_CeCILL_V2-fr.txt)
@@ -16,23 +16,21 @@
  */
 
 
-//error_reporting(E_ALL);
-//srand((double)microtime()*1000000); 
+error_reporting(0);
 
-if  ((!isset($_COOKIE['cryptcookietest']))) // and ($_GET[$_GET['sn']]==""))
-    {
-    header("Content-type: image/gif");
-    readfile('images/error.gif'); 
-    exit;
-    }
+//if  ((!isset($_COOKIE['cryptcookietest']))) // and ($_GET[$_GET['sn']]==""))
+//    {
+//    header("Content-type: image/png");
+//    readfile('images/error.png');
+//    exit;
+//    }
 
-if ($_GET[$_GET['sn']]=="") unset ($_GET['sn']); 
+//if (isset($_GET[$_GET['sn']]) && $_GET[$_GET['sn']]=="") unset ($_GET['sn']);
 session_start();
 
-
 // N'accepte que les fichiers de config du meme répertoire
-if (is_file($_GET['cfg']) and dirname($_GET['cfg'])=='.' ) $_SESSION['configfile']=$_GET['cfg']; 
-   else  $_SESSION['configfile']="cryptographp.cfg.php";
+//if (is_file($_GET['cfg']) and dirname($_GET['cfg'])=='.' ) $_SESSION['configfile']=$_GET['cfg'];
+   /*else*/  $_SESSION['configfile']="cmsimple.cfg.php";
 
 include($_SESSION['configfile']);
 
@@ -43,13 +41,13 @@ if ($_SESSION['cryptcptuse']>=$cryptusemax) {
    }
 
 $delai = time()-$_SESSION['crypttime'];
-if ($delai < $cryptusetimer) { 
+if ($delai < $cryptusetimer) {
    switch ($cryptusertimererror) {
           case 2  : header('Location: error.php?text='.urlencode($_SESSION['cryptographp_tx']['error_user_time']));
                     exit;
           case 3  : sleep ($cryptusetimer-$delai);
                     break; // Fait une pause
-          case 1  :          
+          case 1  :
           default : exit;  // Quitte le script sans rien faire
           }
    }
@@ -62,13 +60,13 @@ imagefill($imgtmp,0,0,$blank);
 
 
 $word ='';
-$x = 10; 
+$x = 10;
 $pair = rand(0,1);
 $charnb = rand($charnbmin,$charnbmax);
-for ($i=1;$i<= $charnb;$i++) {              
+for ($i=1;$i<= $charnb;$i++) {
      $tword[$i]['font'] =  $tfont[array_rand($tfont,1)];
      $tword[$i]['angle'] = (rand(1,2)==1)?rand(0,$charanglemax):rand(360-$charanglemax,360);
-     
+
      if ($crypteasy) $tword[$i]['element'] =(!$pair)?$charelc{rand(0,strlen($charelc)-1)}:$charelv{rand(0,strlen($charelv)-1)};
         else $tword[$i]['element'] = $charel{rand(0,strlen($charel)-1)};
 
@@ -76,12 +74,12 @@ for ($i=1;$i<= $charnb;$i++) {
      $tword[$i]['size'] = rand($charsizemin,$charsizemax);
      $tword[$i]['y'] = ($charup?($cryptheight/2)+rand(0,($cryptheight/5)):($cryptheight/1.5));
      $word .=$tword[$i]['element'];
-     
+
      $lafont="fonts/".$tword[$i]['font'];
      imagettftext($imgtmp,$tword[$i]['size'],$tword[$i]['angle'],$x,$tword[$i]['y'],$black,$lafont,$tword[$i]['element']);
 
      $x +=$charspace;
-     } 
+     }
 
 // Calcul du racadrage horizontal du cryptogramme temporaire
 $xbegin=0;
@@ -93,8 +91,8 @@ while (($x<$cryptwidth)and(!$xbegin)) {
            $y++;
            }
      $x++;
-     } 
-    
+     }
+
 $xend=0;
 $x=$cryptwidth-1;
 while (($x>0)and(!$xend)) {
@@ -104,19 +102,19 @@ while (($x>0)and(!$xend)) {
            $y++;
            }
      $x--;
-     } 
-     
+     }
+
 $xvariation = round(($cryptwidth/2)-(($xend-$xbegin)/2));
 imagedestroy ($imgtmp);
 
 
 // Création du cryptogramme définitif
 // Création du fond
-$img = imagecreatetruecolor($cryptwidth,$cryptheight); 
+$img = imagecreatetruecolor($cryptwidth,$cryptheight);
 
 if ($bgimg and is_dir($bgimg)) {
                     $dh  = opendir($bgimg);
-                    while (false !== ($filename = readdir($dh))) 
+                    while (false !== ($filename = readdir($dh)))
                           if(eregi(".[gif|jpg|png]$", $filename))  $files[] = $filename;
                     closedir($dh);
                     $bgimg = $bgimg.'/'.$files[array_rand($files,1)];
@@ -146,8 +144,8 @@ if (function_exists ('imagecolorallocatealpha')) $ink = imagecolorallocatealpha(
    else $ink = imagecolorallocate ($img,$charR,$charG,$charB);
 
 $x = $xvariation;
-for ($i=1;$i<=$charnb;$i++) {       
-       
+for ($i=1;$i<=$charnb;$i++) {
+
     if ($charcolorrnd){   // Choisit des couleurs au hasard
        $ok = false;
        do {
@@ -158,19 +156,19 @@ for ($i=1;$i<=$charnb;$i++) {
                  case 2  : if ($rndcolor<400) $ok=true; break; // sombre
                  case 3  : if ($rndcolor>500) $ok=true; break; // claires
                  case 4  : if ($rndcolor>650) $ok=true; break; // très claires
-                 default : $ok=true;               
+                 default : $ok=true;
                  }
           } while (!$ok);
-          
+
       if (function_exists ('imagecolorallocatealpha')) $rndink = imagecolorallocatealpha($img,$rndR,$rndG,$rndB,$charclear);
-          else $rndink = imagecolorallocate ($img,$rndR,$rndG,$rndB);          
+          else $rndink = imagecolorallocate ($img,$rndR,$rndG,$rndB);
          }
-         
+
     $lafont="fonts/".$tword[$i]['font'];
     imagettftext($img,$tword[$i]['size'],$tword[$i]['angle'],$x,$tword[$i]['y'],$charcolorrnd?$rndink:$ink,$lafont,$tword[$i]['element']);
 
     $x +=$charspace;
-    } 
+    }
 }
 
 
@@ -181,8 +179,8 @@ function noisecolor()
  switch ($noisecolorchar) {
          case 1  : $noisecol=$ink; break;
          case 2  : $noisecol=$bg; break;
-         case 3  : 
-         default : $noisecol=imagecolorallocate ($img,rand(0,255),rand(0,255),rand(0,255)); break;               
+         case 3  :
+         default : $noisecol=imagecolorallocate ($img,rand(0,255),rand(0,255),rand(0,255)); break;
          }
 // cmb: replaced imagesetbrush() with imagesetthickness
  //if ($brushsize and $brushsize>1 and function_exists('imagesetbrush')) {
@@ -192,7 +190,7 @@ function noisecolor()
  //   imagesetbrush($img,$brush);
  //   $noisecol=IMG_COLOR_BRUSHED;
  //   }
- return $noisecol;    
+ return $noisecol;
 }
 
 
@@ -207,7 +205,7 @@ for ($i=1;$i<$nbpx;$i++) imagesetpixel ($img,rand(0,$cryptwidth-1),rand(0,$crypt
 imagesetthickness($img, $brushsize); // cmb
 for ($i=1;$i<=$nbline;$i++) imageline($img,rand(0,$cryptwidth-1),rand(0,$cryptheight-1),rand(0,$cryptwidth-1),rand(0,$cryptheight-1),noisecolor());
 for ($i=1;$i<=$nbcircle;$i++) imagearc($img,rand(0,$cryptwidth-1),rand(0,$cryptheight-1),$rayon=rand(5,$cryptwidth/3),$rayon,0,359,noisecolor());
-} 
+}
 
 
 if ($noiseup) {
@@ -224,8 +222,8 @@ if ($bgframe) {
    $framecol = imagecolorallocate($img,($bgR*3+$charR)/4,($bgG*3+$charG)/4,($bgB*3+$charB)/4);
    imagerectangle($img,0,0,$cryptwidth-1,$cryptheight-1,$framecol);
    }
- 
-            
+
+
 // Transformations supplémentaires: Grayscale et Brouillage
 // Vérifie si la fonction existe dans la version PHP installée
 if (function_exists('imagefilter')) {
@@ -238,20 +236,20 @@ if (function_exists('imagefilter')) {
 $word = ($difuplow?$word:strtoupper($word));
 
 
-// Retourne 2 informations dans la session: 
+// Retourne 2 informations dans la session:
 // - Le code du cryptogramme (crypté ou pas)
-// - La Date/Heure de la création du cryptogramme au format integer "TimeStamp" 
-switch (strtoupper($cryptsecure)) {    
+// - La Date/Heure de la création du cryptogramme au format integer "TimeStamp"
+switch (strtoupper($cryptsecure)) {
        case "MD5"  : $_SESSION['cryptcode'] = md5($word); break;
        case "SHA1" : $_SESSION['cryptcode'] = sha1($word); break;
        default     : $_SESSION['cryptcode'] = $word; break;
        }
 $_SESSION['crypttime'] = time();
-$_SESSION['cryptcptuse']++;       
-  
+$_SESSION['cryptcptuse']++;
 
-// Envoi de l'image finale au navigateur 
-switch (strtoupper($cryptformat)) {  
+
+// Envoi de l'image finale au navigateur
+switch (strtoupper($cryptformat)) {
        case "JPG"  :
 	     case "JPEG" : if (imagetypes() & IMG_JPG)  {
                         header("Content-type: image/jpeg");
@@ -263,7 +261,7 @@ switch (strtoupper($cryptformat)) {
                         imagegif($img);
                         }
                      break;
-	     case "PNG"  : 
+	     case "PNG"  :
 	     default     : if (imagetypes() & IMG_PNG)  {
                         header("Content-type: image/png");
                         imagepng($img);
@@ -272,5 +270,5 @@ switch (strtoupper($cryptformat)) {
 
 imagedestroy ($img);
 unset ($word,$tword);
-unset ($_SESSION['cryptreload']); 
+unset ($_SESSION['cryptreload']);
 ?>

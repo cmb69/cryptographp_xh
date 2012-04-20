@@ -1,7 +1,5 @@
 <?php
 
-$plugin_cf['cryptographp']['utf-8-marker']="äöüß";
-
 $plugin_cf['cryptographp']['crypt_width']="130";
 $plugin_cf['cryptographp']['crypt_height']="40";
 $plugin_cf['cryptographp']['bg_rgb_red']="255";
@@ -46,6 +44,5 @@ $plugin_cf['cryptographp']['crypt_use_timer']="0";
 $plugin_cf['cryptographp']['crypt_use_timer_error']="3";
 $plugin_cf['cryptographp']['crypt_use_max']="100";
 $plugin_cf['cryptographp']['crypt_one_use']="yes";
-
 
 ?>

@@ -1,15 +1,17 @@
 <?php
 
-$plugin_tx['cryptographp']['utf-8-marker']="äöüß";
-
 $plugin_tx['cryptographp']['message_reload']="Reload CAPTCHA";
 $plugin_tx['cryptographp']['message_enter_code']="Enter the anti spam code!<br>(Cookies must be enabled)";
 
+$plugin_tx['cryptographp']['syscheck_title']="System check";
+$plugin_tx['cryptographp']['syscheck_phpversion']="PHP version &ge; %s";
+$plugin_tx['cryptographp']['syscheck_extension']="Extension '%s' loaded";
+$plugin_tx['cryptographp']['syscheck_encoding']="Encoding 'UTF-8' configured";
+$plugin_tx['cryptographp']['syscheck_magic_quotes']="Magic quotes runtime off";
+$plugin_tx['cryptographp']['syscheck_writable']="Folder '%s' writable";
+
 $plugin_tx['cryptographp']['error_use_max']="Too many reloads!";
 $plugin_tx['cryptographp']['error_user_time']="Too quickly reloaded!";
-$plugin_tx['cryptographp']['error_phpversion']="Cryptographp_XH requires at least PHP version %s!";
-$plugin_tx['cryptographp']['error_extension']="Cryptographp_XH requires PHP's %s extension!";
-$plugin_tx['cryptographp']['error_encoding']="Cryptographp_XH requires UTF-8 encoding!";
 
 $plugin_tx['cryptographp']['cf_crypt_width']="Width of cryptogram in pixels";
 $plugin_tx['cryptographp']['cf_crypt_height']="Height of cryptogram in pixels";
@@ -55,6 +57,5 @@ $plugin_tx['cryptographp']['cf_crypt_use_timer']="Delay in seconds before reload
 $plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Strategy if cryptograms are reloaded too fast: <em>1</em> (return no image), <em>2</em> (return error message) or <em>3</em> (return after the delay is over)";
 $plugin_tx['cryptographp']['cf_crypt_use_max']="How many times the cryptogram may be reloaded";
 $plugin_tx['cryptographp']['cf_crypt_one_use']="Wether the cryptogram should be discarded after successful confirmation: <em>yes</em> or <em>no</em>";
-$plugin_tx['cryptographp']['cf_utf-8-marker']="Internal use. <strong>Do not change!</strong>";
 
 ?>
