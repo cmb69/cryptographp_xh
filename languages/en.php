@@ -1,6 +1,9 @@
 <?php
 
-$plugin_tx['cryptographp']['message_reload']="Reload CAPTCHA";
+$plugin_tx['cryptographp']['alt_image']="Visual challenge";
+$plugin_tx['cryptographp']['alt_reload']="Get new challenge";
+$plugin_tx['cryptographp']['alt_audio']="Get audio challenge";
+
 $plugin_tx['cryptographp']['message_enter_code']="Enter the anti spam code:";
 
 $plugin_tx['cryptographp']['syscheck_title']="System check";
