@@ -4,11 +4,12 @@ TODO:
 
     improve joinwav()
     get rid of cryptographp.cfg.php (use config.php directly)
+    separate $_SESSION info for different CAPTCHAs
 
 Version 1beta2 - released TODO
 cmb	fixed buggy requirement check
 cmb	extended copyright to 2012
-cmb	changed usage of original cryptographp: instead of using it as library, it's now fully integrated
+cmb	changed usage of original cryptographp: instead of using it as library it's now fully integrated
 cmb	fixed cryptographps local file inclusion bug
 cmb	implemented audio captcha
 cmb	removed config options char_case_sensitive and crypt_secure

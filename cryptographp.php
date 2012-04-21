@@ -30,9 +30,9 @@ session_start();
 
 // N'accepte que les fichiers de config du meme répertoire
 //if (is_file($_GET['cfg']) and dirname($_GET['cfg'])=='.' ) $_SESSION['configfile']=$_GET['cfg'];
-   /*else*/  $_SESSION['configfile']="config/cryptographp.cfg.php";
+   //else  $_SESSION['configfile']="config/cryptographp.cfg.php";
 
-include($_SESSION['configfile']);
+include './config/cryptographp.cfg.php';
 
 // Vérifie si l'utilisateur a le droit de (re)générer un cryptogramme
 if ($_SESSION['cryptcptuse']>=$cryptusemax) {

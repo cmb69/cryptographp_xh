@@ -61,8 +61,10 @@ function cryptographp_captcha_display() {
  * @return bool
  */
 function cryptographp_captcha_check() {
+    global $pth;
+
     $code = stsl($_POST['cryptographp-captcha']);
-    include ($_SESSION['configfile']);
+    include $pth['folder']['plugins'].'cryptographp/config/cryptographp.cfg.php';
     $code = addslashes($code);
     $code = str_replace(' ', '', $code);  // supprime les espaces saisis par erreur.
     if (isset($_SESSION['cryptcode']) && $_SESSION['cryptcode'] == $code) {
