@@ -33,7 +33,7 @@ function error($text) {
 
 session_start();
 $id = $_GET['id'];
-$lang = $_GET['lang'];
+$lang = basename($_GET['lang']);
 
 include './config/cryptographp.cfg.php';
 include './languages/'.$lang.'.php';
