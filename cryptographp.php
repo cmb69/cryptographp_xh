@@ -10,20 +10,21 @@
 
 error_reporting(0);
 
-//if  ((!isset($_COOKIE['cryptcookietest']))) // and ($_GET[$_GET['sn']]==""))
-//    {
-//    header("Content-type: image/png");
-//    readfile('images/error.png');
-//    exit;
-//    }
-
 session_start();
 
+if (!isset($_SESSION['cryptographp_lang'])) {
+    header('Content-Type: image/png');
+    readfile('images/error.png');
+    exit;
+}
+
+
 include './config/cryptographp.cfg.php';
+include './languages/'.$_SESSION['cryptographp_lang'].'.php';
 
 // Vérifie si l'utilisateur a le droit de (re)générer un cryptogramme
 if ($_SESSION['cryptographp_use'] >= $cryptusemax) {
-    header('Location: error.php?text='.urlencode($_SESSION['cryptographp_tx']['error_use_max']));
+    header('Location: error.php?text='.urlencode($plugin_tx['cryptographp']['error_use_max']));
     exit;
 }
 
@@ -31,7 +32,7 @@ $delay = time() - $_SESSION['cryptographp_time'];
 if ($delay < $cryptusetimer) {
     switch ($cryptusertimererror) {
 	case 2:
-	    header('Location: error.php?text='.urlencode($_SESSION['cryptographp_tx']['error_user_time']));
+	    header('Location: error.php?text='.urlencode($plugin_tx['cryptographp']['error_user_time']));
 	    exit;
 	case 3:
 	    sleep($cryptusetimer - $delay);

@@ -23,8 +23,9 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
  * @return string
  */
 function cryptographp_captcha_display() {
-    global $pth, $plugin_tx;
+    global $pth, $sl, $plugin_tx;
 
+    $_SESSION['cryptographp_lang'] = $sl;
     $dir = $pth['folder']['plugins'].'cryptographp/';
     $ptx = $plugin_tx['cryptographp'];
     $o = '<div class="cryptographp">'."\n";
@@ -59,7 +60,7 @@ function cryptographp_captcha_check() {
 	if ($cryptoneuse) {unset($_SESSION['cryptographp_code']);}
 	return true;
     } else {
-	$_SESSION['cryptographp_reload'] = true;
+	$_SESSION['cryptographp_reload'] = TRUE;
 	return false;
     }
 }
