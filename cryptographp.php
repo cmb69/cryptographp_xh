@@ -13,8 +13,7 @@ error_reporting(0);
 session_start();
 
 if (!isset($_SESSION['cryptographp_lang'])) {
-    header('Content-Type: image/png');
-    readfile('images/error.png');
+    header('HTTP/1.0 403 Forbidden');
     exit;
 }
 
@@ -58,9 +57,9 @@ for ($i=1; $i <= $charnb; $i++) {
     $tword[$i]['angle'] = rand(1, 2) == 1 ? rand(0, $charanglemax) : rand(360 - $charanglemax, 360); // TODO: intval?
 
     if ($crypteasy) { // TODO: {}????????
-	$tword[$i]['element'] = !$pair ? $charelc{rand(0, strlen($charelc) - 1)} : $charelv{rand(0, strlen($charelv) - 1)};
+	$tword[$i]['element'] = !$pair ? $charelc[rand(0, strlen($charelc) - 1)] : $charelv[rand(0, strlen($charelv) - 1)];
     } else {
-	$tword[$i]['element'] = $charel{rand(0,strlen($charel)-1)};
+	$tword[$i]['element'] = $charel[rand(0,strlen($charel)-1)];
     }
 
     $pair = !$pair;
