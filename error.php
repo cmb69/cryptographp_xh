@@ -2,14 +2,12 @@
 
 /**
  * Error message as image.
- * Copyright (c) 2011 Christoph M. Becker (see Licence_CeCILL_V2-en.txt)
+ *
+ * Copyright (c) 2011-2012 Christoph M. Becker (see README.txt)
  */
- 
 
-// utf-8-marker: äöüß
+error_reporting(0);
 
-
-header('Content-type: image/png');
 $text = wordwrap(urldecode($_GET['text']), 15);
 $lines = explode("\n", $text);
 $font = './fonts/DejaVuSans.ttf';
@@ -24,6 +22,7 @@ $bg = imagecolorallocate($img, 255, 255, 255);
 $fg = imagecolorallocate($img, 192, 0, 0);
 imagefilledrectangle($img, 0, 0, $width-1, $height-1, $bg);
 imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text);
+header('Content-type: image/png');
 imagepng($img);
 
 ?>

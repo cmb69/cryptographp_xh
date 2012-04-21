@@ -1,6 +1,7 @@
 TODO:
     add translations
     add credits (mp3 files)
+    update manual
 
     improve joinwav()
     get rid of cryptographp.cfg.php (use config.php directly)

@@ -13,18 +13,6 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
     exit;
 }
 
-// TODO declare globals
-
-
-//$cryptinstall = $pth['folder']['plugins'].'cryptographp/cryptographp.fct.php';
-//include $cryptinstall;
-// TODO: hmm...
-if (isset($plugin_tx['cryptographp'])) {
-    $_SESSION['cryptographp_tx'] = $plugin_tx['cryptographp'];
-} else {
-    trigger_error('Cryptograph_XH not yet loaded', E_USER_WARNING);
-}
-
 
 /**
  * Returns the (x)html block element displaying the captcha,
@@ -38,7 +26,6 @@ function cryptographp_captcha_display() {
     global $pth, $plugin_tx;
 
     $dir = $pth['folder']['plugins'].'cryptographp/';
-    $_SESSION['cryptdir'] = $dir;
     $ptx = $plugin_tx['cryptographp'];
     $o = '<div class="cryptographp">'."\n";
     $alt = htmlspecialchars($ptx['alt_image'], ENT_QUOTES);
@@ -76,5 +63,13 @@ function cryptographp_captcha_check() {
 	return false;
     }
 }
+
+
+if (!isset($plugin_tx['cryptographp'])) {
+    include $pth['folder']['plugins'].'cryptographp/languages/'.$sl.'.php'; // TODO
+}
+if (session_id() == '') {session_start();}
+//$_SESSION['cryptographp_tx'] = $plugin_tx['cryptographp'];
+var_dump($_SESSION);
 
 ?>
