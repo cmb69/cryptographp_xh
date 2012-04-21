@@ -25,20 +25,24 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 function cryptographp_captcha_display() {
     global $pth, $sl, $plugin_tx;
 
-    $_SESSION['cryptographp_lang'] = $sl;
+    $_SESSION['cryptographp_id'] = isset($_SESSION['cryptographp_id']) ? $_SESSION['cryptographp_id'] + 1 : 1;
+    $_SESSION['cryptographp_lang'][$_SESSION['cryptographp_id']] = $sl;
     $dir = $pth['folder']['plugins'].'cryptographp/';
     $ptx = $plugin_tx['cryptographp'];
     $o = '<div class="cryptographp">'."\n";
     $alt = htmlspecialchars($ptx['alt_image'], ENT_QUOTES);
-    $o .= tag('img id="cryptogram" src="'.$dir.'cryptographp.php" alt="'.$alt.'"')."\n";
+    $o .= tag('img id="cryptogram" src="'.$dir.'cryptographp.php?id='.$_SESSION['cryptographp_id'].'" alt="'.$alt.'"')."\n";
     $alt = htmlspecialchars($ptx['alt_audio'], ENT_QUOTES);
-    $o .= '<a href="'.$dir.'audio.php">'
+    $o .= '<a href="'.$dir.'audio.php?id='.$_SESSION['cryptographp_id'].'">'
 	    .tag('img src="'.$dir.'images/audio.png" alt="'.$alt.'" title="'.$alt.'"').'</a>'."\n";
     $alt = htmlspecialchars($ptx['alt_reload'], ENT_QUOTES);
-    $o .= '<a href="javascript:void(0)" onclick="document.getElementById(\'cryptogram\').src = \''.$dir.'cryptographp.php?\' + new Date().getTime()">'
+    $o .= '<a href="javascript:void(0)" onclick="document.getElementById(\'cryptogram\').src = \''
+		.$dir.'cryptographp.php?id='.$_SESSION['cryptographp_id'].'&\' + new Date().getTime()">'
 	    .tag('img src="'.$dir.'images/reload.png" alt="'.$alt.'" title="'.$alt.'"').'</a>'."\n"
 	    .'<div>'.$ptx['message_enter_code'].'</div>'."\n"
-	    .tag('input type="text" name="cryptographp-captcha"').'</div>'."\n";
+	    .tag('input type="text" name="cryptographp-captcha"')
+	    .tag('input type="hidden" name="cryptographp_id" value="'.$_SESSION['cryptographp_id'].'"')
+	    .'</div>'."\n";
     return $o;
 }
 
@@ -51,16 +55,17 @@ function cryptographp_captcha_display() {
 function cryptographp_captcha_check() {
     global $pth;
 
+    $id = stsl($_POST['cryptographp_id']);
     $code = stsl($_POST['cryptographp-captcha']);
-    include $pth['folder']['plugins'].'cryptographp/config/cryptographp.cfg.php';
-    $code = addslashes($code);
-    $code = str_replace(' ', '', $code);  // supprime les espaces saisis par erreur.
-    if (isset($_SESSION['cryptographp_code']) && $_SESSION['cryptographp_code'] == $code) {
-	unset($_SESSION['cryptographp_reload']);
-	if ($cryptoneuse) {unset($_SESSION['cryptographp_code']);}
+    //include $pth['folder']['plugins'].'cryptographp/config/cryptographp.cfg.php';
+    //$code = addslashes($code);
+    //$code = str_replace(' ', '', $code);  // supprime les espaces saisis par erreur.
+    if (isset($_SESSION['cryptographp_code'][$id])
+	    && $_SESSION['cryptographp_code'][$id] == $code) {
+	unset($_SESSION['cryptographp_code'][$id], $_SESSION['crytographp_lang'][$id],
+		$_SESSION['cryptographp_time'][$id]);
 	return true;
     } else {
-	$_SESSION['cryptographp_reload'] = TRUE;
 	return false;
     }
 }
@@ -70,8 +75,6 @@ if (!isset($plugin_tx['cryptographp'])) {
     include $pth['folder']['plugins'].'cryptographp/languages/'.$sl.'.php'; // TODO
 }
 if (session_id() == '') {session_start();}
-//$_SESSION['cryptographp_tx'] = $plugin_tx['cryptographp'];
 //session_destroy();
-var_dump($_SESSION);
 
 ?>

@@ -6,10 +6,10 @@
  * Copyright (c) 2012 Christoph M.Becker (see license.txt)
  */
 
-// http://www.splitbrain.org/blog/2006-11/15-joining_wavs_with_php
 
 /**
  * Returns the .wav file.
+// http://www.splitbrain.org/blog/2006-11/15-joining_wavs_with_php
  *
  * @param array $wavs
  * @return string
@@ -40,7 +40,8 @@ function joinwavs($wavs) {
 
 
 if (session_id() == '') {session_start();}
-$code = preg_split('/(?<!^)(?!$)/u', $_SESSION['cryptographp_code']);
+$id = $_GET['id'];
+$code = preg_split('/(?<!^)(?!$)/u', $_SESSION['cryptographp_code'][$id]);
 $wavs = array();
 foreach ($code as $char) {
     $wavs[] = './languages/en/'.strtolower($char).'.wav';

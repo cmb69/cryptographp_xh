@@ -128,8 +128,6 @@ $crypthographp_config = array(
     'crypt_format' => array('$cryptformat', 'string'),
     'crypt_use_timer' => array('$cryptusetimer', 'int'),
     'crypt_use_timer_error' => array('$cryptusertimererror', 'int'),
-    'crypt_use_max' => array('$cryptusemax', 'int'),
-    'crypt_one_use' => array('$cryptoneuse', 'bool')
 );
 
     $pcf = $plugin_cf['cryptographp'];

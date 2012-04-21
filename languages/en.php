@@ -13,7 +13,6 @@ $plugin_tx['cryptographp']['syscheck_encoding']="Encoding 'UTF-8' configured";
 $plugin_tx['cryptographp']['syscheck_magic_quotes']="Magic quotes runtime off";
 $plugin_tx['cryptographp']['syscheck_writable']="Folder '%s' writable";
 
-$plugin_tx['cryptographp']['error_use_max']="Too many reloads!";
 $plugin_tx['cryptographp']['error_user_time']="Too quickly reloaded!";
 
 $plugin_tx['cryptographp']['cf_crypt_width']="Width of cryptogram in pixels";
@@ -56,7 +55,5 @@ $plugin_tx['cryptographp']['cf_noise_above']="Whether the noise is above the cha
 $plugin_tx['cryptographp']['cf_crypt_format']="Image file format: <em>gif</em>, <em>png</em> or <em>jpeg</em>";
 $plugin_tx['cryptographp']['cf_crypt_use_timer']="Delay in seconds before reloading a new cryptogram is possible";
 $plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Strategy if cryptograms are reloaded too fast: <em>1</em> (return no image), <em>2</em> (return error message) or <em>3</em> (return after the delay is over)";
-$plugin_tx['cryptographp']['cf_crypt_use_max']="How many times the cryptogram may be reloaded";
-$plugin_tx['cryptographp']['cf_crypt_one_use']="Whether the cryptogram should be discarded after successful confirmation: <em>yes</em> or <em>no</em>";
 
 ?>

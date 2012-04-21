@@ -40,7 +40,5 @@ $plugin_cf['cryptographp']['noise_above']="no";
 $plugin_cf['cryptographp']['crypt_format']="png";
 $plugin_cf['cryptographp']['crypt_use_timer']="0";
 $plugin_cf['cryptographp']['crypt_use_timer_error']="3";
-$plugin_cf['cryptographp']['crypt_use_max']="100";
-$plugin_cf['cryptographp']['crypt_one_use']="yes";
 
 ?>

@@ -42,7 +42,5 @@ $noiseup = false;
 $cryptformat = 'png';
 $cryptusetimer = 0;
 $cryptusertimererror = 3;
-$cryptusemax = 100;
-$cryptoneuse = true;
 
 ?>

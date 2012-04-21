@@ -12,22 +12,19 @@ error_reporting(0);
 
 session_start();
 
-if (!isset($_SESSION['cryptographp_lang'])) {
+if (!isset($_SESSION['cryptographp_id'])) {
     header('HTTP/1.0 403 Forbidden');
     exit;
 }
 
 
+$id = $_GET['id'];
+
 include './config/cryptographp.cfg.php';
-include './languages/'.$_SESSION['cryptographp_lang'].'.php';
+include './languages/'.$_SESSION['cryptographp_lang'][$id].'.php';
 
-// Vérifie si l'utilisateur a le droit de (re)générer un cryptogramme
-if ($_SESSION['cryptographp_use'] >= $cryptusemax) {
-    header('Location: error.php?text='.urlencode($plugin_tx['cryptographp']['error_use_max']));
-    exit;
-}
 
-$delay = time() - $_SESSION['cryptographp_time'];
+$delay = time() - $_SESSION['cryptographp_time'][$id];
 if ($delay < $cryptusetimer) {
     switch ($cryptusertimererror) {
 	case 2:
@@ -36,7 +33,6 @@ if ($delay < $cryptusetimer) {
 	case 3:
 	    sleep($cryptusetimer - $delay);
 	    break; // Fait une pause
-	case 1:
 	default: exit;  // Quitte le script sans rien faire
     }
 }
@@ -64,7 +60,7 @@ for ($i=1; $i <= $charnb; $i++) {
 
     $pair = !$pair;
     $tword[$i]['size'] = rand($charsizemin, $charsizemax);
-    $tword[$i]['y'] = $charup ? ($cryptheight / 2) + rand(0, $cryptheight / 5) : $cryptheight / 1.5;
+    $tword[$i]['y'] = $charup ? $cryptheight / 2 + rand(0, $cryptheight / 5) : $cryptheight / 1.5;
     $word .= $tword[$i]['element'];
 
     $lafont = 'fonts/'.$tword[$i]['font'];
@@ -106,8 +102,8 @@ $img = imagecreatetruecolor($cryptwidth, $cryptheight);
 
 if ($bgimg && is_dir($bgimg)) { // TODO: fixed directory for bgimages?
     $dh  = opendir($bgimg);
-    while (false !== ($filename = readdir($dh)))
-	  if(eregi(".[gif|jpg|png]$", $filename))  $files[] = $filename; // TODO: use getimagesize?
+    while (($filename = readdir($dh)) != FALSE)
+	  if (eregi(".[gif|jpg|png]$", $filename))  $files[] = $filename; // TODO: use getimagesize?
     closedir($dh);
     $bgimg = $bgimg.'/'.$files[array_rand($files,1)];
 }
@@ -236,9 +232,8 @@ if (function_exists('imagefilter')) {
 // Retourne 2 informations dans la session:
 // - Le code du cryptogramme (crypté ou pas)
 // - La Date/Heure de la création du cryptogramme au format integer "TimeStamp"
-$_SESSION['cryptographp_code'] = $word;
-$_SESSION['cryptographp_time'] = time();
-$_SESSION['cryptographp_use']++;
+$_SESSION['cryptographp_code'][$id] = $word;
+$_SESSION['cryptographp_time'][$id] = time();
 
 
 // Envoi de l'image finale au navigateur
@@ -266,6 +261,5 @@ switch (strtoupper($cryptformat)) {
 
 imagedestroy($img);
 unset($word, $tword); // TODO: why unset; script finishes
-unset($_SESSION['cryptographp_reload']);
 
 ?>
