@@ -1,3 +1,7 @@
 div.cryptographp img {vertical-align: middle}
 div.cryptographp a img {border: none}
 div.cryptographp div {margin-top: 1em}
+
+/* administration */
+img.cryptographp_plugin_icon {display: block; float: left; margin: -10px 20px 10px 0}
+p.cryptographp_license {clear: both; text-align: justify}

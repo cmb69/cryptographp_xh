@@ -14,6 +14,7 @@ cmb	implemented audio captcha
 cmb	removed config options char_case_sensitive and crypt_secure
 cmb	moved cryptographp config to config/
 cmb	added alt attributes for captcha and buttons
+cmb	added plugin icon
 
 Version 1beta1 - released 2011-09-19
 cmb	initial release
