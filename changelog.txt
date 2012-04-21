@@ -6,7 +6,6 @@ TODO:
 
     improve joinwav()
     get rid of cryptographp.cfg.php (use config.php directly)
-    separate $_SESSION info for different CAPTCHAs
 
 Version 1beta2 - released TODO
 cmb	fixed buggy requirement check
@@ -19,6 +18,8 @@ cmb	moved cryptographp config to config/
 cmb	added alt attributes for captcha and buttons
 cmb	added plugin icon
 cmb	allowed multiple idependent instances (removed crypt_use_max and crypt_one_use)
+cmb	integrated error.php to cryptographp.php
+cmb	added warning, if cookies are disabled
 
 Version 1beta1 - released 2011-09-19
 cmb	initial release

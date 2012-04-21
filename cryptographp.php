@@ -10,26 +10,46 @@
 
 error_reporting(0);
 
-session_start();
 
-if (!isset($_SESSION['cryptographp_id'])) {
-    header('HTTP/1.0 403 Forbidden');
+function error($text) {
+    $text = wordwrap($text, 15);
+    $lines = explode("\n", $text);
+    $font = './fonts/DejaVuSans.ttf';
+    $fontsize = 12;
+    $padding = 5;
+    $bbox = imagettfbbox($fontsize, 0, $font, $text);
+    $width = $bbox[2] - $bbox[0] + 1 + 2 * $padding;
+    $height = $bbox[1] - $bbox[7] + 1 + 2 * $padding;
+    $bbox = imagettfbbox($fontsize, 0, $font, $lines[0]);
+    $img = imagecreatetruecolor($width, $height);
+    $bg = imagecolorallocate($img, 255, 255, 255);
+    $fg = imagecolorallocate($img, 192, 0, 0);
+    imagefilledrectangle($img, 0, 0, $width-1, $height-1, $bg);
+    imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text);
+    header('Content-type: image/png');
+    imagepng($img);
     exit;
 }
 
-
+session_start();
 $id = $_GET['id'];
+$lang = $_GET['lang'];
 
 include './config/cryptographp.cfg.php';
-include './languages/'.$_SESSION['cryptographp_lang'][$id].'.php';
+include './languages/'.$lang.'.php';
+
+if (!isset($_SESSION['cryptographp_id'])) {
+    error($plugin_tx['cryptographp']['error_cookies']);
+}
+
+
 
 
 $delay = time() - $_SESSION['cryptographp_time'][$id];
 if ($delay < $cryptusetimer) {
     switch ($cryptusertimererror) {
 	case 2:
-	    header('Location: error.php?text='.urlencode($plugin_tx['cryptographp']['error_user_time']));
-	    exit;
+	    error($plugin_tx['cryptographp']['error_user_time']);
 	case 3:
 	    sleep($cryptusetimer - $delay);
 	    break; // Fait une pause

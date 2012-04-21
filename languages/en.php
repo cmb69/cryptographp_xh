@@ -13,7 +13,8 @@ $plugin_tx['cryptographp']['syscheck_encoding']="Encoding 'UTF-8' configured";
 $plugin_tx['cryptographp']['syscheck_magic_quotes']="Magic quotes runtime off";
 $plugin_tx['cryptographp']['syscheck_writable']="Folder '%s' writable";
 
-$plugin_tx['cryptographp']['error_user_time']="Too quickly reloaded!";
+$plugin_tx['cryptographp']['error_cookies']="Cookies must be enabled!";
+$plugin_tx['cryptographp']['error_user_time']="Reloaded too fast!";
 
 $plugin_tx['cryptographp']['cf_crypt_width']="Width of cryptogram in pixels";
 $plugin_tx['cryptographp']['cf_crypt_height']="Height of cryptogram in pixels";

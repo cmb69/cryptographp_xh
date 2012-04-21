@@ -40,7 +40,7 @@ $noisecolorchar = 3;
 $brushsize = 3;
 $noiseup = false;
 $cryptformat = 'png';
-$cryptusetimer = 0;
-$cryptusertimererror = 3;
+$cryptusetimer = 1;
+$cryptusertimererror = 2;
 
 ?>
