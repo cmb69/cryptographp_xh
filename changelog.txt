@@ -2,6 +2,7 @@ TODO:
     add translations
     add credits (mp3 files)
     update manual
+    test when cookies are disabled
 
     improve joinwav()
     get rid of cryptographp.cfg.php (use config.php directly)

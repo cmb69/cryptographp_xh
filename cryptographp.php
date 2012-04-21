@@ -22,12 +22,12 @@ session_start();
 include './config/cryptographp.cfg.php';
 
 // Vérifie si l'utilisateur a le droit de (re)générer un cryptogramme
-if ($_SESSION['cryptcptuse'] >= $cryptusemax) {
+if ($_SESSION['cryptographp_use'] >= $cryptusemax) {
     header('Location: error.php?text='.urlencode($_SESSION['cryptographp_tx']['error_use_max']));
     exit;
 }
 
-$delay = time() - $_SESSION['crypttime'];
+$delay = time() - $_SESSION['cryptographp_time'];
 if ($delay < $cryptusetimer) {
     switch ($cryptusertimererror) {
 	case 2:
@@ -236,9 +236,9 @@ if (function_exists('imagefilter')) {
 // Retourne 2 informations dans la session:
 // - Le code du cryptogramme (crypté ou pas)
 // - La Date/Heure de la création du cryptogramme au format integer "TimeStamp"
-$_SESSION['cryptcode'] = $word;
-$_SESSION['crypttime'] = time();
-$_SESSION['cryptcptuse']++;
+$_SESSION['cryptographp_code'] = $word;
+$_SESSION['cryptographp_time'] = time();
+$_SESSION['cryptographp_use']++;
 
 
 // Envoi de l'image finale au navigateur
@@ -266,6 +266,6 @@ switch (strtoupper($cryptformat)) {
 
 imagedestroy($img);
 unset($word, $tword); // TODO: why unset; script finishes
-unset($_SESSION['cryptreload']);
+unset($_SESSION['cryptographp_reload']);
 
 ?>

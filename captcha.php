@@ -54,12 +54,12 @@ function cryptographp_captcha_check() {
     include $pth['folder']['plugins'].'cryptographp/config/cryptographp.cfg.php';
     $code = addslashes($code);
     $code = str_replace(' ', '', $code);  // supprime les espaces saisis par erreur.
-    if (isset($_SESSION['cryptcode']) && $_SESSION['cryptcode'] == $code) {
-	unset($_SESSION['cryptreload']);
-	if ($cryptoneuse) {unset($_SESSION['cryptcode']);}
+    if (isset($_SESSION['cryptographp_code']) && $_SESSION['cryptographp_code'] == $code) {
+	unset($_SESSION['cryptographp_reload']);
+	if ($cryptoneuse) {unset($_SESSION['cryptographp_code']);}
 	return true;
     } else {
-	$_SESSION['cryptreload'] = true;
+	$_SESSION['cryptographp_reload'] = true;
 	return false;
     }
 }
@@ -70,6 +70,7 @@ if (!isset($plugin_tx['cryptographp'])) {
 }
 if (session_id() == '') {session_start();}
 //$_SESSION['cryptographp_tx'] = $plugin_tx['cryptographp'];
+//session_destroy();
 var_dump($_SESSION);
 
 ?>

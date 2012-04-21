@@ -40,7 +40,7 @@ function joinwavs($wavs) {
 
 
 if (session_id() == '') {session_start();}
-$code = preg_split('/(?<!^)(?!$)/u', $_SESSION['cryptcode']);
+$code = preg_split('/(?<!^)(?!$)/u', $_SESSION['cryptographp_code']);
 $wavs = array();
 foreach ($code as $char) {
     $wavs[] = './languages/en/'.strtolower($char).'.wav';
