@@ -127,7 +127,7 @@ $crypthographp_config = array(
     'noise_above' => array('$noiseup', 'bool'),
     'crypt_format' => array('$cryptformat', 'string'),
     'crypt_use_timer' => array('$cryptusetimer', 'int'),
-    'crypt_use_timer_error' => array('$cryptusertimererror', 'int'),
+    'crypt_use_timer_error' => array('$cryptusertimererror', 'bool'),
 );
 
     $pcf = $plugin_cf['cryptographp'];

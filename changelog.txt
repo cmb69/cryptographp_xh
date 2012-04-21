@@ -20,6 +20,7 @@ cmb	added plugin icon
 cmb	allowed multiple idependent instances (removed crypt_use_max and crypt_one_use)
 cmb	integrated error.php to cryptographp.php
 cmb	added warning, if cookies are disabled
+cmb	made crypt_use_timer_error a boolean config option
 
 Version 1beta1 - released 2011-09-19
 cmb	initial release

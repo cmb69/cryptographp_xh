@@ -47,13 +47,10 @@ if (!isset($_SESSION['cryptographp_id'])) {
 
 $delay = time() - $_SESSION['cryptographp_time'][$id];
 if ($delay < $cryptusetimer) {
-    switch ($cryptusertimererror) {
-	case 2:
-	    error($plugin_tx['cryptographp']['error_user_time']);
-	case 3:
-	    sleep($cryptusetimer - $delay);
-	    break; // Fait une pause
-	default: exit;  // Quitte le script sans rien faire
+    if ($cryptusertimererror) {
+	error($plugin_tx['cryptographp']['error_user_time']);
+    } else {
+	sleep($cryptusetimer - $delay);
     }
 }
 

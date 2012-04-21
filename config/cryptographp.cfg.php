@@ -41,6 +41,6 @@ $brushsize = 3;
 $noiseup = false;
 $cryptformat = 'png';
 $cryptusetimer = 1;
-$cryptusertimererror = 2;
+$cryptusertimererror = true;
 
 ?>
