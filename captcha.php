@@ -56,12 +56,16 @@ function cryptographp_captcha_display() {
  * @return bool
  */
 function cryptographp_captcha_check() {
-    global $pth;
+    global $pth, $plugin_cf;
 
+    if (!isset($plugin_cf['cryptographp'])) {
+	include $pth['folder']['plugins'].'cryptographp/config/config.php';
+    }
     $id = stsl($_POST['cryptographp_id']);
     $code = stsl($_POST['cryptographp-captcha']);
     $ok = isset($_SESSION['cryptographp_code'][$id])
-	    && $_SESSION['cryptographp_code'][$id] == $code;
+	    && $_SESSION['cryptographp_code'][$id] == $code
+	    && $_SESSION['cryptographp_time'][$id] + $plugin_cf['cryptographp']['crypt_expiration'] >= time();
     unset($_SESSION['cryptographp_code'][$id], $_SESSION['crytographp_lang'][$id],
 	    $_SESSION['cryptographp_time'][$id]);
     return $ok;

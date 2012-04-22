@@ -44,7 +44,6 @@ if (!isset($_SESSION['cryptographp_id'])) {
 
 
 
-
 $delay = time() - $_SESSION['cryptographp_time'][$id];
 if ($delay < $cryptusetimer) {
     if ($cryptusertimererror) {

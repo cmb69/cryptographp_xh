@@ -20,6 +20,7 @@ cmb	added warning, if cookies are disabled
 cmb	made crypt_use_timer_error a boolean config option
 cmb	updated the manual
 cmb	moved the updating of the configuration to index.php
+cmb	implemented expiration of CAPTCHAs
 
 Version 1beta1 - released 2011-09-19
 cmb	initial release
