@@ -41,10 +41,11 @@ function joinwavs($wavs) {
 
 if (session_id() == '') {session_start();}
 $id = $_GET['id'];
+$lang = basename($_GET['lang']);
 $code = preg_split('/(?<!^)(?!$)/u', $_SESSION['cryptographp_code'][$id]);
 $wavs = array();
 foreach ($code as $char) {
-    $wavs[] = './languages/en/'.strtolower($char).'.wav';
+    $wavs[] = './languages/'.$lang.'/'.strtolower($char).'.wav';
 }
 $data = joinwavs($wavs);
 
