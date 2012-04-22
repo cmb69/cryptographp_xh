@@ -1,10 +1,10 @@
 TODO:
     add translations
     add credits (mp3 files)
-    update manual
-    test when cookies are disabled
+    invalidate captcha after wrong attempt
 
     improve joinwav()
+    improve error()
     get rid of cryptographp.cfg.php (use config.php directly)
 
 Version 1beta2 - released TODO
@@ -21,6 +21,7 @@ cmb	allowed multiple idependent instances (removed crypt_use_max and crypt_one_u
 cmb	integrated error.php to cryptographp.php
 cmb	added warning, if cookies are disabled
 cmb	made crypt_use_timer_error a boolean config option
+cmb	updated the manual
 
 Version 1beta1 - released 2011-09-19
 cmb	initial release

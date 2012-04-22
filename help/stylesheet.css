@@ -6,6 +6,8 @@ body {
     background: #ffffe1;
 }
 
+h1 {line-height: 1em}
+
 #body {
     margin-left: 17em;
 }
@@ -17,6 +19,7 @@ body {
 #nav {
     margin-left: 0;
     float: left;
+    clear: both;
     width: 15em;
     list-style: none;
     padding-left: 0;

@@ -25,6 +25,9 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 function cryptographp_captcha_display() {
     global $pth, $sl, $plugin_tx;
 
+    if (!isset($plugin_tx['cryptographp'])) {
+	include $pth['folder']['plugins'].'cryptographp/languages/'.$sl.'.php';
+    }
     $_SESSION['cryptographp_id'] = isset($_SESSION['cryptographp_id']) ? $_SESSION['cryptographp_id'] + 1 : 1;
     $_SESSION['cryptographp_lang'][$_SESSION['cryptographp_id']] = $sl;
     $dir = $pth['folder']['plugins'].'cryptographp/';
@@ -57,9 +60,6 @@ function cryptographp_captcha_check() {
 
     $id = stsl($_POST['cryptographp_id']);
     $code = stsl($_POST['cryptographp-captcha']);
-    //include $pth['folder']['plugins'].'cryptographp/config/cryptographp.cfg.php';
-    //$code = addslashes($code);
-    //$code = str_replace(' ', '', $code);  // supprime les espaces saisis par erreur.
     if (isset($_SESSION['cryptographp_code'][$id])
 	    && $_SESSION['cryptographp_code'][$id] == $code) {
 	unset($_SESSION['cryptographp_code'][$id], $_SESSION['crytographp_lang'][$id],
@@ -71,10 +71,9 @@ function cryptographp_captcha_check() {
 }
 
 
-if (!isset($plugin_tx['cryptographp'])) {
-    include $pth['folder']['plugins'].'cryptographp/languages/'.$sl.'.php'; // TODO
-}
+/**
+ * Start the session.
+ */
 if (session_id() == '') {session_start();}
-//session_destroy();
 
 ?>

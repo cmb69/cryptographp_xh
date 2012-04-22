@@ -1,22 +1,26 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
-<!-- utf-8-marker: äöüß -->
 <html>
 
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8">
 <meta name="content-language" content="de">
-<title>Cryptographp_XH - Manual</title>
+<title>Cryptographp_XH &ndash; Manual</title>
 <link rel="stylesheet" type="text/css" href="./stylesheet.css">
 </head>
 
 <body>
 
 <h1>Cryptographp_XH - a CMSimple_XH Plugin</h1>
+<img src="../cryptographp.png" style="display:block; float:left; margin: -10px 20px 10px 0">
 <p>Cryptographp_XH is a
-<a href="http://www.cmsimple-xh.com/wiki/doku.php/z_playground:captcha_plugins">captcha plugin</a>
-powered by <a href="http://www.captcha.fr/">cryptographp</a>.
-It could be used as utility plugin for other plugins, such as Advancedform_XH (Version 1beta7 and up).</p>
+<a href="http://www.cmsimple-xh.com/wiki/doku.php/z_playground:captcha_plugins">CAPTCHA plugin</a>
+based on <a href="http://www.captcha.fr/">cryptographp</a>.
+It was modified to fit in the CMSimple environment,
+can be called multiple times (even on the same page),
+and offers an alternative audio CAPTCHA.
+It could be used as utility plugin for other plugins, such as
+<a href="http://3-magi.net/?CMSimple_XH/Advancedform_XH">Advancedform_XH</a>.</p>
 
 <ul id="nav">
 <li><a href="#notice">Important Notice</a></li>
@@ -31,7 +35,7 @@ It could be used as utility plugin for other plugins, such as Advancedform_XH (V
 
 <div id="body">
 
-<p><strong>Please do read this documentation! Support might not be given otherwise.
+<p><strong><em>Please</em> do read this documentation!
 It's generally a good idea to read the documentation,
 <em>before</em> you encounter any problems!</strong></p>
 
@@ -42,7 +46,7 @@ It is a so called BETA version. Use with caution!</strong></p>
 
 <h2><a name="requirements">Requirements</a></h2>
 <p>Cryptographp_XH is a plugin for CMSimple_XH.
-It requires an UTF-8 encoded version.</p>
+It requires a UTF-8 encoded version.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2><a name="installation">Installation</a></h2>
@@ -52,20 +56,16 @@ CMSimple_XH wiki</a> for further details.</p>
 <ol>
 <li><strong>Backup the data on your server.</strong></li>
 <li>Unzip the distribution on your computer.</li>
-<li>Upload the whole directory cryptographp to your server into the CMSimple_XH plugins directory.</li>
-<li>Set write permissions to the subdirectories config/, crypt/, css/ and languages/.</li>
-<li><strong>Switch to Cryptographp in the back-end to check if all requirements are fulfilled.</strong>
-Missing requirements will be reported as a warning.
-You should not proceed using Cryptographp_XH until all it's requirements are met,
-as further checks are avoided for performance reasons,
-and that might lead to faulty behaviour.</li>
+<li>Upload the whole directory cryptographp/ to your server into CMSimple_XH's plugins directory.</li>
+<li>Set write permissions to the subdirectories config/, css/ and languages/.</li>
+<li><strong>Switch to "Cryptographp" in the back-end to check if all requirements are fulfilled.</strong></li>
 </ol>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2><a name="settings">Settings</a></h2>
 <p>The plugin's configuration is done as with many other
 CMSimple_XH plugins in the website's back-end.
-Select Cryptographp from "Plugins".</p>
+Select "Cryptographp" from "Plugins".</p>
 <p>You can change the default settings of Cryptographp_XH in "Plugin Config".
 Hints for the options will be displayed
 when hovering over the help icons with your mouse.</p>
@@ -84,8 +84,16 @@ CMSimple_XH wiki</a>.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2><a name="limitations">Limitations</a></h2>
-<p>The visitors of your site must accept cookies.
-No audio CAPTCHA for the visually impaired is available.</p>
+<p>To successfully submit forms protected by Cryptographp_XH,
+the visitor's browser must accept cookies.</p>
+<p>The spam protection offered by Cryptographp_XH is not safe against attacts
+specifically targeted at it, e.g. OCRing the visual CAPTCHA is not too hard to accomplish.
+OTOH even simple text based CAPTCHAs (e.g. the one of CMSimple's built-in mailform)
+should suffice to keep out general spam bots. If you're looking for a more
+secure CAPTCHA implementation have a look at
+<a href="http://3-magi.net/?CMSimple_XH/Recaptcha_XH">Recaptcha_XH</a>.
+The underlying reCAPTCHA is probably one of the best CAPTCHAs currently available.
+But even a perfect CAPTCHA can't prevent human spammers from posting spam.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2><a name="license">License</a></h2>
@@ -95,16 +103,24 @@ No audio CAPTCHA for the visually impaired is available.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2><a name="credits">Credits</a></h2>
-<p>Cryptographp_XH is powered by
+<p>Cryptographp_XH is based on
 <a href="http://www.captcha.fr/" target="_blank">cryptographp</a>.
 Many thanks to Sylvain Brison for making this nice and quite flexible CAPTCHA
-available under a GPL compatible license.</p>
+available under a GPL compatible license.
+The audio CAPTCHA was inspired by <a href="http://xtc.xhonneux.com/">xtc</a>'s braillecaptcha,
+and made possible by <a href="http://www.theblog.ca/mp3-audio-files-alphabet">Peter Keung</a>'s
+phantastic mp3 files, which were released as freeware.</p>
+<p>The plugin icon is designed by
+<a href="http://www.kde-look.org/usermanager/search.php?username=InFeRnODeMoN">Pavel InFeRnODeMoN</a>.
+Many thanks for releasing this icon under GPL.</p>
 <p>This plugin uses free applications icons from <a href="http://www.aha-soft.com/" target="_blank">Aha-Soft</a>.
 Many thanks for making these icons freely available.</p>
-<!--<p>Many thanks to the community at the <a href="http://www.cmsimpleforum.com">CMSimple forum</a>-->
-<!--for tips, suggestions and testing.</p>-->
-<p><!-- Particularly -->I want to thank snafu, who pointed me to cryptographp.</p>
-<p>And many thanks to all developers of <a href="http://www.cmsimple-xh.com">
+<p>Many thanks to the community at the <a href="http://www.cmsimpleforum.com">CMSimple forum</a>
+for tips, suggestions and testing.
+Particulary I want to thank snafu, who pointed me to cryptographp,
+and jwndev, who came up with the requirement of having alternative CAPTCHAs for Avanceform_XH.</p>
+<p>Last but not least, many thanks to <a href="http://harteg.dk">Peter Harteg</a>
+and all developers of <a href="http://www.cmsimple-xh.com">
 CMSimple_XH</a> without whom this amazing CMS wouldn't exist.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
