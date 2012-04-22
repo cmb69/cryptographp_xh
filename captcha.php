@@ -51,7 +51,7 @@ function cryptographp_captcha_display() {
 
 
 /**
- * Returns wether the correct captcha code was entered.
+ * Returns whether the correct captcha code was entered.
  *
  * @return bool
  */
@@ -60,14 +60,11 @@ function cryptographp_captcha_check() {
 
     $id = stsl($_POST['cryptographp_id']);
     $code = stsl($_POST['cryptographp-captcha']);
-    if (isset($_SESSION['cryptographp_code'][$id])
-	    && $_SESSION['cryptographp_code'][$id] == $code) {
-	unset($_SESSION['cryptographp_code'][$id], $_SESSION['crytographp_lang'][$id],
-		$_SESSION['cryptographp_time'][$id]);
-	return true;
-    } else {
-	return false;
-    }
+    $ok = isset($_SESSION['cryptographp_code'][$id])
+	    && $_SESSION['cryptographp_code'][$id] == $code;
+    unset($_SESSION['cryptographp_code'][$id], $_SESSION['crytographp_lang'][$id],
+	    $_SESSION['cryptographp_time'][$id]);
+    return $ok;
 }
 
 

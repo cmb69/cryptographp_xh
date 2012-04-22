@@ -55,6 +55,6 @@ $plugin_tx['cryptographp']['cf_noise_brush_size']="The thickness of the lines an
 $plugin_tx['cryptographp']['cf_noise_above']="Whether the noise is above the characters: <em>yes</em> or <em>no</em>";
 $plugin_tx['cryptographp']['cf_crypt_format']="Image file format: <em>gif</em>, <em>png</em> or <em>jpeg</em>";
 $plugin_tx['cryptographp']['cf_crypt_use_timer']="Delay (in seconds) before reloading a new cryptogram is possible";
-$plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Wether to report an error, if the CAPTCHA is reloaded too fast (\"yes\") or to wait for some time (\"no\")";
+$plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Whether to report an error, if the CAPTCHA is reloaded too fast (\"yes\") or to wait for some time (\"no\")";
 
 ?>

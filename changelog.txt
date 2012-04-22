@@ -1,7 +1,6 @@
 TODO:
     add translations
     add credits (mp3 files)
-    invalidate captcha after wrong attempt
 
     improve joinwav()
     improve error()
