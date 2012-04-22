@@ -3,7 +3,7 @@ TODO:
     improve error()
     get rid of cryptographp.cfg.php (use config.php directly)
 
-Version 1beta2 - released TODO
+Version 1beta2 - released 2012-04-22
 cmb	fixed buggy requirement check
 cmb	extended copyright to 2012
 cmb	changed usage of original cryptographp: instead of using it as library it's now fully integrated
