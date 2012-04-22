@@ -1,7 +1,5 @@
 TODO:
     add translations
-    add credits (mp3 files)
-
     improve joinwav()
     improve error()
     get rid of cryptographp.cfg.php (use config.php directly)
@@ -21,6 +19,7 @@ cmb	integrated error.php to cryptographp.php
 cmb	added warning, if cookies are disabled
 cmb	made crypt_use_timer_error a boolean config option
 cmb	updated the manual
+cmb	moved the updating of the configuration to index.php
 
 Version 1beta1 - released 2011-09-19
 cmb	initial release
