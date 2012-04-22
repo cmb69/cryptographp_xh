@@ -22,6 +22,7 @@ cmb	moved the updating of the configuration to index.php
 cmb	implemented expiration of CAPTCHAs
 cmb	added slovak translation (provided by Tata)
 cmb	added czech translation (provided by oldnema)
+cmb	made several minor improvements
 
 Version 1beta1 - released 2011-09-19
 cmb	initial release

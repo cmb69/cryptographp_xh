@@ -22,7 +22,7 @@ $plugin_tx['cryptographp']['cf_bg_rgb_red']="RGB background color: intensity of 
 $plugin_tx['cryptographp']['cf_bg_rgb_green']="RGB background color: intensity of green";
 $plugin_tx['cryptographp']['cf_bg_rgb_blue']="RGB background color: intensity of blue";
 $plugin_tx['cryptographp']['cf_bg_clear']="Whether background is transparent (PNG format only): <em>yes</em> or <em>no</em>";
-$plugin_tx['cryptographp']['cf_bg_image']="File name of the background image. The image will be resized if necessary to fit to the cryptogram. If a folder name is given, the image will be choosen randomly from the folder.";
+$plugin_tx['cryptographp']['cf_bg_image']="File name of the background image. The image will be resized if necessary to fit to the cryptogram. If a folder name is given, the image will be choosen randomly from the folder. Specify the path relative to the plugin's folder.";
 $plugin_tx['cryptographp']['cf_bg_frame']="Whether a frame is added around the cryptogram: <em>yes</em> or <em>no</em>";
 $plugin_tx['cryptographp']['cf_char_rgb_red']="RGB color of the characters: intensity of red";
 $plugin_tx['cryptographp']['cf_char_rgb_green']="RGB color of the characters: intensity of green";
@@ -30,7 +30,7 @@ $plugin_tx['cryptographp']['cf_char_rgb_blue']="RGB color of the characters: int
 $plugin_tx['cryptographp']['cf_char_color_random']="Whether the color is choosen randomly. <em>yes</em> or <em>no</em>";
 $plugin_tx['cryptographp']['cf_char_color_random_level']="The brightness of random colors: <em>0</em> (no restriction), <em>1</em> (very light colors only), <em>2</em> (light colors only), <em>3</em> (dark colors only) or <em>4</em> (very dark colors only)";
 $plugin_tx['cryptographp']['cf_char_clear']="Transparency of the characters: between <em>0</em> (opaque) and <em>127</em> (totally transparent). Requires PHP >= 4.3.2";
-$plugin_tx['cryptographp']['cf_fonts']="Semicolon delimited list of fonts, that are available in the crypt/fonts/ folder";
+$plugin_tx['cryptographp']['cf_fonts']="Semicolon delimited list of fonts, that are available in the fonts/ folder";
 $plugin_tx['cryptographp']['cf_char_allowed']="Allowed characters";
 $plugin_tx['cryptographp']['cf_crypt_easy']="Whether the cryptograms are made up alternatively of consonants and vowels: <em>yes</em> or <em>no</em>";
 $plugin_tx['cryptographp']['cf_char_allowed_consonants']="Allowed consonants";
@@ -55,7 +55,7 @@ $plugin_tx['cryptographp']['cf_noise_brush_size']="The thickness of the lines an
 $plugin_tx['cryptographp']['cf_noise_above']="Whether the noise is above the characters: <em>yes</em> or <em>no</em>";
 $plugin_tx['cryptographp']['cf_crypt_format']="Image file format: <em>gif</em>, <em>png</em> or <em>jpeg</em>";
 $plugin_tx['cryptographp']['cf_crypt_use_timer']="Delay (in seconds) before reloading a new cryptogram is possible";
-$plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Whether to report an error, if the CAPTCHA is reloaded too fast (\"yes\") or to wait for some time (\"no\")";
-$plugin_tx['cryptographp']['cf_crypt_expiration']="How long each CAPTCHA can be used (in seconds)";
+$plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Whether to report an error, if the cryptogram is reloaded too fast (\"yes\") or to wait for some time (\"no\")";
+$plugin_tx['cryptographp']['cf_crypt_expiration']="How long each cryptogram can be used (in seconds)";
 
 ?>

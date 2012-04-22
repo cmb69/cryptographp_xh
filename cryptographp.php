@@ -66,9 +66,9 @@ $pair = rand(0, 1);
 $charnb = rand($charnbmin, $charnbmax);
 for ($i=1; $i <= $charnb; $i++) {
     $tword[$i]['font'] =  $tfont[array_rand($tfont, 1)];
-    $tword[$i]['angle'] = rand(1, 2) == 1 ? rand(0, $charanglemax) : rand(360 - $charanglemax, 360); // TODO: intval?
+    $tword[$i]['angle'] = rand(1, 2) == 1 ? rand(0, $charanglemax) : rand(360 - $charanglemax, 360);
 
-    if ($crypteasy) { // TODO: {}????????
+    if ($crypteasy) {
 	$tword[$i]['element'] = !$pair ? $charelc[rand(0, strlen($charelc) - 1)] : $charelv[rand(0, strlen($charelv) - 1)];
     } else {
 	$tword[$i]['element'] = $charel[rand(0,strlen($charel)-1)];
@@ -109,17 +109,20 @@ while ($x > 0 && !$xend) {
 }
 
 $xvariation = round($cryptwidth / 2 - ($xend - $xbegin) / 2);
-imagedestroy($imgtmp); // TODO: ?
+imagedestroy($imgtmp);
 
 
 // Création du cryptogramme définitif
 // Création du fond
 $img = imagecreatetruecolor($cryptwidth, $cryptheight);
 
-if ($bgimg && is_dir($bgimg)) { // TODO: fixed directory for bgimages?
+if ($bgimg && is_dir($bgimg)) {
     $dh  = opendir($bgimg);
-    while (($filename = readdir($dh)) != FALSE)
-	  if (eregi(".[gif|jpg|png]$", $filename))  $files[] = $filename; // TODO: use getimagesize?
+    while (($filename = readdir($dh)) != FALSE) {
+	if (preg_match('/\.(gif|jpg|png)$/', $filename)) {
+	    $files[] = $filename;
+	}
+    }
     closedir($dh);
     $bgimg = $bgimg.'/'.$files[array_rand($files,1)];
 }
@@ -157,12 +160,12 @@ function ecriture() {
 	    $ok = FALSE;
 	    do {
 		$rndR = rand(0, 255); $rndG = rand(0, 255); $rndB = rand(0, 255);
-		$rndcolor = $rndR + $rndG + $rndB; // TODO: ?
+		$rndcolor = $rndR + $rndG + $rndB;
 		switch ($charcolorrndlevel) {
-		    case 1: if ($rndcolor < 200) {$ok = TRUE;} break; // tres sombre
-		    case 2: if ($rndcolor < 400) {$ok = TRUE;} break; // sombre
-		    case 3: if ($rndcolor > 500) {$ok = TRUE;} break; // claires
-		    case 4: if ($rndcolor > 650) {$ok = TRUE;} break; // très claires
+		    case 1: if ($rndcolor < 200) {$ok = TRUE;} break; // very dark
+		    case 2: if ($rndcolor < 400) {$ok = TRUE;} break; // dark
+		    case 3: if ($rndcolor > 500) {$ok = TRUE;} break; // light
+		    case 4: if ($rndcolor > 650) {$ok = TRUE;} break; // very light
 		    default : $ok = TRUE;
 		}
 	    } while (!$ok);
@@ -243,22 +246,17 @@ if (function_exists('imagefilter')) {
 }
 
 
-
-
-// Retourne 2 informations dans la session:
-// - Le code du cryptogramme (crypté ou pas)
-// - La Date/Heure de la création du cryptogramme au format integer "TimeStamp"
 $_SESSION['cryptographp_code'][$id] = $word;
 $_SESSION['cryptographp_time'][$id] = time();
 
 
-// Envoi de l'image finale au navigateur
+// Send the final image to the browser
 switch (strtoupper($cryptformat)) {
     case "JPG":
     case "JPEG":
 	if (imagetypes() & IMG_JPG) {
 	    header("Content-type: image/jpeg");
-	    imagejpeg($img, '', 80); // TODO
+	    imagejpeg($img, '', 80);
 	}
 	break;
     case "GIF":
@@ -267,15 +265,12 @@ switch (strtoupper($cryptformat)) {
 	    imagegif($img);
 	}
 	break;
-    case "PNG": // TODO
     default:
 	if (imagetypes() & IMG_PNG) {
 	    header("Content-type: image/png");
 	    imagepng($img);
 	}
 }
-
 imagedestroy($img);
-unset($word, $tword); // TODO: why unset; script finishes
 
 ?>
