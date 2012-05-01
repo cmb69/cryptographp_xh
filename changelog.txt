@@ -1,7 +1,11 @@
 TODO:
     improve joinwav()
     improve error()
+    stream audio captcha
     get rid of cryptographp.cfg.php (use config.php directly)
+
+Version 1beta3 - released TODO
+cmb	updated czech translation (constributed by oldnema)
 
 Version 1beta2 - released 2012-04-22
 cmb	fixed buggy requirement check
