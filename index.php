@@ -14,7 +14,7 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 }
 
 
-define('CRYPTOGRAPHP_VERSION', '1beta2');
+define('CRYPTOGRAPHP_VERSION', '1beta3');
 
 
 /**
