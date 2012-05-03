@@ -56,7 +56,6 @@ function cryptographp_captcha_display() {
 	include $pth['folder']['plugins'].'cryptographp/languages/'.$sl.'.php';
     }
     $_SESSION['cryptographp_id'] = isset($_SESSION['cryptographp_id']) ? $_SESSION['cryptographp_id'] + 1 : 1;
-    $_SESSION['cryptographp_lang'][$_SESSION['cryptographp_id']] = $sl;
     $dir = $pth['folder']['plugins'].'cryptographp/';
     $ptx = $plugin_tx['cryptographp'];
     $get = 'id='.$_SESSION['cryptographp_id'].'&amp;lang='.$sl;

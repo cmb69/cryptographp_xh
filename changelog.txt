@@ -2,11 +2,11 @@ TODO:
     improve error()
     get rid of cryptographp.cfg.php (use config.php directly)
     adjust visual captcha: it's to high
-    remove lang from session (specify as GET param)
 
 Version 1beta3 - released TODO
 cmb	updated czech translation (constributed by oldnema)
 cmb	added jplayer to stream audio CAPTCHAs with graceful degradation by offering a file download (degrades)
+cmb	removed language code from session
 
 Version 1beta2 - released 2012-04-22
 cmb	fixed buggy requirement check
