@@ -63,6 +63,18 @@ function cryptographp_system_check() { // RELEASE-TODO
 	$o .= (extension_loaded($ext) ? $ok : $fail)
 		.'&nbsp;&nbsp;'.sprintf($ptx['syscheck_extension'], $ext).tag('br')."\n";
     }
+    if (function_exists('gd_info')) {
+	$gdinfo = gd_info();
+	if (!isset($gdinfo['JPEG Support'])) {
+	    $gdinfo['JPEG Support'] = $gdinfo['JPG support'];
+	}
+	$support = array(array('FreeType Support', 'freetype'), array('GIF Create Support', 'gif'),
+		array('JPEG Support', 'jpeg'), array('PNG Support', 'png'));
+	foreach ($support as $i => $key) {
+	    $o .= ($gdinfo[$key[0]] ? $ok : ($i < 1 ? $fail : $warn))
+		    .'&nbsp;&nbsp;'.$ptx['syscheck_'.$key[1].'_support'].tag('br')."\n";
+	}
+    }
     $o .= (!get_magic_quotes_runtime() ? $ok : $fail)
 	    .'&nbsp;&nbsp;'.$ptx['syscheck_magic_quotes'].tag('br').tag('br')."\n";
     $o .= (strtoupper($tx['meta']['codepage']) == 'UTF-8' ? $ok : $warn)
