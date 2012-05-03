@@ -49,7 +49,7 @@ function cryptographp_version() {
 function cryptographp_system_check() { // RELEASE-TODO
     global $pth, $tx, $plugin_tx;
 
-    define('CRYPTOGRAPHP_PHP_VERSION', '4.0.7');
+    define('CRYPTOGRAPHP_PHP_VERSION', '4.3.0');
     $ptx = $plugin_tx['cryptographp'];
     $imgdir = $pth['folder']['plugins'].'cryptographp/images/';
     $ok = tag('img src="'.$imgdir.'ok.png" alt="ok"');
