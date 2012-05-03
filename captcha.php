@@ -15,6 +15,40 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 
 
 /**
+ * Returns code to embed the flash player.
+ */
+function cryptographp_player() {
+    global $hjs, $pth, $sl, $plugin_cf;
+
+    $dir = $pth['folder']['plugins'].'cryptographp/';
+    $get = 'id='.$_SESSION['cryptographp_id'].'&lang='.$sl;
+    $audio = $dir.'audio.php?'.$get;
+    //$audio = $dir.'captcha.mp3';
+    include_once $pth['folder']['plugins'].'jquery/jquery.inc.php';
+    include_jquery();
+    include_jqueryplugin('jplayer', $pth['folder']['plugins'].'cryptographp/jquery.jplayer.min.js');
+    $hjs .= <<<SCRIPT
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#player").jPlayer({
+		ready: function () {
+			$(this).jPlayer("setMedia", {
+				mp3: "$audio"
+			})/*.jPlayer("play")*/;
+		},
+		supplied: "mp3",
+		swfPath: "{$dir}Jplayer.swf",
+		solution: "flash,html"
+	});
+});
+</script>
+
+SCRIPT;
+    $o = '<span id="player"></span>';
+    return $o;
+}
+
+/**
  * Returns the (x)html block element displaying the captcha,
  * the input field for the captcha code and all other elements,
  * that are related directly to the captcha,
@@ -37,13 +71,14 @@ function cryptographp_captcha_display() {
     $alt = htmlspecialchars($ptx['alt_image'], ENT_QUOTES);
     $o .= tag('img id="cryptographp'.$_SESSION['cryptographp_id'].'" src="'
 	    .$dir.'cryptographp.php?'.$get.'" alt="'.$alt.'"')."\n";
+    $o .= cryptographp_player();
     $alt = htmlspecialchars($ptx['alt_audio'], ENT_QUOTES);
-    $o .= '<a href="'.$dir.'audio.php?'.$get.'">'
+    $o .= '<a href="javascript:void(0)" onclick="$(\'#player\').jPlayer(\'play\', 0)">'
 	    .tag('img src="'.$dir.'images/audio.png" alt="'.$alt.'" title="'.$alt.'"').'</a>'."\n";
     $alt = htmlspecialchars($ptx['alt_reload'], ENT_QUOTES);
     $o .= '<a href="javascript:void(0)" onclick="document.getElementById(\'cryptographp'.$_SESSION['cryptographp_id'].'\').src = \''
-		.$dir.'cryptographp.php?id='.$_SESSION['cryptographp_id'].'&lang='.$sl.'&\' + new Date().getTime()">'
-	    .tag('img src="'.$dir.'images/reload.png" alt="'.$alt.'" title="'.$alt.'"').'</a>'."\n"
+		.$dir.'cryptographp.php?id='.$_SESSION['cryptographp_id'].'&lang='.$sl.'&\' + new Date().getTime()">';
+    $o .= tag('img src="'.$dir.'images/reload.png" alt="'.$alt.'" title="'.$alt.'"').'</a>'."\n"
 	    .'<div>'.$ptx['message_enter_code'].'</div>'."\n"
 	    .tag('input type="text" name="cryptographp-captcha"')
 	    .tag('input type="hidden" name="cryptographp_id" value="'.$_SESSION['cryptographp_id'].'"')
