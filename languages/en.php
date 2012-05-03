@@ -15,6 +15,7 @@ $plugin_tx['cryptographp']['syscheck_writable']="Folder '%s' writable";
 
 $plugin_tx['cryptographp']['error_cookies']="Cookies must be enabled!";
 $plugin_tx['cryptographp']['error_user_time']="Reloaded too fast!";
+$plugin_tx['cryptographp']['error_audio']="The audio CAPTCHA couldn't be generated! Please get a new challenge and try again.";
 
 $plugin_tx['cryptographp']['cf_crypt_width']="Width of cryptogram in pixels";
 $plugin_tx['cryptographp']['cf_crypt_height']="Height of cryptogram in pixels";
@@ -31,10 +32,10 @@ $plugin_tx['cryptographp']['cf_char_color_random']="Whether the color is choosen
 $plugin_tx['cryptographp']['cf_char_color_random_level']="The brightness of random colors: <em>0</em> (no restriction), <em>1</em> (very light colors only), <em>2</em> (light colors only), <em>3</em> (dark colors only) or <em>4</em> (very dark colors only)";
 $plugin_tx['cryptographp']['cf_char_clear']="Transparency of the characters: between <em>0</em> (opaque) and <em>127</em> (totally transparent). Requires PHP >= 4.3.2";
 $plugin_tx['cryptographp']['cf_fonts']="Semicolon delimited list of fonts, that are available in the fonts/ folder";
-$plugin_tx['cryptographp']['cf_char_allowed']="Allowed characters";
+$plugin_tx['cryptographp']['cf_char_allowed']="Allowed characters, if \"crypt easy\" is \"no\" (only A-Z and 0-9 are supported by the audio CAPTCHA).";
 $plugin_tx['cryptographp']['cf_crypt_easy']="Whether the cryptograms are made up alternatively of consonants and vowels: <em>yes</em> or <em>no</em>";
-$plugin_tx['cryptographp']['cf_char_allowed_consonants']="Allowed consonants";
-$plugin_tx['cryptographp']['cf_char_allowed_vowels']="Allowed Vowels";
+$plugin_tx['cryptographp']['cf_char_allowed_consonants']="Allowed consonants, if \"crypt easy\" is \"yes\" (only A-Z and 0-9 are supported by the audio CAPTCHA).";
+$plugin_tx['cryptographp']['cf_char_allowed_vowels']="Allowed Vowels, if \"crypt easy\" is \"yes\" (only A-Z and 0-9 are supported by the audio CAPTCHA).";
 $plugin_tx['cryptographp']['cf_char_count_min']="Minimum number of characters in the cryptograms";
 $plugin_tx['cryptographp']['cf_char_count_max']="Maximum number of characters in the cryptograms";
 $plugin_tx['cryptographp']['cf_char_space']="Space between the characters in pixels";

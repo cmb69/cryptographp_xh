@@ -15,38 +15,31 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 
 
 /**
- * Returns code to embed the flash player.
+ * Returns code to include the jplayer.
+ *
+ * @global string $hjs
+ * @return string  The (X)HTML.
  */
 function cryptographp_player() {
     global $hjs, $pth, $sl, $plugin_cf;
+    static $again = FALSE;
 
-    $dir = $pth['folder']['plugins'].'cryptographp/';
-    $get = 'id='.$_SESSION['cryptographp_id'].'&lang='.$sl;
-    $audio = $dir.'audio.php?'.$get;
-    //$audio = $dir.'captcha.mp3';
-    include_once $pth['folder']['plugins'].'jquery/jquery.inc.php';
-    include_jquery();
-    include_jqueryplugin('jplayer', $pth['folder']['plugins'].'cryptographp/jquery.jplayer.min.js');
-    $hjs .= <<<SCRIPT
-<script type="text/javascript">
-$(document).ready(function(){
-	$("#player").jPlayer({
-		ready: function () {
-			$(this).jPlayer("setMedia", {
-				mp3: "$audio"
-			})/*.jPlayer("play")*/;
-		},
-		supplied: "mp3",
-		swfPath: "{$dir}Jplayer.swf",
-		solution: "flash,html"
-	});
-});
-</script>
-
-SCRIPT;
-    $o = '<span id="player"></span>';
+    if (!$again) {
+	$again = TRUE;
+	$dir = $pth['folder']['plugins'].'cryptographp/';
+	include_once $pth['folder']['plugins'].'jquery/jquery.inc.php';
+	include_jquery();
+	include_jqueryplugin('jplayer', $dir.'jquery.jplayer.min.js');
+	$hjs .= '<script type="text/javascript" src="'.$dir.'cryptographp.js"></script>'."\n"
+		.'<script type="text/javascript">/* <![CDATA[ */'."\n"
+		.'Cryptographp.DIR = \''.$dir.'\';'."\n"
+		.'Cryptographp.LANG = \''.$sl.'\';'."\n"
+		.'/* ]]> */</script>'."\n";
+    }
+    $o = '<span id="cryptographp_player'.$_SESSION['cryptographp_id'].'" class="cryptographp_player"></span>';
     return $o;
 }
+
 
 /**
  * Returns the (x)html block element displaying the captcha,
@@ -73,12 +66,13 @@ function cryptographp_captcha_display() {
 	    .$dir.'cryptographp.php?'.$get.'" alt="'.$alt.'"')."\n";
     $o .= cryptographp_player();
     $alt = htmlspecialchars($ptx['alt_audio'], ENT_QUOTES);
-    $o .= '<a href="javascript:void(0)" onclick="$(\'#player\').jPlayer(\'play\', 0)">'
+    $url = $dir.'audio.php?'.$get.'&amp;download';
+    $o .= '<a href="'.$url.'" onclick="Cryptographp.play('.$_SESSION['cryptographp_id'].'); return false">'
 	    .tag('img src="'.$dir.'images/audio.png" alt="'.$alt.'" title="'.$alt.'"').'</a>'."\n";
     $alt = htmlspecialchars($ptx['alt_reload'], ENT_QUOTES);
-    $o .= '<a href="javascript:void(0)" onclick="document.getElementById(\'cryptographp'.$_SESSION['cryptographp_id'].'\').src = \''
-		.$dir.'cryptographp.php?id='.$_SESSION['cryptographp_id'].'&lang='.$sl.'&\' + new Date().getTime()">';
-    $o .= tag('img src="'.$dir.'images/reload.png" alt="'.$alt.'" title="'.$alt.'"').'</a>'."\n"
+    $o .= '<a class="cryptographp_reload" style="display: none"'
+	    .' href="javascript:Cryptographp.reload('.$_SESSION['cryptographp_id'].')">'
+	    .tag('img src="'.$dir.'images/reload.png" alt="'.$alt.'" title="'.$alt.'"').'</a>'."\n"
 	    .'<div>'.$ptx['message_enter_code'].'</div>'."\n"
 	    .tag('input type="text" name="cryptographp-captcha"')
 	    .tag('input type="hidden" name="cryptographp_id" value="'.$_SESSION['cryptographp_id'].'"')
