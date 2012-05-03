@@ -76,10 +76,18 @@ for ($i=1; $i <= $charnb; $i++) {
 
     $pair = !$pair;
     $tword[$i]['size'] = rand($charsizemin, $charsizemax);
-    $tword[$i]['y'] = $charup ? $cryptheight / 2 + rand(0, $cryptheight / 5) : $cryptheight / 1.5;
+    //$tword[$i]['y'] = $charup ? $cryptheight / 2 + rand(0, $cryptheight / 5) : $cryptheight / 1.5;
+    $lafont = 'fonts/'.$tword[$i]['font'];
+    $bbox = imagettfbbox($tword[$i]['size'], $tword[$i]['angle'], $lafont, $tword[$i]['element']);
+    $min = min($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
+    $max = max($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
+    $delta = $cryptheight - $max + $min;
+    $tword[$i]['y'] = $delta / 2 + abs($min) - 1;
+    if ($charup) {
+	$tword[$i]['y'] += rand(-intval($delta / 2), intval($delta / 2));
+    }
     $word .= $tword[$i]['element'];
 
-    $lafont = 'fonts/'.$tword[$i]['font'];
     imagettftext($imgtmp, $tword[$i]['size'], $tword[$i]['angle'], $x, $tword[$i]['y'], $black, $lafont, $tword[$i]['element']);
 
     $x += $charspace;
