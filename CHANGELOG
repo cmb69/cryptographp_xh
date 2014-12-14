@@ -1,0 +1,30 @@
+Version 1beta3 - released 2012-05-03
+* updated czech translation (constributed by oldnema)
+* added jplayer to stream audio CAPTCHA with graceful degradation by offering a file download (degrades)
+* removed language code from session
+* added detection of GD capabilities to system check
+* corrected vertical alignment of visual CAPTCHAs
+
+Version 1beta2 - released 2012-04-22
+* fixed buggy requirement check
+* extended copyright to 2012
+* changed usage of original cryptographp: instead of using it as library it's now fully integrated
+* fixed cryptographps local file inclusion bug
+* implemented audio captcha
+* removed config options char_case_sensitive and crypt_secure
+* moved cryptographp config to config/
+* added alt attributes for captcha and buttons
+* added plugin icon
+* allowed multiple idependent instances (removed crypt_use_max and crypt_one_use)
+* integrated error.php to cryptographp.php
+* added warning, if cookies are disabled
+* made crypt_use_timer_error a boolean config option
+* updated the manual
+* moved the updating of the configuration to index.php
+* implemented expiration of CAPTCHAs
+* added slovak translation (provided by Tata)
+* added czech translation (provided by oldnema)
+* made several minor improvements
+
+Version 1beta1 - released 2011-09-19
+* initial release
