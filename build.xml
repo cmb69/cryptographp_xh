@@ -38,7 +38,7 @@
 
     <target name="compat2"
             description="checks compatibility with PHP_CompatInfo 2">
-        <exec command="C:\xampp\php\phpcompatinfo --configuration phpcompatinfo.xml print --exclude-pattern privacy ."
+        <exec command="C:\xampp\php\phpcompatinfo --configuration phpcompatinfo.xml print --exclude-pattern cryptographp ."
               logoutput="true"/>
     </target>
 
