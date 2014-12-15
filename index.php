@@ -20,6 +20,9 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
     exit;
 }
 
+/**
+ * The plugin version.
+ */
 define('CRYPTOGRAPHP_VERSION', '1beta3');
 
 /**

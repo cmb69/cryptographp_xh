@@ -36,7 +36,13 @@ for ($i = 0; $i < strlen($code); $i++) {
     if ($cnt !== false) {
         $o .= $cnt;
     } else {
+        /**
+         * The default localization.
+         */
         include './languages/default.php';
+        /**
+         * The localization of the current language.
+         */
         include './languages/' . $lang . '.php';
         exit($plugin_tx['cryptographp']['error_audio']);
     }
