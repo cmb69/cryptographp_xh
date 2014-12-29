@@ -3,8 +3,6 @@
 <project name="Cryptographp" default="help">
 
     <fileset id="php-sources" dir=".">
-        <include name="admin.php"/>
-        <include name="audio.php"/>
         <include name="captcha.php"/>
         <include name="cryptographp.php"/>
         <include name="index.php"/>

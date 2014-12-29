@@ -10,7 +10,8 @@
          */
         play: function(id) {
             $('#cryptographp_player' + id).jPlayer('setMedia', {
-                mp3: Cryptographp.DIR + 'audio.php?id=' + id + '&lang=' + Cryptographp.LANG
+                mp3: Cryptographp.URL + '?cryptographp_mode=audio&cryptographp_id=' + id +
+                    '&cryptographp_lang=' + Cryptographp.LANG
             }).jPlayer('pauseOthers').jPlayer('play', 0);
             return;
         },
@@ -24,8 +25,8 @@
          */
         reload: function(id) {
             $('#cryptographp' + id).attr('src',
-                    Cryptographp.DIR + 'cryptographp.php?id=' + id
-                    + '&lang=' + Cryptographp.LANG + '&' + new Date().getTime());
+                    Cryptographp.DIR + 'cryptographp.php?id=' + id +
+                    '&lang=' + Cryptographp.LANG + '&' + new Date().getTime());
             return;
         }
 

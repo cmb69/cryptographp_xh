@@ -3,10 +3,10 @@
 /**
  * CAPTCHA image generator of Cryptographp_XH
  *
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * @category  CMSimple_XH
- * @package   Crpytographp
+ * @package   Cryptographp
  * @author    Sylvain Brison <cryptographp@alphpa.com>
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2006-2007 Sylvain Brison
