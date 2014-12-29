@@ -23,7 +23,7 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 /**
  * The plugin version.
  */
-define('CRYPTOGRAPHP_VERSION', '1beta3');
+define('CRYPTOGRAPHP_VERSION', '@CRYPTOGRAPHP_VERSION@');
 
 /**
  * Autoloads the plugin classes.
