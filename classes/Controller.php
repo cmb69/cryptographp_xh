@@ -106,7 +106,7 @@ class Cryptographp_Controller
             . "\n"
             . '<p>Copyright &copy; 2006-2007 <a href="http://www.captcha.fr/">'
             . 'Sylvain Brison</a>' . tag('br')
-            . 'Copyright &copy; 2011-2012 <a href="http://3-magi.net/">'
+            . 'Copyright &copy; 2011-2014 <a href="http://3-magi.net/">'
             . 'Christoph M. Becker</a></p>' . "\n"
             . '<p class="cryptographp_license">'
             . 'This program is free software: you can redistribute it and/or modify'
