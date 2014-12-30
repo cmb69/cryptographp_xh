@@ -4,7 +4,6 @@
 
     <fileset id="php-sources" dir=".">
         <include name="captcha.php"/>
-        <include name="cryptographp.php"/>
         <include name="index.php"/>
         <include name="classes/*.php"/>
     </fileset>

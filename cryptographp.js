@@ -25,8 +25,8 @@
          */
         reload: function(id) {
             $('#cryptographp' + id).attr('src',
-                    Cryptographp.DIR + 'cryptographp.php?id=' + id +
-                    '&lang=' + Cryptographp.LANG + '&' + new Date().getTime());
+                    Cryptographp.URL + '?cryptographp_mode=video&cryptographp_id=' + id +
+                    '&' + new Date().getTime());
             return;
         }
 

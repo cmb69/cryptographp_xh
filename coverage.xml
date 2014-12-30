@@ -9,7 +9,6 @@
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">classes</directory>
             <file>captcha.php</file>
-            <file>cryptographp.php</file>
             <file>index.php</file>
         </whitelist>
     </filter>
