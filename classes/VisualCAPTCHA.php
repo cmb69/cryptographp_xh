@@ -286,13 +286,11 @@ class Cryptographp_VisualCAPTCHA
         /*
          * Additional transformations: Grayscale and Interference
          */
-        if (function_exists('imagefilter')) {
-            if ($pcf['crypt_gray_scale']) {
-                imagefilter($this->img, IMG_FILTER_GRAYSCALE);
-            }
-            if ($pcf['crypt_gaussian_blur']) {
-                imagefilter($this->img, IMG_FILTER_GAUSSIAN_BLUR);
-            }
+        if ($pcf['crypt_gray_scale']) {
+            imagefilter($this->img, IMG_FILTER_GRAYSCALE);
+        }
+        if ($pcf['crypt_gaussian_blur']) {
+            imagefilter($this->img, IMG_FILTER_GAUSSIAN_BLUR);
         }
 
         $_SESSION['cryptographp_code'][$this->id] = $word;
@@ -377,17 +375,10 @@ class Cryptographp_VisualCAPTCHA
 
         $pcf = $plugin_cf['cryptographp'];
 
-        if (function_exists('imagecolorallocatealpha')) {
-            $this->ink = imagecolorallocatealpha(
-                $this->img, $pcf['char_rgb_red'], $pcf['char_rgb_green'],
-                $pcf['char_rgb_blue'], $pcf['char_clear']
-            );
-        } else {
-            $this->ink = imagecolorallocate(
-                $this->img, $pcf['char_rgb_red'], $pcf['char_rgb_green'],
-                $pcf['char_rgb_blue']
-            );
-        }
+        $this->ink = imagecolorallocatealpha(
+            $this->img, $pcf['char_rgb_red'], $pcf['char_rgb_green'],
+            $pcf['char_rgb_blue'], $pcf['char_clear']
+        );
 
         $x = $this->xvariation;
         for ($i = 1; $i <= $this->charnb; $i++) {
@@ -423,13 +414,9 @@ class Cryptographp_VisualCAPTCHA
                     }
                 } while (!$ok);
 
-                if (function_exists('imagecolorallocatealpha')) {
-                    $rndink = imagecolorallocatealpha(
-                        $this->img, $rndR, $rndG, $rndB, $pcf['char_clear']
-                    );
-                } else {
-                    $rndink = imagecolorallocate($this->img, $rndR, $rndG, $rndB);
-                }
+                $rndink = imagecolorallocatealpha(
+                    $this->img, $rndR, $rndG, $rndB, $pcf['char_clear']
+                );
             }
 
             $lafont = $pth['folder']['plugins'] . 'cryptographp/fonts/'
