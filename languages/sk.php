@@ -23,7 +23,7 @@ $plugin_tx['cryptographp']['cf_char_rgb_blue']="RGB farba znakov: intenzita modr
 $plugin_tx['cryptographp']['cf_char_color_random']="Má sa farba voliť náhodne? <em>áno</em> alebo <em>nie</em>";
 $plugin_tx['cryptographp']['cf_char_color_random_level']="Jasnosť náhodných farieb: <em>0</em> (nezmenená), <em>1</em> (iba veľmi jasné farby), <em>2</em> (iba jasné farby), <em>3</em> (iba tmavé farby) alebo <em>4</em> (iba veľmi tmavé farby)";
 $plugin_tx['cryptographp']['cf_char_clear']="Priehľadnosť písmen: od <em>0</em> (plné) do <em>127</em> (úplne priehľadné). Vyžaduje PHP >= 4.3.2";
-$plugin_tx['cryptographp']['cf_fonts']="Bodkočiarkou oddelený zoznam fontov, ktoré sú k dispozícii v adresári fonts/ ";
+$plugin_tx['cryptographp']['cf_char_fonts']="Bodkočiarkou oddelený zoznam fontov, ktoré sú k dispozícii v adresári fonts/ ";
 $plugin_tx['cryptographp']['cf_char_allowed']="Povolené znaky";
 $plugin_tx['cryptographp']['cf_crypt_easy']="Majú byť kryptogramy vytvárané alternatívne zo spoluhlások a samohlások? <em>áno</em> alebo <em>nie</em>: <em>yes</em> or <em>no</em>";
 $plugin_tx['cryptographp']['cf_char_allowed_consonants']="Povolené spoluhlásky";
@@ -43,7 +43,7 @@ $plugin_tx['cryptographp']['cf_noise_line_min']="Minimálny počet náhodných �
 $plugin_tx['cryptographp']['cf_noise_line_max']="Maximálny počet náhodných čiar.";
 $plugin_tx['cryptographp']['cf_noise_circle_min']="Minimálny počet náhodných krúžkov.";
 $plugin_tx['cryptographp']['cf_noise_circle_max']="Maximálny počet náhodných krúžkov.";
-$plugin_tx['cryptographp']['cf_noise_color_char']="Farba šumu: <em>1</em> (Farba znakov), <em>2</em> (Farba pozadia) alebo <em>3</em> (náhodná farba)";
+$plugin_tx['cryptographp']['cf_noise_color']="Farba šumu: <em>1</em> (Farba znakov), <em>2</em> (Farba pozadia) alebo <em>3</em> (náhodná farba)";
 $plugin_tx['cryptographp']['cf_noise_brush_size']="Hrúbka čiar a krúžkov.";
 $plugin_tx['cryptographp']['cf_noise_above']="Má sa okolo znakov zobraziť šum? <em>áno</em> alebo <em>nie</em>";
 $plugin_tx['cryptographp']['cf_crypt_format']="Formát obrázku: <em>gif</em>, <em>png</em> alebo <em>jpeg</em>";

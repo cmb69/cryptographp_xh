@@ -96,7 +96,7 @@ class Cryptographp_VisualCAPTCHA
             session_start();
         }
         $this->id = $_GET['cryptographp_id'];
-        $this->fonts = explode(';', $plugin_cf['cryptographp']['fonts']);
+        $this->fonts = explode(';', $plugin_cf['cryptographp']['char_fonts']);
     }
 
     /**
@@ -347,7 +347,7 @@ class Cryptographp_VisualCAPTCHA
     {
         global $plugin_cf;
 
-        switch ($plugin_cf['cryptographp']['noise_color_char']) {
+        switch ($plugin_cf['cryptographp']['noise_color']) {
         case 1:
             $noisecol = $this->ink;
             break;

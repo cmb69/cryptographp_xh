@@ -26,7 +26,7 @@
 	$plugin_tx['cryptographp']['cf_char_color_random']="Má se barva volit náhodně? <em>yes</em> nebo <em>ne</em>";
 	$plugin_tx['cryptographp']['cf_char_color_random_level']="Světlost náhodných barev: <em>0</em> (nezměněná), <em>1</em> (jen velmi jasné barvy), <em>2</em> (jen jasné barvy), <em>3</em> (jen tmavé barvy) nebo <em>4</em> (jen velmi tmavé barvy)";
 	$plugin_tx['cryptographp']['cf_char_clear']="Průhlednost písmen: od <em>0</em> (plné) do <em>127</em> (úplně průhledné). Vyžaduje PHP >= 4.3.2";
-	$plugin_tx['cryptographp']['cf_fonts']="Středníkem oddělený seznam fontů, které jsou k dispozici v adresáři fonts/";
+	$plugin_tx['cryptographp']['cf_char_fonts']="Středníkem oddělený seznam fontů, které jsou k dispozici v adresáři fonts/";
 	$plugin_tx['cryptographp']['cf_char_allowed']="Povolené znaky";
 	$plugin_tx['cryptographp']['cf_crypt_easy']="Mají být kryptogramy vytvářeny alternativně ze souhlásek a samohlásek? <em>yes</em> nebo <em>no</em>:";
 	$plugin_tx['cryptographp']['cf_char_allowed_consonants']="Povolené souhlásky";
@@ -46,7 +46,7 @@
 	$plugin_tx['cryptographp']['cf_noise_line_max']="Maximální počet náhodných čar.";
 	$plugin_tx['cryptographp']['cf_noise_circle_min']="Minimální počet náhodných kroužků.";
 	$plugin_tx['cryptographp']['cf_noise_circle_max']="Maximální počet náhodných kroužků.";
-	$plugin_tx['cryptographp']['cf_noise_color_char']="Barva šumu: <em>1</em> (Barva znaků), <em>2</em> (Barva pozadí) nebo <em>3</em> (Náhodná barva)";
+	$plugin_tx['cryptographp']['cf_noise_color']="Barva šumu: <em>1</em> (Barva znaků), <em>2</em> (Barva pozadí) nebo <em>3</em> (Náhodná barva)";
 	$plugin_tx['cryptographp']['cf_noise_brush_size']="Tloušťka čar a kroužků.";
 	$plugin_tx['cryptographp']['cf_noise_above']="Má se kolem znaků zobrazit šum? <em>yes</em> nebo <em>no</em>";
 	$plugin_tx['cryptographp']['cf_crypt_format']="Formát obrázku: <em>gif</em>, <em>png</em> nebo <em>jpeg</em>";
