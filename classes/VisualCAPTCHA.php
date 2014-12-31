@@ -220,17 +220,7 @@ class Cryptographp_VisualCAPTCHA
         // Creation du fond
         $this->img = imagecreatetruecolor($pcf['crypt_width'], $pcf['crypt_height']);
 
-        if ($pcf['bg_image'] && is_dir($pcf['bg_image'])) {
-            $dh  = opendir($pcf['bg_image']);
-            while (($filename = readdir($dh)) != false) {
-                if (preg_match('/\.(gif|jpg|png)$/', $filename)) {
-                    $files[] = $filename;
-                }
-            }
-            closedir($dh);
-            $bgimg = $pcf['bg_image'] . '/' . $files[array_rand($files, 1)];
-        }
-
+        $bgimg = $this->getBackgroundImage();
         if ($bgimg) {
             list($getwidth, $getheight, $gettype, $getattr) = getimagesize($bgimg);
             switch ($gettype) {
@@ -320,6 +310,41 @@ class Cryptographp_VisualCAPTCHA
             }
         }
         imagedestroy($this->img);
+    }
+
+    /**
+     * Returns the background image path.
+     *
+     * @return string
+     *
+     * @global array The paths of system files and folders.
+     * @global array The configuration of the plugins.
+     */
+    protected function getBackgroundImage()
+    {
+        global $pth, $plugin_cf;
+
+        $pcf = $plugin_cf['cryptographp'];
+        if ($pcf['bg_image']) {
+            $filename = $pth['folder']['images'] . $pcf['bg_image'];
+            if (is_dir($filename)) {
+                if ($dh  = opendir($filename)) {
+                    while (($entry = readdir($dh)) != false) {
+                        if (preg_match('/\.(gif|jpg|png)$/', $entry)) {
+                            $files[] = $entry;
+                        }
+                    }
+                    closedir($dh);
+                }
+                return $filename . '/' . $files[array_rand($files, 1)];
+            } elseif (is_file($filename)) {
+                return $filename;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
