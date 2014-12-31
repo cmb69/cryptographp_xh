@@ -328,11 +328,18 @@ class Cryptographp_Controller
      * Delivers the audio CAPTCHA to the client.
      *
      * @return void
+     *
+     * @global array The paths of system files and folders.
      */
     static function deliverAudio()
     {
+        global $pth;
+
         $id = $_GET['cryptographp_id'];
         $lang = basename($_GET['cryptographp_lang']);
+        if (!is_dir($pth['folder']['plugins'] . 'cryptographp/languages/' . $lang)) {
+            $lang = 'en';
+        }
         if (session_id() == '') {
             session_start();
         }
