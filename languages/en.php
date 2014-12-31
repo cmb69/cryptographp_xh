@@ -1,21 +1,22 @@
 <?php
 
+$plugin_tx['cryptographp']['menu_info']="Info";
+
 $plugin_tx['cryptographp']['alt_image']="Visual challenge";
 $plugin_tx['cryptographp']['alt_reload']="Get new challenge";
 $plugin_tx['cryptographp']['alt_audio']="Get audio challenge";
+$plugin_tx['cryptographp']['alt_logo']="Prohibition sign";
 
 $plugin_tx['cryptographp']['message_enter_code']="Enter the anti spam code:";
 
 $plugin_tx['cryptographp']['syscheck_title']="System check";
 $plugin_tx['cryptographp']['syscheck_phpversion']="PHP version &ge; %s";
-$plugin_tx['cryptographp']['syscheck_extension']="Extension '%s' loaded";
-$plugin_tx['cryptographp']['syscheck_magic_quotes']="Magic quotes runtime off";
+$plugin_tx['cryptographp']['syscheck_extension']="Extension \"%s\" loaded";
 $plugin_tx['cryptographp']['syscheck_freetype_support']="TrueType font support available";
 $plugin_tx['cryptographp']['syscheck_gif_support']="GIF support available";
 $plugin_tx['cryptographp']['syscheck_jpeg_support']="JPEG support available";
 $plugin_tx['cryptographp']['syscheck_png_support']="PNG support available";
-$plugin_tx['cryptographp']['syscheck_encoding']="Encoding 'UTF-8' configured";
-$plugin_tx['cryptographp']['syscheck_writable']="Folder '%s' writable";
+$plugin_tx['cryptographp']['syscheck_writable']="Folder \"%s\" writable";
 
 $plugin_tx['cryptographp']['error_cookies']="Cookies must be enabled!";
 $plugin_tx['cryptographp']['error_user_time']="Reloaded too fast!";

@@ -86,7 +86,7 @@ class Cryptographp_Controller
         $o .= print_plugin_admin('off');
         switch ($admin) {
         case '':
-            $o .= self::renderVersion() . tag('hr') . self::renderSystemCheck();
+            $o .= self::renderVersion() . self::renderSystemCheck();
             break;
         default:
             $o .= plugin_admin_common($action, $admin, 'cryptographp');
@@ -99,19 +99,20 @@ class Cryptographp_Controller
      * @return string (X)HTML.
      *
      * @global array The paths of system files and folders.
+     * @global array The localization of the plugins.
      */
     protected static function renderVersion()
     {
-        global $pth;
+        global $pth, $plugin_tx;
 
-        return '<h1><a href="http://3-magi.net/?CMSimple_XH/Cryptographp_XH">'
-            . ' Cryptographp_XH</a></h1>' . "\n"
+        $ptx = $plugin_tx['cryptographp'];
+        return '<h1>Cryptographp &ndash; ' . $ptx['menu_info'] . '</h1>' . "\n"
             . tag(
                 'img class="cryptographp_plugin_icon" src="'
                 . $pth['folder']['plugins']
-                . 'cryptographp/cryptographp.png" alt="Plugin icon"'
+                . 'cryptographp/cryptographp.png" alt="' . $ptx['alt_logo'] . '"'
             ) . "\n"
-            . '<p style="margin-top: 1em">Version: ' . CRYPTOGRAPHP_VERSION . '</p>'
+            . '<p>Version: ' . CRYPTOGRAPHP_VERSION . '</p>'
             . "\n"
             . '<p>Copyright &copy; 2006-2007 <a href="http://www.captcha.fr/">'
             . 'Sylvain Brison</a>' . tag('br')
@@ -124,8 +125,9 @@ class Cryptographp_Controller
             . ' (at your option) any later version.</p>' . "\n"
             . '<p class="cryptographp_license">'
             . 'This program is distributed in the hope that it will be useful,'
-            . ' but WITHOUT ANY WARRANTY; without even the implied warranty of'
-            . ' MERCHAN&shy;TABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the'
+            . ' but <em>without any warranty</em>; without even the implied'
+            . ' warranty of <em>merchantability</em> or <em>fitness for a'
+            . ' particular purpose</em>. See the'
             . ' GNU General Public License for more details.</p>' . "\n"
             . '<p class="cryptographp_license">'
             . 'You should have received a copy of the GNU General Public License'
@@ -147,7 +149,7 @@ class Cryptographp_Controller
     {
         global $pth, $tx, $plugin_tx;
 
-        $requiredPHPVersion = '4.3.0';
+        $requiredPHPVersion = '5.1.2';
         $ptx = $plugin_tx['cryptographp'];
         $imgdir = $pth['folder']['plugins'] . 'cryptographp/images/';
         $ok = tag('img src="' . $imgdir . 'ok.png" alt="ok"');
@@ -181,12 +183,7 @@ class Cryptographp_Controller
                     . tag('br') . "\n";
             }
         }
-        $o .= (!get_magic_quotes_runtime() ? $ok : $fail)
-            . '&nbsp;&nbsp;' . $ptx['syscheck_magic_quotes']
-            . tag('br') . tag('br') . "\n";
-        $o .= (strtoupper($tx['meta']['codepage']) == 'UTF-8' ? $ok : $warn)
-            . '&nbsp;&nbsp;' . $ptx['syscheck_encoding']
-            . tag('br') . tag('br') . "\n";
+        $o .= tag('br') . "\n";
         foreach (array('config/', 'css/', 'languages/') as $folder) {
             $folder = $pth['folder']['plugins'] . 'cryptographp/' . $folder;
             $o .= (is_writable($folder) ? $ok : $warn)

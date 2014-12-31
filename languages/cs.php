@@ -6,10 +6,8 @@
 	$plugin_tx['cryptographp']['message_enter_code']="Vložte antiSPAMový kód!<br>(Cookies ve vašem prohlížeči musí být povoleny)";
 	$plugin_tx['cryptographp']['syscheck_title']="Kontola systému";
 	$plugin_tx['cryptographp']['syscheck_phpversion']="PHP verze ≥ %s";
-	$plugin_tx['cryptographp']['syscheck_extension']="Rozšíření '%s' spuštěno";
-	$plugin_tx['cryptographp']['syscheck_encoding']="Kódovaní 'UTF-8' nastaveno";
-	$plugin_tx['cryptographp']['syscheck_magic_quotes']="Magic quotes runtime off";
-	$plugin_tx['cryptographp']['syscheck_writable']="Adresář '%s' zapisovatelný";
+	$plugin_tx['cryptographp']['syscheck_extension']="Rozšíření \"%s\" spuštěno";
+	$plugin_tx['cryptographp']['syscheck_writable']="Adresář \"%s\" zapisovatelný";
 	$plugin_tx['cryptographp']['error_cookies']="Cookies musí být zapnuto!";
 	$plugin_tx['cryptographp']['error_user_time']="Příliš rychlé pokusy!";
 	$plugin_tx['cryptographp']['cf_crypt_width']="Šířka kryptogramu v px.";
