@@ -45,6 +45,9 @@ class Cryptographp_Controller
             }
         }
         if (XH_ADM) {
+            if (function_exists('XH_registerStandardPluginMenuItems')) {
+                XH_registerStandardPluginMenuItems(false);
+            }
             if (self::isAdministrationRequested()) {
                 self::handleAdministration();
             }
@@ -62,7 +65,9 @@ class Cryptographp_Controller
     {
         global $cryptographp;
 
-        return isset($cryptographp) && $cryptographp == 'true';
+        return function_exists('XH_wantsPluginAdministration')
+            && XH_wantsPluginAdministration('cryptographp')
+            || isset($cryptographp) && $cryptographp == 'true';
     }
 
     /**
@@ -217,7 +222,7 @@ class Cryptographp_Controller
         $url = $sn . '?cryptographp_mode=video&amp;cryptographp_id='
             . $_SESSION['cryptographp_id'];
         $o = '<div class="cryptographp">' . "\n";
-        $alt = htmlspecialchars($ptx['alt_image'], ENT_QUOTES);
+        $alt = XH_hsc($ptx['alt_image']);
         $o .= tag(
             'img id="cryptographp' . $_SESSION['cryptographp_id'] . '" src="'
             . $url . '" alt="' . $alt . '"'
@@ -225,7 +230,7 @@ class Cryptographp_Controller
         $o .= self::emitPlayer();
         $get = 'cryptographp_mode=audio&amp;cryptographp_id='
             . $_SESSION['cryptographp_id'] . '&amp;cryptographp_lang=' . $sl;
-        $alt = htmlspecialchars($ptx['alt_audio'], ENT_QUOTES);
+        $alt = XH_hsc($ptx['alt_audio']);
         $url = $sn . '?' . $get . '&amp;cryptographp_download=yes';
         $o .= '<a href="' . $url . '" onclick="Cryptographp.play('
             . $_SESSION['cryptographp_id'].'); return false">'
@@ -234,7 +239,7 @@ class Cryptographp_Controller
                 . $alt . '"'
             )
             . '</a>' . "\n";
-        $alt = htmlspecialchars($ptx['alt_reload'], ENT_QUOTES);
+        $alt = XH_hsc($ptx['alt_reload']);
         $o .= '<a class="cryptographp_reload" style="display: none"'
             . ' href="javascript:Cryptographp.reload('
             . $_SESSION['cryptographp_id'] . ')">'
