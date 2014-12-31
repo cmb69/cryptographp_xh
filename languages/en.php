@@ -44,9 +44,9 @@ $plugin_tx['cryptographp']['cf_char_color_random']="Use random colors";
 $plugin_tx['cryptographp']['cf_char_color_random_level']="The brightness of random colors: <em>0</em> (no restriction), <em>1</em> (very light colors only), <em>2</em> (light colors only), <em>3</em> (dark colors only) or <em>4</em> (very dark colors only)";
 $plugin_tx['cryptographp']['cf_char_clear']="Transparency of the characters: between <em>0</em> (opaque) and <em>127</em> (totally transparent)";
 $plugin_tx['cryptographp']['cf_char_fonts']="Semicolon delimited list of TrueType fonts, that are available in the fonts/ folder";
-$plugin_tx['cryptographp']['cf_char_allowed']="Allowed characters, if \"crypt easy\" is \"no\" (only A-Z and 0-9 are supported by the audio CAPTCHA).";
-$plugin_tx['cryptographp']['cf_char_allowed_consonants']="Allowed consonants, if \"crypt easy\" is \"yes\" (only A-Z and 0-9 are supported by the audio CAPTCHA).";
-$plugin_tx['cryptographp']['cf_char_allowed_vowels']="Allowed Vowels, if \"crypt easy\" is \"yes\" (only A-Z and 0-9 are supported by the audio CAPTCHA).";
+$plugin_tx['cryptographp']['cf_char_allowed']="Allowed characters, if \"crypt easy\" is disabled (only A-Z and 0-9 are supported by the audio CAPTCHA).";
+$plugin_tx['cryptographp']['cf_char_allowed_consonants']="Allowed consonants, if \"crypt easy\" is enabled (only A-Z and 0-9 are supported by the audio CAPTCHA).";
+$plugin_tx['cryptographp']['cf_char_allowed_vowels']="Allowed Vowels, if \"crypt easy\" is enabled (only A-Z and 0-9 are supported by the audio CAPTCHA).";
 $plugin_tx['cryptographp']['cf_char_count_min']="Minimum number of characters in the cryptograms";
 $plugin_tx['cryptographp']['cf_char_count_max']="Maximum number of characters in the cryptograms";
 $plugin_tx['cryptographp']['cf_char_space']="Space between the characters in pixels";
@@ -62,6 +62,6 @@ $plugin_tx['cryptographp']['cf_noise_circle_min']="Minimum number of random circ
 $plugin_tx['cryptographp']['cf_noise_circle_max']="Maximum number of random circles";
 $plugin_tx['cryptographp']['cf_noise_color']="The color of the noise: <em>1</em> (character color), <em>2</em> (background color) or <em>3</em> (random color)";
 $plugin_tx['cryptographp']['cf_noise_brush_size']="The thickness of the lines and circles";
-$plugin_tx['cryptographp']['cf_noise_above']="Put the noise above the characters";
+$plugin_tx['cryptographp']['cf_noise_above']="Put the noise <em>above</em> the characters";
 
 ?>
