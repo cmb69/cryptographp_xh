@@ -176,7 +176,7 @@ class Cryptographp_Controller
         if (function_exists('gd_info')) {
             $gdinfo = gd_info();
             if (!isset($gdinfo['JPEG Support'])) {
-                $gdinfo['JPEG Support'] = $gdinfo['JPG support'];
+                $gdinfo['JPEG Support'] = $gdinfo['JPG Support'];
             }
             $support = array(
                 array('FreeType Support', 'freetype'),
