@@ -28,6 +28,13 @@
 class Cryptographp_Controller
 {
     /**
+     * Whether the JavaScript has been emitted.
+     *
+     * @var bool
+     */
+    protected static $isJavaScriptEmitted;
+
+    /**
      * Handles plugin related requests.
      *
      * @return void
@@ -223,28 +230,27 @@ class Cryptographp_Controller
         $o .= tag(
             'img id="cryptographp' . $_SESSION['cryptographp_id'] . '" src="'
             . $url . '" alt="' . $alt . '"'
-        ) . "\n";
-        $o .= self::emitPlayer();
+        );
+        $o .= self::emitJavaScript();
         $get = 'cryptographp_mode=audio&amp;cryptographp_id='
             . $_SESSION['cryptographp_id'] . '&amp;cryptographp_lang=' . $sl;
         $alt = XH_hsc($ptx['alt_audio']);
         $url = $sn . '?' . $get . '&amp;cryptographp_download=yes';
-        $o .= '<a href="' . $url . '" onclick="Cryptographp.play('
-            . $_SESSION['cryptographp_id'].'); return false">'
+        $o .= '<a class="cryptographp_audio" href="' . $url . '">'
             . tag(
                 'img src="' . $dir . 'images/audio.png" alt="' . $alt . '" title="'
                 . $alt . '"'
             )
-            . '</a>' . "\n";
+            . '</a>';
+        $url = $sn . '?cryptographp_mode=video&amp;cryptographp_id='
+            . $_SESSION['cryptographp_id'];
         $alt = XH_hsc($ptx['alt_reload']);
-        $o .= '<a class="cryptographp_reload" style="display: none"'
-            . ' href="javascript:Cryptographp.reload('
-            . $_SESSION['cryptographp_id'] . ')">'
+        $o .= '<!--<a class="cryptographp_reload" href="' . $url . '">'
             . tag(
                 'img src="' . $dir . 'images/reload.png" alt="' . $alt . '" title="'
                 . $alt . '"'
             )
-            . '</a>' . "\n"
+            . '</a>-->'
             . '<div>' . $ptx['message_enter_code'] . '</div>' . "\n"
             . tag('input type="text" name="cryptographp-captcha"')
             . tag(
@@ -256,32 +262,23 @@ class Cryptographp_Controller
     }
 
     /**
-     * Returns code to include the jplayer.
+     * Returns code to include the JavaScript.
      *
      * @return string (X)HTML.
+     *
+     * @global array The paths of system files and folders.
+     * @global string The (X)HTML fragment to insert at the bottom of <body>.
      */
-    protected static function emitPlayer()
+    protected static function emitJavaScript()
     {
-        global $hjs, $pth, $sn, $sl, $plugin_cf;
-        static $again = false;
+        global $pth, $bjs;
 
-        if (!$again) {
-            $again = true;
-            $dir = $pth['folder']['plugins'].'cryptographp/';
-            include_once $pth['folder']['plugins'].'jquery/jquery.inc.php';
-            include_jquery();
-            include_jqueryplugin('jplayer', $dir.'jquery.jplayer.min.js');
-            $hjs .= '<script type="text/javascript" src="' . $dir
-                . 'cryptographp.js"></script>' . "\n"
-                . '<script type="text/javascript">/* <![CDATA[ */' . "\n"
-                . 'Cryptographp.URL = "' . $sn . '";' . "\n"
-                . 'Cryptographp.DIR = \'' . $dir . '\';' . "\n"
-                . 'Cryptographp.LANG = \'' . $sl . '\';' . "\n"
-                . '/* ]]> */</script>' . "\n";
+        if (!self::$isJavaScriptEmitted) {
+            $bjs .= '<script type="text/javascript" src="'
+                . $pth['folder']['plugins'] . 'cryptographp/cryptographp.js">'
+                . '</script>';
+            self::$isJavaScriptEmitted = true;
         }
-        $o = '<span id="cryptographp_player' . $_SESSION['cryptographp_id']
-            . '" class="cryptographp_player"></span>';
-        return $o;
     }
 
     /**
