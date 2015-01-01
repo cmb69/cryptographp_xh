@@ -1,4 +1,5 @@
 Version 1beta4 - released 2015-01-01
+* raised requirements to CMSimple_XH >= 1.6 and PHP >= 5.1.2
 * fixed bug, where no audio CAPTCHA was available when language files were
   missing
 * added version.nfo
