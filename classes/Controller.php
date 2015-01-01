@@ -314,7 +314,7 @@ class Cryptographp_Controller
      *
      * @return void
      */
-    static function deliverVideo()
+    protected static function deliverVideo()
     {
         $video = new Cryptographp_VisualCAPTCHA();
         $video->render();
@@ -328,7 +328,7 @@ class Cryptographp_Controller
      *
      * @global array The paths of system files and folders.
      */
-    static function deliverAudio()
+    protected static function deliverAudio()
     {
         global $pth;
 
