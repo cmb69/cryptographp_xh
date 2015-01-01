@@ -1,6 +1,14 @@
+Version 1beta4 - released 2015-01-01
+* fixed bug, where no audio CAPTCHA was available when language files were
+  missing
+* added version.nfo
+* added metaconfig.php
+* added German localization (though not for audio files) and manual
+
 Version 1beta3 - released 2012-05-03
 * updated czech translation (constributed by oldnema)
-* added jplayer to stream audio CAPTCHA with graceful degradation by offering a file download (degrades)
+* added jplayer to stream audio CAPTCHA with graceful degradation by offering a
+  file download (degrades)
 * removed language code from session
 * added detection of GD capabilities to system check
 * corrected vertical alignment of visual CAPTCHAs
@@ -8,14 +16,16 @@ Version 1beta3 - released 2012-05-03
 Version 1beta2 - released 2012-04-22
 * fixed buggy requirement check
 * extended copyright to 2012
-* changed usage of original cryptographp: instead of using it as library it's now fully integrated
+* changed usage of original cryptographp: instead of using it as library it's
+  now fully integrated
 * fixed cryptographps local file inclusion bug
 * implemented audio captcha
 * removed config options char_case_sensitive and crypt_secure
 * moved cryptographp config to config/
 * added alt attributes for captcha and buttons
 * added plugin icon
-* allowed multiple idependent instances (removed crypt_use_max and crypt_one_use)
+* allowed multiple idependent instances (removed crypt_use_max and
+  crypt_one_use)
 * integrated error.php to cryptographp.php
 * added warning, if cookies are disabled
 * made crypt_use_timer_error a boolean config option
