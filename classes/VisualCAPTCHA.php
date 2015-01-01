@@ -343,7 +343,7 @@ class Cryptographp_VisualCAPTCHA
                 $imgread = imagecreatefrompng($bgimg);
                 break;
             }
-            imagecopyresized(
+            imagecopyresampled(
                 $this->img, $imgread, 0, 0, 0, 0,
                 $pcf['crypt_width'], $pcf['crypt_height'], $getwidth, $getheight
             );
