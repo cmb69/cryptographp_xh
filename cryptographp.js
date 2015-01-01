@@ -53,7 +53,9 @@ CRYPTOGRAPHP.onReload = function () {
     var image = this.previousSibling.previousSibling;
 
     image.src = this.href + "&" + new Date().getTime();
-    CRYPTOGRAPHP.audio.pause();
+    if (CRYPTOGRAPHP.audio) {
+        CRYPTOGRAPHP.audio.pause();
+    }
     return false;
 };
 
