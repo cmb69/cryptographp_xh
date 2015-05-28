@@ -149,12 +149,11 @@ class Cryptographp_Controller
      * @return string (X)HTML.
      *
      * @global array The paths of system files and folders.
-     * @global array The localization of the core.
      * @global array The localization of the plugins.
      */
     protected static function renderSystemCheck()
     {
-        global $pth, $tx, $plugin_tx;
+        global $pth, $plugin_tx;
 
         $requiredPHPVersion = '5.1.2';
         $ptx = $plugin_tx['cryptographp'];
@@ -286,12 +285,11 @@ class Cryptographp_Controller
      *
      * @return bool
      *
-     * @global array The paths of system files and folders.
      * @global array The configuration of the plugins.
      */
     public static function checkCAPTCHA()
     {
-        global $pth, $plugin_cf;
+        global $plugin_cf;
 
         if (session_id() == '') {
             session_start();
