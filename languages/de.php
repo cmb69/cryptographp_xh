@@ -10,12 +10,17 @@ $plugin_tx['cryptographp']['alt_logo']="Verbotsschild";
 $plugin_tx['cryptographp']['message_enter_code']="Geben Sie den Anti-Spam-Code ein:";
 
 $plugin_tx['cryptographp']['syscheck_title']="System-Prüfung";
+$plugin_tx['cryptographp']['syscheck_alt_ok']="OK";
+$plugin_tx['cryptographp']['syscheck_alt_warn']="Warnung";
+$plugin_tx['cryptographp']['syscheck_alt_fail']="Fehler";
 $plugin_tx['cryptographp']['syscheck_phpversion']="PHP Version &ge; %s";
+$plugin_tx['cryptographp']['syscheck_xhversion']="CMSimple_XH Version &ge; %s";
 $plugin_tx['cryptographp']['syscheck_extension']="Erweiterung \"%s\" geladen";
 $plugin_tx['cryptographp']['syscheck_freetype_support']="TrueType Schriftarten werden unterstützt";
 $plugin_tx['cryptographp']['syscheck_gif_support']="GIF wird unterstützt";
 $plugin_tx['cryptographp']['syscheck_jpeg_support']="JPEG wird unterstützt";
 $plugin_tx['cryptographp']['syscheck_png_support']="PNG wird unterstützt";
+$plugin_tx['cryptographp']['syscheck_magic_quotes']="Magic quotes runtime off";
 $plugin_tx['cryptographp']['syscheck_writable']="Ordner \"%s\" beschreibbar";
 
 $plugin_tx['cryptographp']['error_cookies']="Cookies müssen aktiviert sein!";

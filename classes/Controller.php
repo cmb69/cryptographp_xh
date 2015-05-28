@@ -144,59 +144,14 @@ class Cryptographp_Controller
     }
 
     /**
-     * Renderns the system check.
+     * Renders the system check.
      *
      * @return string (X)HTML.
-     *
-     * @global array The paths of system files and folders.
-     * @global array The localization of the plugins.
      */
     protected static function renderSystemCheck()
     {
-        global $pth, $plugin_tx;
-
-        $requiredPHPVersion = '5.1.2';
-        $ptx = $plugin_tx['cryptographp'];
-        $imgdir = $pth['folder']['plugins'] . 'cryptographp/images/';
-        $ok = tag('img src="' . $imgdir . 'ok.png" alt="ok"');
-        $warn = tag('img src="' . $imgdir . 'warn.png" alt="warning"');
-        $fail = tag('img src="' . $imgdir . 'fail.png" alt="failure"');
-        $o = '<h4>' . $ptx['syscheck_title'] . '</h4>'
-            . (version_compare(PHP_VERSION, $requiredPHPVersion) >= 0 ? $ok : $fail)
-            . '&nbsp;&nbsp;' . sprintf(
-                $ptx['syscheck_phpversion'], $requiredPHPVersion
-            )
-            . tag('br') . "\n";
-        foreach (array('gd', 'pcre', 'session', 'spl') as $ext) {
-            $o .= (extension_loaded($ext) ? $ok : $fail)
-                . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_extension'], $ext)
-                .tag('br') . "\n";
-        }
-        if (function_exists('gd_info')) {
-            $gdinfo = gd_info();
-            if (!isset($gdinfo['JPEG Support'])) {
-                $gdinfo['JPEG Support'] = $gdinfo['JPG Support'];
-            }
-            $support = array(
-                array('FreeType Support', 'freetype'),
-                array('GIF Create Support', 'gif'),
-                array('JPEG Support', 'jpeg'),
-                array('PNG Support', 'png')
-            );
-            foreach ($support as $i => $key) {
-                $o .= ($gdinfo[$key[0]] ? $ok : ($i < 1 ? $fail : $warn))
-                    . '&nbsp;&nbsp;' . $ptx['syscheck_' . $key[1] . '_support']
-                    . tag('br') . "\n";
-            }
-        }
-        $o .= tag('br') . "\n";
-        foreach (array('config/', 'css/', 'languages/') as $folder) {
-            $folder = $pth['folder']['plugins'] . 'cryptographp/' . $folder;
-            $o .= (is_writable($folder) ? $ok : $warn)
-                . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_writable'], $folder)
-                . tag('br') . "\n";
-        }
-        return $o;
+        $systemCheck = new Cryptographp_SystemCheck();
+        return $systemCheck->render();
     }
 
     /**
