@@ -45,7 +45,8 @@
     </target>
 
     <target name="unit-tests" description="runs all unit tests">
-        <phpunit haltonerror="true" haltonfailure="true">
+        <phpunit bootstrap="classes/required_classes.php"
+                 haltonerror="true" haltonfailure="true">
             <formatter type="plain" usefile="false"/>
             <batchtest>
                 <fileset refid="unit-tests"/>
@@ -64,7 +65,20 @@
     </target>
 
     <target name="coverage" description="generates coverage report">
-        <exec command="phpunit --configuration coverage.xml" logoutput="true"/>
+        <mkdir dir="tests/coverage"/>
+        <coverage-setup database="tests/coverage/coverage.db">
+            <fileset dir="classes">
+                <include name="*.php"/>
+            </fileset>
+        </coverage-setup>
+        <phpunit bootstrap="classes/required_classes.php" codecoverage="true">
+            <batchtest>
+                <fileset refid="unit-tests"/>
+            </batchtest>
+        </phpunit>
+        <coverage-report outfile="tests/coverage/coverage.xml">
+            <report todir="tests/coverage" styledir="vendor/phing/phing/etc"/>
+        </coverage-report>
     </target>
 
     <target name="php-doc">
