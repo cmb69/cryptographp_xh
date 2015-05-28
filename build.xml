@@ -33,6 +33,12 @@
         </phpcodesniffer>
     </target>
 
+    <target name="mess" description="detects code flaws">
+        <phpmd>
+            <fileset refid="php-sources"/>
+         </phpmd>
+    </target>
+
     <target name="compat"
             description="checks PHP requirements">
         <exec command="phpcompatinfo analyser:run --alias current" logoutput="true"/>
