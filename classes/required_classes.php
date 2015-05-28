@@ -21,17 +21,12 @@
  * @param string $class A class name.
  *
  * @return void
- *
- * @global array The paths of system files and folders.
  */
 function Cryptographp_autoload($class)
 {
-    global $pth;
-
     $parts = explode('_', $class, 2);
     if ($parts[0] == 'Cryptographp') {
-        include_once $pth['folder']['plugins'] . 'cryptographp/classes/'
-            . $parts[1] . '.php';
+        include_once dirname(__FILE__) . '/' . $parts[1] . '.php';
     }
 }
 
