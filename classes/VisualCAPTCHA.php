@@ -49,6 +49,13 @@ class Cryptographp_VisualCAPTCHA
     protected $tword;
 
     /**
+     * The CAPTCHA word.
+     *
+     * @var string
+     */
+    protected $word;
+
+    /**
      * The (current?) color.
      *
      * @var int
@@ -104,13 +111,12 @@ class Cryptographp_VisualCAPTCHA
      *
      * @return void
      *
-     * @global array The paths of system files and folders.
      * @global array The configuration of the plugins.
      * @global array The localization of the plugins.
      */
     public function render()
     {
-        global $pth, $plugin_cf, $plugin_tx;
+        global $plugin_cf, $plugin_tx;
 
         $pcf = $plugin_cf['cryptographp'];
 
@@ -131,13 +137,56 @@ class Cryptographp_VisualCAPTCHA
             }
         }
 
+        $this->precalculate();
+
+        // Create the final image
+        $this->img = imagecreatetruecolor($pcf['crypt_width'], $pcf['crypt_height']);
+        $this->renderBackground();
+        if ($pcf['noise_above']) {
+            $this->renderCharacters();
+            $this->renderNoise();
+        } else {
+            $this->renderNoise();
+            $this->renderCharacters();
+        }
+        if ($pcf['bg_frame']) {
+            $this->renderFrame();
+        }
+        if ($pcf['crypt_gray_scale']) {
+            imagefilter($this->img, IMG_FILTER_GRAYSCALE);
+        }
+        if ($pcf['crypt_gaussian_blur']) {
+            imagefilter($this->img, IMG_FILTER_GAUSSIAN_BLUR);
+        }
+
+        $_SESSION['cryptographp_code'][$this->id] = $this->word;
+        $_SESSION['cryptographp_time'][$this->id] = time();
+
+        self::deliverImage();
+        imagedestroy($this->img);
+    }
+
+    /**
+     * Precalculates several properties.
+     *
+     * @return void
+     *
+     * @global array The paths of system files and folders.
+     * @global array The configuration of the plugins.
+     */
+    protected function precalculate()
+    {
+        global $pth, $plugin_cf;
+
+        $pcf = $plugin_cf['cryptographp'];
+
         // Creation du cryptogramme temporaire
         $imgtmp = imagecreatetruecolor($pcf['crypt_width'], $pcf['crypt_height']);
         $blank = imagecolorallocate($imgtmp, 255, 255, 255);
         $black = imagecolorallocate($imgtmp, 0, 0, 0);
         imagefill($imgtmp, 0, 0, $blank);
 
-        $word = '';
+        $this->word = '';
         $x = 10;
         $pair = rand(0, 1);
         $this->charnb = rand($pcf['char_count_min'], $pcf['char_count_max']);
@@ -175,7 +224,7 @@ class Cryptographp_VisualCAPTCHA
                     -intval($delta / 2), intval($delta / 2)
                 );
             }
-            $word .= $this->tword[$i]['element'];
+            $this->word .= $this->tword[$i]['element'];
 
             imagettftext(
                 $imgtmp, $this->tword[$i]['size'], $this->tword[$i]['angle'],
@@ -186,63 +235,70 @@ class Cryptographp_VisualCAPTCHA
             $x += $pcf['char_space'];
         }
 
-        // Calcul du racadrage horizontal du cryptogramme temporaire
+        $width = $this->calculateTextWidth($imgtmp, $blank);
+        $this->xvariation = round(($pcf['crypt_width'] - $width) / 2);
+        imagedestroy($imgtmp);
+    }
+
+    /**
+     * Calculates the text width.
+     *
+     * @param resource $img   A GD image.
+     * @param int      $blank A color.
+     *
+     * @return int
+     *
+     * @global array The configuration of the plugins.
+     */
+    protected function calculateTextWidth($img, $blank)
+    {
+        global $plugin_cf;
+
+        $width = $plugin_cf['cryptographp']['crypt_width'];
+
         $xbegin = 0;
         $x = 0;
-        while ($x < $pcf['crypt_width'] && !$xbegin) {
-            $y = 0;
-            while ($y < $pcf['crypt_height'] && !$xbegin) {
-                if (imagecolorat($imgtmp, $x, $y) != $blank) {
-                    $xbegin = $x;
-                }
-                $y++;
-            }
+        while ($x < $width && !$xbegin) {
+            $xbegin = $this->scanColumn($img, $x, $blank);
             $x++;
         }
 
         $xend = 0;
-        $x = $pcf['crypt_width'] - 1;
+        $x = $width - 1;
         while ($x > 0 && !$xend) {
-            $y = 0;
-            while ($y < $pcf['crypt_height'] && !$xend) {
-                if (imagecolorat($imgtmp, $x, $y) != $blank) {
-                    $xend = $x;
-                }
-                $y++;
-            }
+            $xend = $this->scanColumn($img, $x, $blank);
             $x--;
         }
-
-        $this->xvariation = round($pcf['crypt_width'] / 2 - ($xend - $xbegin) / 2);
-        imagedestroy($imgtmp);
-
-        // Create the final image
-        $this->img = imagecreatetruecolor($pcf['crypt_width'], $pcf['crypt_height']);
-        $this->renderBackground();
-        if ($pcf['noise_above']) {
-            $this->renderCharacters();
-            $this->renderNoise();
-        } else {
-            $this->renderNoise();
-            $this->renderCharacters();
-        }
-        if ($pcf['bg_frame']) {
-            $this->renderFrame();
-        }
-        if ($pcf['crypt_gray_scale']) {
-            imagefilter($this->img, IMG_FILTER_GRAYSCALE);
-        }
-        if ($pcf['crypt_gaussian_blur']) {
-            imagefilter($this->img, IMG_FILTER_GAUSSIAN_BLUR);
-        }
-
-        $_SESSION['cryptographp_code'][$this->id] = $word;
-        $_SESSION['cryptographp_time'][$this->id] = time();
-
-        self::deliverImage();
-        imagedestroy($this->img);
+        
+        return $xend - $xbegin;
     }
 
+    /**
+     * Scans a column and returns the index of the first non-blank pixel.
+     *
+     * @param resource $img   A GD image.
+     * @param int      $x     A column.
+     * @param int      $blank A color.
+     *
+     * @return int
+     *
+     * @global array The configuration of the plugins.
+     */
+    protected function scanColumn($img, $x, $blank)
+    {
+        global $plugin_cf;
+
+        $res = 0;
+        $y = 0;
+        while ($y < $plugin_cf['cryptographp']['crypt_height'] && !$res) {
+            if (imagecolorat($img, $x, $y) != $blank) {
+                $res = $x;
+            }
+            $y++;
+        }
+        return $res;
+    }
+    
     /**
      * Returns the background image path.
      *
@@ -381,43 +437,9 @@ class Cryptographp_VisualCAPTCHA
 
         $x = $this->xvariation;
         for ($i = 1; $i <= $this->charnb; $i++) {
-
-            if ($pcf['char_color_random']) {   // Choisit des couleurs au hasard
-                $ok = false;
-                do {
-                    $rndR = rand(0, 255); $rndG = rand(0, 255); $rndB = rand(0, 255);
-                    $rndcolor = $rndR + $rndG + $rndB;
-                    switch ($pcf['char_color_random_level']) {
-                    case 1: // very dark
-                        if ($rndcolor < 200) {
-                            $ok = true;
-                        }
-                        break;
-                    case 2: // dark
-                        if ($rndcolor < 400) {
-                            $ok = true;
-                        }
-                        break;
-                    case 3: // light
-                        if ($rndcolor > 500) {
-                            $ok = true;
-                        }
-                        break;
-                    case 4: // very light
-                        if ($rndcolor > 650) {
-                            $ok = true;
-                        }
-                        break;
-                    default:
-                        $ok = true;
-                    }
-                } while (!$ok);
-
-                $rndink = imagecolorallocatealpha(
-                    $this->img, $rndR, $rndG, $rndB, $pcf['char_clear']
-                );
+            if ($pcf['char_color_random']) {
+                $rndink = $this->chooseRandomColor();
             }
-
             $lafont = $pth['folder']['plugins'] . 'cryptographp/fonts/'
                 . $this->tword[$i]['font'];
             imagettftext(
@@ -426,9 +448,73 @@ class Cryptographp_VisualCAPTCHA
                 $pcf['char_color_random'] ? $rndink : $this->ink,
                 $lafont, $this->tword[$i]['element']
             );
-
             $x += $pcf['char_space'];
         }
+    }
+
+    /**
+     * Chooses a random color.
+     *
+     * @return int
+     *
+     * @global array The configuration of the plugins.
+     */
+    protected function chooseRandomColor()
+    {
+        global $plugin_cf;
+
+        $ok = false;
+        do {
+            $rndR = rand(0, 255);
+            $rndG = rand(0, 255);
+            $rndB = rand(0, 255);
+            $rndcolor = $rndR + $rndG + $rndB;
+            $ok = $this->checkRandomColor($rndcolor);
+        } while (!$ok);
+        return imagecolorallocatealpha(
+            $this->img, $rndR, $rndG, $rndB, $plugin_cf['cryptographp']['char_clear']
+        );
+    }
+
+    /**
+     * Checks whether a random color is allowed according to the configuration.
+     *
+     * @param int $color A sum of the red, green and blue values.
+     *
+     * @return bool
+     *
+     * @global array The configuration of the plugins.
+     */
+    protected function checkRandomColor($color)
+    {
+        global $plugin_cf;
+
+        $ok = false;
+        switch ($plugin_cf['cryptographp']['char_color_random_level']) {
+        case 1: // very dark
+            if ($color < 200) {
+                $ok = true;
+            }
+            break;
+        case 2: // dark
+            if ($color < 400) {
+                $ok = true;
+            }
+            break;
+        case 3: // light
+            if ($color > 500) {
+                $ok = true;
+            }
+            break;
+        case 4: // very light
+            if ($color > 650) {
+                $ok = true;
+            }
+            break;
+        default:
+            $ok = true;
+        }
+        return $ok;
     }
 
     /**

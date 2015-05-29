@@ -44,10 +44,12 @@ class Cryptographp_Controller
         if (isset($_GET['cryptographp_mode'])) {
             switch ($_GET['cryptographp_mode']) {
             case 'video':
-                self::deliverVideo();
-                break;
+                $video = new Cryptographp_VisualCAPTCHA();
+                $video->render();
+                exit;
             case 'audio':
-                self::deliverAudio();
+                $captcha = new Cryptographp_AudioCaptcha();
+                $captcha->deliver();
                 break;
             }
         }
@@ -261,82 +263,6 @@ class Cryptographp_Controller
         );
         return $ok;
     }
-
-    /**
-     * Delivers the visual CAPTCHA to the client.
-     *
-     * @return void
-     */
-    protected static function deliverVideo()
-    {
-        $video = new Cryptographp_VisualCAPTCHA();
-        $video->render();
-        exit;
-    }
-
-    /**
-     * Delivers the audio CAPTCHA to the client.
-     *
-     * @return void
-     *
-     * @global array The paths of system files and folders.
-     */
-    protected static function deliverAudio()
-    {
-        global $pth;
-
-        $id = $_GET['cryptographp_id'];
-        $lang = basename($_GET['cryptographp_lang']);
-        if (!is_dir($pth['folder']['plugins'] . 'cryptographp/languages/' . $lang)) {
-            $lang = 'en';
-        }
-        if (session_id() == '') {
-            session_start();
-        }
-        if (!isset($_SESSION['cryptographp_code'][$id])) {
-            header('HTTP/1.0 403 Forbidden');
-            exit;
-        }
-        $o = Cryptographp_Controller::makeAudio($id, $lang);
-        header('Content-Type: audio/mpeg');
-        if (isset($_GET['cryptographp_download'])) {
-            header('Content-Disposition: attachment; filename="captcha.mp3"');
-        }
-        header('Content-Length: ' . strlen($o));
-        echo $o;
-    }
-
-    /**
-     * Creates and returns an audio CAPTCHA.
-     *
-     * @param string $id   A CAPTCHA ID.
-     * @param string $lang A language code.
-     *
-     * @return string
-     *
-     * @global array The paths of system files and folders.
-     * @global array The localization of the plugins.
-     */
-    protected static function makeAudio($id, $lang)
-    {
-        global $pth, $plugin_tx;
-
-        $code = $_SESSION['cryptographp_code'][$id];
-        $o = '';
-        for ($i = 0; $i < strlen($code); $i++) {
-            $cnt = file_get_contents(
-                $pth['folder']['plugins'] . 'cryptographp/languages/'
-                . $lang . '/' . strtolower($code[$i]) . '.mp3'
-            );
-            if ($cnt !== false) {
-                $o .= $cnt;
-            } else {
-                exit($plugin_tx['cryptographp']['error_audio']);
-            }
-        }
-        return $o;
-    }
-
 }
 
 ?>
