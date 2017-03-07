@@ -1,7 +1,5 @@
 <?php
 
-$plugin_tx['cryptographp']['menu_info']="Info";
-
 $plugin_tx['cryptographp']['alt_image']="Visual challenge";
 $plugin_tx['cryptographp']['alt_reload']="Get new challenge";
 $plugin_tx['cryptographp']['alt_audio']="Get audio challenge";

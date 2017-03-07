@@ -1,7 +1,5 @@
 <?php
 
-$plugin_tx['cryptographp']['menu_info']="Info";
-
 $plugin_tx['cryptographp']['alt_image']="Visuelle Aufgabe";
 $plugin_tx['cryptographp']['alt_reload']="Neue Aufgabe stellen";
 $plugin_tx['cryptographp']['alt_audio']="Höraufgabe stellen";

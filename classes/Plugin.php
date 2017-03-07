@@ -84,37 +84,12 @@ class Plugin
      */
     protected static function renderVersion()
     {
-        global $pth, $plugin_tx;
+        global $pth;
 
-        $ptx = $plugin_tx['cryptographp'];
-        return '<h1>Cryptographp &ndash; ' . $ptx['menu_info'] . '</h1>' . "\n"
-            . tag(
-                'img class="cryptographp_plugin_icon" src="'
-                . $pth['folder']['plugins']
-                . 'cryptographp/cryptographp.png" alt="' . $ptx['alt_logo'] . '"'
-            ) . "\n"
-            . '<p>Version: ' . CRYPTOGRAPHP_VERSION . '</p>'
-            . "\n"
-            . '<p>Copyright &copy; 2006-2007 <a href="http://www.captcha.fr/">'
-            . 'Sylvain Brison</a>' . tag('br')
-            . 'Copyright &copy; 2011-2017 <a href="http://3-magi.net/">'
-            . 'Christoph M. Becker</a></p>' . "\n"
-            . '<p class="cryptographp_license">'
-            . 'This program is free software: you can redistribute it and/or modify'
-            . ' it under the terms of the GNU General Public License as published by'
-            . ' the Free Software Foundation, either version 3 of the License, or'
-            . ' (at your option) any later version.</p>' . "\n"
-            . '<p class="cryptographp_license">'
-            . 'This program is distributed in the hope that it will be useful,'
-            . ' but <em>without any warranty</em>; without even the implied'
-            . ' warranty of <em>merchantability</em> or <em>fitness for a'
-            . ' particular purpose</em>. See the'
-            . ' GNU General Public License for more details.</p>' . "\n"
-            . '<p class="cryptographp_license">'
-            . 'You should have received a copy of the GNU General Public License'
-            . ' along with this program.  If not, see'
-            . ' <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/'
-            . '</a>.</p>' . "\n";
+        $view = new View('info');
+        $view->logo = "{$pth['folder']['plugins']}cryptographp/cryptographp.png";
+        $view->version = CRYPTOGRAPHP_VERSION;
+        return (string) $view;
     }
 
     /**
