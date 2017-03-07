@@ -65,20 +65,7 @@
     </target>
 
     <target name="coverage" description="generates coverage report">
-        <mkdir dir="tests/coverage"/>
-        <coverage-setup database="tests/coverage/coverage.db">
-            <fileset dir="classes">
-                <include name="*.php"/>
-            </fileset>
-        </coverage-setup>
-        <phpunit bootstrap="classes/required_classes.php" codecoverage="true">
-            <batchtest>
-                <fileset refid="unit-tests"/>
-            </batchtest>
-        </phpunit>
-        <coverage-report outfile="tests/coverage/coverage.xml">
-            <report todir="tests/coverage" styledir="vendor/phing/phing/etc"/>
-        </coverage-report>
+        <exec command="phpunit --configuration coverage.xml" logoutput="true"/>
     </target>
 
     <target name="build" description="builds a distributable ZIP archive">
