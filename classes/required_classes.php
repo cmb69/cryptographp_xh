@@ -15,21 +15,11 @@
  * @link      http://3-magi.net/?CMSimple_XH/Cryptographp_XH
  */
 
-/**
- * Autoloads the plugin classes.
- *
- * @param string $class A class name.
- *
- * @return void
- */
-function Cryptographp_autoload($class)
-{
+spl_autoload_register(function ($class) {
     $parts = explode('\\', $class, 2);
     if ($parts[0] == 'Cryptographp') {
         include_once dirname(__FILE__) . '/' . $parts[1] . '.php';
     }
-}
-
-spl_autoload_register('Cryptographp_autoload');
+});
 
 ?>
