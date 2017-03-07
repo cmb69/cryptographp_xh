@@ -25,7 +25,7 @@
  */
 function cryptographp_captcha_display()
 {
-    return Cryptographp\Controller::renderCAPTCHA();
+    return Cryptographp\Plugin::renderCAPTCHA();
 }
 
 /**
@@ -33,5 +33,5 @@ function cryptographp_captcha_display()
  */
 function cryptographp_captcha_check()
 {
-    return Cryptographp\Controller::checkCAPTCHA();
+    return Cryptographp\Plugin::checkCAPTCHA();
 }

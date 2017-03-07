@@ -22,7 +22,7 @@
 
 namespace Cryptographp;
 
-class Controller
+class Plugin
 {
     /**
      * @var bool

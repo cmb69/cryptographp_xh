@@ -35,4 +35,4 @@ EOT
 
 define('CRYPTOGRAPHP_VERSION', '@CRYPTOGRAPHP_VERSION@');
 
-Cryptographp\Controller::dispatch();
+Cryptographp\Plugin::dispatch();
