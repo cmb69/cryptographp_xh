@@ -15,6 +15,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Cryptographp_XH
  */
 
+namespace Cryptographp;
+
 /**
  * The plugin controller.
  *
@@ -25,7 +27,7 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Cryptographp_XH
  */
-class Cryptographp_Controller
+class Controller
 {
     /**
      * Whether the JavaScript has been emitted.
@@ -44,11 +46,11 @@ class Cryptographp_Controller
         if (isset($_GET['cryptographp_mode'])) {
             switch ($_GET['cryptographp_mode']) {
             case 'video':
-                $video = new Cryptographp_VisualCAPTCHA();
+                $video = new VisualCAPTCHA();
                 $video->render();
                 exit;
             case 'audio':
-                $captcha = new Cryptographp_AudioCaptcha();
+                $captcha = new AudioCaptcha();
                 $captcha->deliver();
                 break;
             }
@@ -152,7 +154,7 @@ class Cryptographp_Controller
      */
     protected static function renderSystemCheck()
     {
-        $systemCheck = new Cryptographp_SystemCheck();
+        $systemCheck = new SystemCheck();
         return $systemCheck->render();
     }
 

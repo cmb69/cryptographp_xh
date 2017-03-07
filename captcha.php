@@ -27,7 +27,7 @@
 function cryptographp_captcha_display()
 {
 // @codingStandardsIgnoreEnd
-    return Cryptographp_Controller::renderCAPTCHA();
+    return Cryptographp\Controller::renderCAPTCHA();
 }
 
 /**
@@ -39,7 +39,7 @@ function cryptographp_captcha_display()
 function cryptographp_captcha_check()
 {
 // @codingStandardsIgnoreEnd
-    return Cryptographp_Controller::checkCAPTCHA();
+    return Cryptographp\Controller::checkCAPTCHA();
 }
 
 ?>

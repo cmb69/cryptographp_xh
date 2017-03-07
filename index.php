@@ -36,6 +36,6 @@ EOT
  */
 define('CRYPTOGRAPHP_VERSION', '@CRYPTOGRAPHP_VERSION@');
 
-Cryptographp_Controller::dispatch();
+Cryptographp\Controller::dispatch();
 
 ?>
