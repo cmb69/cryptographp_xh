@@ -10,7 +10,7 @@
  * @author    Sylvain Brison <cryptographp@alphpa.com>
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2006-2007 Sylvain Brison
- * @copyright 2011-2015 Christoph M. Becker <http://3-magi.net>
+ * @copyright 2011-2017 Christoph M. Becker <http://3-magi.net>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link      http://3-magi.net/?CMSimple_XH/Cryptographp_XH
  */
@@ -125,7 +125,7 @@ class Cryptographp_Controller
             . "\n"
             . '<p>Copyright &copy; 2006-2007 <a href="http://www.captcha.fr/">'
             . 'Sylvain Brison</a>' . tag('br')
-            . 'Copyright &copy; 2011-2015 <a href="http://3-magi.net/">'
+            . 'Copyright &copy; 2011-2017 <a href="http://3-magi.net/">'
             . 'Christoph M. Becker</a></p>' . "\n"
             . '<p class="cryptographp_license">'
             . 'This program is free software: you can redistribute it and/or modify'

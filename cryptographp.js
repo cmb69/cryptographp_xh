@@ -4,7 +4,7 @@
  * @author    Sylvain Brison <cryptographp@alphpa.com>
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2006-2007 Sylvain Brison
- * @copyright 2011-2015 Christoph M. Becker <http://3-magi.net>
+ * @copyright 2011-2017 Christoph M. Becker <http://3-magi.net>
  * @link      http://3-magi.net/?CMSimple_XH/Cryptographp_XH
  */
 
