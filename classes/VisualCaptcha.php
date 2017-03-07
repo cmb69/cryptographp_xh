@@ -22,7 +22,7 @@
 
 namespace Cryptographp;
 
-class VisualCAPTCHA
+class VisualCaptcha
 {
     /**
      * @var int

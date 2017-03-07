@@ -34,7 +34,7 @@ class Controller
         if (isset($_GET['cryptographp_mode'])) {
             switch ($_GET['cryptographp_mode']) {
                 case 'video':
-                    $video = new VisualCAPTCHA();
+                    $video = new VisualCaptcha();
                     $video->render();
                     exit;
                 case 'audio':
