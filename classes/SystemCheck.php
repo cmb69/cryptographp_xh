@@ -1,37 +1,16 @@
 <?php
 
 /**
- * The system check.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Cryptographp
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2011-2017 Christoph M. Becker <http://3-magi.net/>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Cryptographp_XH
  */
 
 namespace Cryptographp;
 
-/**
- * The system check.
- *
- * @category CMSimple_XH
- * @package  Cryptographp
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Cryptographp_XH
- */
 class SystemCheck
 {
     /**
-     * Returns the requirements information view.
-     *
-     * @return string (X)HTML
-     *
-     * @global array The localization of the plugins.
+     * @return string
      */
     public function render()
     {
@@ -54,13 +33,8 @@ class SystemCheck
     }
 
     /**
-     * Renders the PHP version check.
-     *
-     * @param string $version Required PHP version.
-     *
-     * @return string (X)HTML
-     *
-     * @global array The localization of the plugins.
+     * @param string $version
+     * @return string
      */
     protected function checkPHPVersion($version)
     {
@@ -68,19 +42,12 @@ class SystemCheck
 
         $kind = version_compare(PHP_VERSION, $version) >= 0 ? 'ok' : 'fail';
         return $this->renderCheckIcon($kind) . '&nbsp;&nbsp;'
-            . sprintf(
-                $plugin_tx['cryptographp']['syscheck_phpversion'], $version
-            );
+            . sprintf($plugin_tx['cryptographp']['syscheck_phpversion'], $version);
     }
 
     /**
-     * Renders the extension availability check.
-     *
-     * @param string $name An extension name.
-     *
-     * @return string (X)HTML
-     *
-     * @global array The localization of the plugins.
+     * @param string $name
+     * @return string
      */
     protected function checkExtension($name)
     {
@@ -88,17 +55,11 @@ class SystemCheck
 
         $kind = extension_loaded($name) ? 'ok' : 'fail';
         return $this->renderCheckIcon($kind) . '&nbsp;&nbsp;'
-            . sprintf(
-                $plugin_tx['cryptographp']['syscheck_extension'], $name
-            );
+            . sprintf($plugin_tx['cryptographp']['syscheck_extension'], $name);
     }
     
     /**
-     * Renders the GD support.
-     *
-     * @return string (X)HTML
-     *
-     * @global array The localization of the plugins.
+     * @return string
      */
     protected function checkGDSupport()
     {
@@ -125,11 +86,7 @@ class SystemCheck
     }
 
     /**
-     * Renders the magic_quotes_runtime check.
-     *
-     * @return string (X)HTML
-     *
-     * @global array The localization of the plugins.
+     * @return string
      */
     protected function checkMagicQuotesRuntime()
     {
@@ -141,13 +98,8 @@ class SystemCheck
     }
 
     /**
-     * Renders the CMSimple_XH version check.
-     *
-     * @param string $version Required CMSimple_XH version.
-     *
-     * @return string (X)HTML
-     *
-     * @global array The localization of the plugins.
+     * @param string $version
+     * @return string
      */
     protected function checkXHVersion($version)
     {
@@ -155,16 +107,11 @@ class SystemCheck
 
         $kind = $this->hasXHVersion($version) ? 'ok' : 'fail';
         return $this->renderCheckIcon($kind) . '&nbsp;&nbsp;'
-            . sprintf(
-                $plugin_tx['cryptographp']['syscheck_xhversion'], $version
-            );
+            . sprintf($plugin_tx['cryptographp']['syscheck_xhversion'], $version);
     }
 
     /**
-     * Returns whether at least a certain CMSimple_XH version is installed.
-     *
-     * @param string $version A CMSimple_XH version number.
-     *
+     * @param string $version
      * @return bool
      */
     protected function hasXHVersion($version)
@@ -175,13 +122,8 @@ class SystemCheck
     }
 
     /**
-     * Renders a writability check.
-     *
-     * @param string $filename A filename.
-     *
-     * @return string (X)HTML
-     *
-     * @global array The localization of the plugins.
+     * @param string $filename
+     * @return string
      */
     protected function checkWritability($filename)
     {
@@ -189,20 +131,12 @@ class SystemCheck
 
         $kind = is_writable($filename) ? 'ok' : 'warn';
         return $this->renderCheckIcon($kind) . '&nbsp;&nbsp;'
-            . sprintf(
-                $plugin_tx['cryptographp']['syscheck_writable'], $filename
-            );
+            . sprintf($plugin_tx['cryptographp']['syscheck_writable'], $filename);
     }
 
     /**
-     * Renders a check icon.
-     *
-     * @param string $kind A kind.
-     *
-     * @return string (X)HTML
-     *
-     * @global array The paths of system files and folders.
-     * @global array The localization of the plugins.
+     * @param string $kind
+     * @return string
      */
     protected function renderCheckIcon($kind)
     {
@@ -215,11 +149,7 @@ class SystemCheck
     }
 
     /**
-     * Returns the folders that should be writable.
-     *
      * @return array
-     *
-     * @global array The paths of system files and folders.
      */
     protected function getWritableFolders()
     {
@@ -232,5 +162,3 @@ class SystemCheck
         return $folders;
     }
 }
-
-?>

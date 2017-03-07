@@ -1,58 +1,32 @@
 <?php
 
 /**
- * The plugin controller.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Cryptographp
- * @author    Sylvain Brison <cryptographp@alphpa.com>
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2006-2007 Sylvain Brison
  * @copyright 2011-2017 Christoph M. Becker <http://3-magi.net>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Cryptographp_XH
  */
 
 namespace Cryptographp;
 
-/**
- * The plugin controller.
- *
- * @category CMSimple_XH
- * @package  Cryptographp
- * @author   Sylvain Brison <cryptographp@alphpa.com>
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Cryptographp_XH
- */
 class Controller
 {
     /**
-     * Whether the JavaScript has been emitted.
-     *
      * @var bool
      */
     protected static $isJavaScriptEmitted;
 
-    /**
-     * Handles plugin related requests.
-     *
-     * @return void
-     */
     public static function dispatch()
     {
         if (isset($_GET['cryptographp_mode'])) {
             switch ($_GET['cryptographp_mode']) {
-            case 'video':
-                $video = new VisualCAPTCHA();
-                $video->render();
-                exit;
-            case 'audio':
-                $captcha = new AudioCaptcha();
-                $captcha->deliver();
-                break;
+                case 'video':
+                    $video = new VisualCAPTCHA();
+                    $video->render();
+                    exit;
+                case 'audio':
+                    $captcha = new AudioCaptcha();
+                    $captcha->deliver();
+                    break;
             }
         }
         if (XH_ADM) {
@@ -66,11 +40,7 @@ class Controller
     }
 
     /**
-     * Returns whether the plugin administration is requested.
-     *
      * @return bool
-     *
-     * @global string Whether the plugin administration is requested.
      */
     protected static function isAdministrationRequested()
     {
@@ -81,36 +51,22 @@ class Controller
             || isset($cryptographp) && $cryptographp == 'true';
     }
 
-    /**
-     * Handles the plugin administration.
-     *
-     * @return void
-     *
-     * @global string The value of the <var>admin</var> GP parameter.
-     * @global string The value of the <var>action</var> GP parameter.
-     * @global string The (X)HTML fragment to insert at the top of the content.
-     */
     protected static function handleAdministration()
     {
         global $admin, $action, $o;
 
         $o .= print_plugin_admin('off');
         switch ($admin) {
-        case '':
-            $o .= self::renderVersion() . self::renderSystemCheck();
-            break;
-        default:
-            $o .= plugin_admin_common($action, $admin, 'cryptographp');
+            case '':
+                $o .= self::renderVersion() . self::renderSystemCheck();
+                break;
+            default:
+                $o .= plugin_admin_common($action, $admin, 'cryptographp');
         }
     }
 
     /**
-     * Renders the plugin information.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The paths of system files and folders.
-     * @global array The localization of the plugins.
+     * @return string
      */
     protected static function renderVersion()
     {
@@ -148,9 +104,7 @@ class Controller
     }
 
     /**
-     * Renders the system check.
-     *
-     * @return string (X)HTML.
+     * @return string
      */
     protected static function renderSystemCheck()
     {
@@ -159,16 +113,7 @@ class Controller
     }
 
     /**
-     * Returns the (x)html block element displaying the captcha,
-     * the input field for the captcha code and all other elements,
-     * that are related directly to the captcha,
-     * such as an reload and an audio button.
-     *
      * @return string
-     *
-     * @global array  The paths of system files and folders.
-     * @global string The current language.
-     * @global array  The localization of the plugins.
      */
     public static function renderCAPTCHA()
     {
@@ -220,12 +165,7 @@ class Controller
     }
 
     /**
-     * Returns code to include the JavaScript.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The paths of system files and folders.
-     * @global string The (X)HTML fragment to insert at the bottom of <body>.
+     * @return string
      */
     protected static function emitJavaScript()
     {
@@ -240,11 +180,7 @@ class Controller
     }
 
     /**
-     * Returns whether the correct captcha code was entered.
-     *
      * @return bool
-     *
-     * @global array The configuration of the plugins.
      */
     public static function checkCAPTCHA()
     {
@@ -260,11 +196,10 @@ class Controller
             && $_SESSION['cryptographp_time'][$id]
             + $plugin_cf['cryptographp']['crypt_expiration'] >= time();
         unset(
-            $_SESSION['cryptographp_code'][$id], $_SESSION['cryptographp_lang'][$id],
+            $_SESSION['cryptographp_code'][$id],
+            $_SESSION['cryptographp_lang'][$id],
             $_SESSION['cryptographp_time'][$id]
         );
         return $ok;
     }
 }
-
-?>

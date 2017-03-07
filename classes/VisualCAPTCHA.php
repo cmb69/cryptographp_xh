@@ -1,102 +1,60 @@
 <?php
 
 /**
- * The visual CAPTCHAs.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Cryptographp
- * @author    Sylvain Brison <cryptographp@alphpa.com>
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2006-2007 Sylvain Brison
  * @copyright 2011-2017 Christoph M. Becker <http://3-magi.net>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Cryptographp_XH
  */
 
 namespace Cryptographp;
 
-/**
- * The visual CAPTCHAs.
- *
- * @category CMSimple_XH
- * @package  Cryptographp
- * @author   Sylvain Brison <cryptographp@alphpa.com>
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Cryptographp_XH
- */
 class VisualCAPTCHA
 {
     /**
-     * The ID of this CAPTCHA.
-     *
      * @var int
      */
     protected $id;
 
     /**
-     * The GD image.
-     *
      * @var resource
      */
     protected $img;
 
     /**
-     * The array of records for each character.
-     *
      * @var array
      */
     protected $tword;
 
     /**
-     * The CAPTCHA word.
-     *
      * @var string
      */
     protected $word;
 
     /**
-     * The (current?) color.
-     *
      * @var int
      */
     protected $ink;
 
     /**
-     * The background color.
-     *
      * @var int
      */
     protected $bg;
 
     /**
-     * The horizontal start position of the characters.
-     *
      * @var int
      */
     protected $xvariation;
 
     /**
-     * The number of characters.
-     *
      * @var int
      */
     protected $charnb;
 
     /**
-     * The array of fonts.
-     *
      * @var array
      */
     protected $fonts;
 
-    /**
-     * Initializes a new instance.
-     *
-     * @global array The configuration of the plugins.
-     */
     public function __construct()
     {
         global $plugin_cf;
@@ -108,14 +66,6 @@ class VisualCAPTCHA
         $this->fonts = explode(';', $plugin_cf['cryptographp']['char_fonts']);
     }
 
-    /**
-     * Renders the CAPTCHA.
-     *
-     * @return void
-     *
-     * @global array The configuration of the plugins.
-     * @global array The localization of the plugins.
-     */
     public function render()
     {
         global $plugin_cf, $plugin_tx;
@@ -168,14 +118,6 @@ class VisualCAPTCHA
         imagedestroy($this->img);
     }
 
-    /**
-     * Precalculates several properties.
-     *
-     * @return void
-     *
-     * @global array The paths of system files and folders.
-     * @global array The configuration of the plugins.
-     */
     protected function precalculate()
     {
         global $pth, $plugin_cf;
@@ -208,30 +150,33 @@ class VisualCAPTCHA
             }
 
             $pair = !$pair;
-            $this->tword[$i]['size'] = rand(
-                $pcf['char_size_min'], $pcf['char_size_max']
-            );
+            $this->tword[$i]['size'] = rand($pcf['char_size_min'], $pcf['char_size_max']);
             $lafont = $pth['folder']['plugins'] . 'cryptographp/fonts/'
                 . $this->tword[$i]['font'];
             $bbox = imagettfbbox(
-                $this->tword[$i]['size'], $this->tword[$i]['angle'],
-                $lafont, $this->tword[$i]['element']
+                $this->tword[$i]['size'],
+                $this->tword[$i]['angle'],
+                $lafont,
+                $this->tword[$i]['element']
             );
             $min = min($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
             $max = max($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
             $delta = $pcf['crypt_height'] - $max + $min;
             $this->tword[$i]['y'] = $delta / 2 + abs($min) - 1;
             if ($pcf['char_displace']) {
-                $this->tword[$i]['y'] += rand(
-                    -intval($delta / 2), intval($delta / 2)
-                );
+                $this->tword[$i]['y'] += rand(-intval($delta / 2), intval($delta / 2));
             }
             $this->word .= $this->tword[$i]['element'];
 
             imagettftext(
-                $imgtmp, $this->tword[$i]['size'], $this->tword[$i]['angle'],
-                $x, $this->tword[$i]['y'],
-                $black, $lafont, $this->tword[$i]['element']
+                $imgtmp,
+                $this->tword[$i]['size'],
+                $this->tword[$i]['angle'],
+                $x,
+                $this->tword[$i]['y'],
+                $black,
+                $lafont,
+                $this->tword[$i]['element']
             );
 
             $x += $pcf['char_space'];
@@ -243,14 +188,9 @@ class VisualCAPTCHA
     }
 
     /**
-     * Calculates the text width.
-     *
-     * @param resource $img   A GD image.
-     * @param int      $blank A color.
-     *
+     * @param resource $img
+     * @param int $blank
      * @return int
-     *
-     * @global array The configuration of the plugins.
      */
     protected function calculateTextWidth($img, $blank)
     {
@@ -276,15 +216,10 @@ class VisualCAPTCHA
     }
 
     /**
-     * Scans a column and returns the index of the first non-blank pixel.
-     *
-     * @param resource $img   A GD image.
-     * @param int      $x     A column.
-     * @param int      $blank A color.
-     *
+     * @param resource $img
+     * @param int $x
+     * @param int $blank
      * @return int
-     *
-     * @global array The configuration of the plugins.
      */
     protected function scanColumn($img, $x, $blank)
     {
@@ -302,12 +237,7 @@ class VisualCAPTCHA
     }
     
     /**
-     * Returns the background image path.
-     *
      * @return string
-     *
-     * @global array The paths of system files and folders.
-     * @global array The configuration of the plugins.
      */
     protected function getBackgroundImage()
     {
@@ -337,10 +267,7 @@ class VisualCAPTCHA
     }
 
     /**
-     * Returns a random character of a string.
-     *
-     * @param string $string A string.
-     *
+     * @param string $string
      * @return string
      */
     protected function getRandomCharOf($string)
@@ -349,38 +276,28 @@ class VisualCAPTCHA
     }
 
     /**
-     * Returns the color of the noise and the brush shape.
-     *
      * @return int
-     *
-     * @global array The configuration of the plugins.
      */
     protected function noisecolor()
     {
         global $plugin_cf;
 
         switch ($plugin_cf['cryptographp']['noise_color']) {
-        case 1:
-            $noisecol = $this->ink;
-            break;
-        case 2:
-            $noisecol = $this->bg;
-            break;
-        case 3:
-        default:
-            $noisecol = imagecolorallocate(
-                $this->img, rand(0, 255), rand(0, 255), rand(0, 255)
-            );
+            case 1:
+                $noisecol = $this->ink;
+                break;
+            case 2:
+                $noisecol = $this->bg;
+                break;
+            case 3:
+            default:
+                $noisecol = imagecolorallocate($this->img, rand(0, 255), rand(0, 255), rand(0, 255));
         }
         return $noisecol;
     }
 
     /**
-     * Renders the image background.
-     *
      * @return void
-     *
-     * @global array The configuration of the plugins.
      */
     protected function renderBackground()
     {
@@ -391,26 +308,31 @@ class VisualCAPTCHA
         if ($bgimg) {
             list($getwidth, $getheight, $gettype) = getimagesize($bgimg);
             switch ($gettype) {
-            case IMAGETYPE_GIF:
-                $imgread = imagecreatefromgif($bgimg);
-                break;
-            case IMAGETYPE_JPEG:
-                $imgread = imagecreatefromjpeg($bgimg);
-                break;
-            case IMAGETYPE_PNG:
-                $imgread = imagecreatefrompng($bgimg);
-                break;
+                case IMAGETYPE_GIF:
+                    $imgread = imagecreatefromgif($bgimg);
+                    break;
+                case IMAGETYPE_JPEG:
+                    $imgread = imagecreatefromjpeg($bgimg);
+                    break;
+                case IMAGETYPE_PNG:
+                    $imgread = imagecreatefrompng($bgimg);
+                    break;
             }
             imagecopyresampled(
-                $this->img, $imgread, 0, 0, 0, 0,
-                $pcf['crypt_width'], $pcf['crypt_height'], $getwidth, $getheight
+                $this->img,
+                $imgread,
+                0,
+                0,
+                0,
+                0,
+                $pcf['crypt_width'],
+                $pcf['crypt_height'],
+                $getwidth,
+                $getheight
             );
             imagedestroy($imgread);
         } else {
-            $this->bg = imagecolorallocate(
-                $this->img, $pcf['bg_rgb_red'], $pcf['bg_rgb_green'],
-                $pcf['bg_rgb_blue']
-            );
+            $this->bg = imagecolorallocate($this->img, $pcf['bg_rgb_red'], $pcf['bg_rgb_green'], $pcf['bg_rgb_blue']);
             imagefill($this->img, 0, 0, $this->bg);
             if ($pcf['bg_clear']) {
                 imagecolortransparent($this->img, $this->bg);
@@ -418,14 +340,6 @@ class VisualCAPTCHA
         }
     }
 
-    /**
-     * Renders the characters.
-     *
-     * @return void
-     *
-     * @global array The paths of system files and folders.
-     * @global array The configuration of the plugins.
-     */
     protected function renderCharacters()
     {
         global $pth, $plugin_cf;
@@ -433,8 +347,11 @@ class VisualCAPTCHA
         $pcf = $plugin_cf['cryptographp'];
 
         $this->ink = imagecolorallocatealpha(
-            $this->img, $pcf['char_rgb_red'], $pcf['char_rgb_green'],
-            $pcf['char_rgb_blue'], $pcf['char_clear']
+            $this->img,
+            $pcf['char_rgb_red'],
+            $pcf['char_rgb_green'],
+            $pcf['char_rgb_blue'],
+            $pcf['char_clear']
         );
 
         $x = $this->xvariation;
@@ -445,21 +362,21 @@ class VisualCAPTCHA
             $lafont = $pth['folder']['plugins'] . 'cryptographp/fonts/'
                 . $this->tword[$i]['font'];
             imagettftext(
-                $this->img, $this->tword[$i]['size'], $this->tword[$i]['angle'],
-                $x, $this->tword[$i]['y'],
+                $this->img,
+                $this->tword[$i]['size'],
+                $this->tword[$i]['angle'],
+                $x,
+                $this->tword[$i]['y'],
                 $pcf['char_color_random'] ? $rndink : $this->ink,
-                $lafont, $this->tword[$i]['element']
+                $lafont,
+                $this->tword[$i]['element']
             );
             $x += $pcf['char_space'];
         }
     }
 
     /**
-     * Chooses a random color.
-     *
      * @return int
-     *
-     * @global array The configuration of the plugins.
      */
     protected function chooseRandomColor()
     {
@@ -473,19 +390,12 @@ class VisualCAPTCHA
             $rndcolor = $rndR + $rndG + $rndB;
             $ok = $this->checkRandomColor($rndcolor);
         } while (!$ok);
-        return imagecolorallocatealpha(
-            $this->img, $rndR, $rndG, $rndB, $plugin_cf['cryptographp']['char_clear']
-        );
+        return imagecolorallocatealpha($this->img, $rndR, $rndG, $rndB, $plugin_cf['cryptographp']['char_clear']);
     }
 
     /**
-     * Checks whether a random color is allowed according to the configuration.
-     *
-     * @param int $color A sum of the red, green and blue values.
-     *
+     * @param int $color
      * @return bool
-     *
-     * @global array The configuration of the plugins.
      */
     protected function checkRandomColor($color)
     {
@@ -493,39 +403,32 @@ class VisualCAPTCHA
 
         $ok = false;
         switch ($plugin_cf['cryptographp']['char_color_random_level']) {
-        case 1: // very dark
-            if ($color < 200) {
+            case 1: // very dark
+                if ($color < 200) {
+                    $ok = true;
+                }
+                break;
+            case 2: // dark
+                if ($color < 400) {
+                    $ok = true;
+                }
+                break;
+            case 3: // light
+                if ($color > 500) {
+                    $ok = true;
+                }
+                break;
+            case 4: // very light
+                if ($color > 650) {
+                    $ok = true;
+                }
+                break;
+            default:
                 $ok = true;
-            }
-            break;
-        case 2: // dark
-            if ($color < 400) {
-                $ok = true;
-            }
-            break;
-        case 3: // light
-            if ($color > 500) {
-                $ok = true;
-            }
-            break;
-        case 4: // very light
-            if ($color > 650) {
-                $ok = true;
-            }
-            break;
-        default:
-            $ok = true;
         }
         return $ok;
     }
 
-    /**
-     * Adds noise: point, random lines and circles.
-     *
-     * @return void
-     *
-     * @global array The configuration of the plugins.
-     */
     protected function renderNoise()
     {
         global $plugin_cf;
@@ -537,36 +440,37 @@ class VisualCAPTCHA
         $nbcircle = rand($pcf['noise_circle_min'], $pcf['noise_circle_max']);
         for ($i=1; $i < $nbpx; $i++) {
             imagesetpixel(
-                $this->img, rand(0, $pcf['crypt_width'] - 1),
-                rand(0, $pcf['crypt_height'] - 1), $this->noisecolor()
+                $this->img,
+                rand(0, $pcf['crypt_width'] - 1),
+                rand(0, $pcf['crypt_height'] - 1),
+                $this->noisecolor()
             );
         }
         imagesetthickness($this->img, $pcf['noise_brush_size']);
         for ($i=1; $i <= $nbline; $i++) {
             imageline(
                 $this->img,
-                rand(0, $pcf['crypt_width'] - 1), rand(0, $pcf['crypt_height'] - 1),
-                rand(0, $pcf['crypt_width'] - 1), rand(0, $pcf['crypt_height'] - 1),
+                rand(0, $pcf['crypt_width'] - 1),
+                rand(0, $pcf['crypt_height'] - 1),
+                rand(0, $pcf['crypt_width'] - 1),
+                rand(0, $pcf['crypt_height'] - 1),
                 $this->noisecolor()
             );
         }
         for ($i=1; $i <= $nbcircle; $i++) {
             imagearc(
                 $this->img,
-                rand(0, $pcf['crypt_width'] - 1), rand(0, $pcf['crypt_height'] - 1),
-                $rayon = rand(5, $pcf['crypt_width'] / 3), $rayon, 0, 359,
+                rand(0, $pcf['crypt_width'] - 1),
+                rand(0, $pcf['crypt_height'] - 1),
+                $rayon = rand(5, $pcf['crypt_width'] / 3),
+                $rayon,
+                0,
+                359,
                 $this->noisecolor()
             );
         }
     }
 
-    /**
-     * Renders a frame around the image.
-     *
-     * @return void
-     *
-     * @global array The configuration of the plugins.
-     */
     protected function renderFrame()
     {
         global $plugin_cf;
@@ -578,20 +482,12 @@ class VisualCAPTCHA
             ($pcf['bg_rgb_green'] * 3 + $pcf['char_rgb_green']) / 4,
             ($pcf['bg_rgb_blue'] * 3 + $pcf['char_rgb_blue']) / 4
         );
-        imagerectangle(
-            $this->img, 0, 0, $pcf['crypt_width'] - 1, $pcf['crypt_height'] - 1,
-            $color
-        );
+        imagerectangle($this->img, 0, 0, $pcf['crypt_width'] - 1, $pcf['crypt_height'] - 1, $color);
     }
 
     /**
-     * Delivers an image with an error message text.
-     *
-     * @param string $text An error message.
-     *
+     * @param string $text
      * @return void
-     *
-     * @global array The paths of system files and folders.
      */
     protected function deliverErrorImage($text)
     {
@@ -610,46 +506,35 @@ class VisualCAPTCHA
         $bg = imagecolorallocate($img, 255, 255, 255);
         $fg = imagecolorallocate($img, 192, 0, 0);
         imagefilledrectangle($img, 0, 0, $width-1, $height-1, $bg);
-        imagettftext(
-            $img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text
-        );
+        imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text);
         header('Content-type: image/png');
         imagepng($img);
         exit;
     }
 
-    /**
-     * Delivers the image.
-     *
-     * @return void
-     *
-     * @global array The configuration of the plugins.
-     */
     protected function deliverImage()
     {
         global $plugin_cf;
 
         switch (strtoupper($plugin_cf['cryptographp']['crypt_format'])) {
-        case 'JPG':
-        case 'JPEG':
-            if (imagetypes() & IMG_JPG) {
-                header('Content-type: image/jpeg');
-                imagejpeg($this->img, '', 80);
-            }
-            break;
-        case 'GIF':
-            if (imagetypes() & IMG_GIF) {
-                header('Content-type: image/gif');
-                imagegif($this->img);
-            }
-            break;
-        default:
-            if (imagetypes() & IMG_PNG) {
-                header('Content-type: image/png');
-                imagepng($this->img);
-            }
+            case 'JPG':
+            case 'JPEG':
+                if (imagetypes() & IMG_JPG) {
+                    header('Content-type: image/jpeg');
+                    imagejpeg($this->img, '', 80);
+                }
+                break;
+            case 'GIF':
+                if (imagetypes() & IMG_GIF) {
+                    header('Content-type: image/gif');
+                    imagegif($this->img);
+                }
+                break;
+            default:
+                if (imagetypes() & IMG_PNG) {
+                    header('Content-type: image/png');
+                    imagepng($this->img);
+                }
         }
     }
 }
-
-?>

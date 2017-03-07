@@ -1,40 +1,17 @@
 <?php
 
 /**
- * The audio CAPTCHAs.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Cryptographp
- * @author    Sylvain Brison <cryptographp@alphpa.com>
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2006-2007 Sylvain Brison
  * @copyright 2011-2017 Christoph M. Becker <http://3-magi.net>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Cryptographp_XH
  */
 
 namespace Cryptographp;
 
-/**
- * The audio CAPTCHAs.
- *
- * @category CMSimple_XH
- * @package  Cryptographp
- * @author   Sylvain Brison <cryptographp@alphpa.com>
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Cryptographp_XH
- */
 class AudioCaptcha
 {
     /**
-     * Delivers the audio CAPTCHA to the client.
-     *
      * @return void
-     *
-     * @global array The paths of system files and folders.
      */
     public function deliver()
     {
@@ -62,15 +39,9 @@ class AudioCaptcha
     }
 
     /**
-     * Creates and returns an audio CAPTCHA.
-     *
-     * @param string $id   A CAPTCHA ID.
-     * @param string $lang A language code.
-     *
+     * @param string $id
+     * @param string $lang
      * @return string
-     *
-     * @global array The paths of system files and folders.
-     * @global array The localization of the plugins.
      */
     protected function makeAudio($id, $lang)
     {
@@ -92,5 +63,3 @@ class AudioCaptcha
         return $o;
     }
 }
-
-?>
