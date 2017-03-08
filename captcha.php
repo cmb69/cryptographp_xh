@@ -25,7 +25,10 @@
  */
 function cryptographp_captcha_display()
 {
-    return Cryptographp\Plugin::renderCAPTCHA();
+    $controller = new Cryptographp\CaptchaController;
+    ob_start();
+    $controller->defaultAction();
+    return ob_get_clean();
 }
 
 /**

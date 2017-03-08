@@ -102,48 +102,6 @@ class Plugin
     }
 
     /**
-     * @return string
-     */
-    public static function renderCAPTCHA()
-    {
-        global $pth, $sn, $sl;
-
-        if (session_id() == '') {
-            session_start();
-        }
-        $_SESSION['cryptographp_id'] = isset($_SESSION['cryptographp_id']) ? $_SESSION['cryptographp_id'] + 1 : 1;
-        self::emitJavaScript();
-        $dir = $pth['folder']['plugins'] . 'cryptographp/';
-
-        $view = new View('captcha');
-        $view->id = $_SESSION['cryptographp_id'];
-        $view->imageUrl = "$sn?cryptographp_mode=video&cryptographp_id={$view->id}";
-
-        $get = "cryptographp_mode=audio&cryptographp_id={$view->id}&cryptographp_lang=$sl";
-        $view->audioUrl = "$sn?$get&cryptographp_download=yes";
-        $view->audioImage = "{$dir}images/audio.png";
-        
-        $view->reloadUrl = "$sn?cryptographp_mode=video&cryptographp_id={$view->id}";
-        $view->reloadImage = "{$dir}images/reload.png";
-        return (string) $view;
-    }
-
-    /**
-     * @return string
-     */
-    protected static function emitJavaScript()
-    {
-        global $pth, $bjs;
-
-        if (!self::$isJavaScriptEmitted) {
-            $bjs .= '<script type="text/javascript" src="'
-                . $pth['folder']['plugins'] . 'cryptographp/cryptographp.js">'
-                . '</script>';
-            self::$isJavaScriptEmitted = true;
-        }
-    }
-
-    /**
      * @return bool
      */
     public static function checkCAPTCHA()
