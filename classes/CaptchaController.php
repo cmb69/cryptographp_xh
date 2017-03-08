@@ -34,17 +34,27 @@ class CaptchaController
      */
     private $pluginFolder;
 
+    /**
+     * @var string
+     */
+    private $scriptName;
+
+    /**
+     * @var string
+     */
+    private $currentLang;
+
     public function __construct()
     {
-        global $pth;
+        global $pth, $sn, $sl;
 
         $this->pluginFolder = "{$pth['folder']['plugins']}cryptographp/";
+        $this->scriptName = $sn;
+        $this->currentLang = $sl;
     }
 
     public function defaultAction()
     {
-        global $sn, $sl;
-
         if (session_id() == '') {
             session_start();
         }
@@ -53,13 +63,14 @@ class CaptchaController
 
         $view = new View('captcha');
         $view->id = $_SESSION['cryptographp_id'];
-        $view->imageUrl = "$sn?cryptographp_mode=video&cryptographp_id={$view->id}";
+        $url = new Url($this->scriptName, $_GET);
+        $view->imageUrl = $url->with('cryptographp_mode', 'video')->with('cryptographp_id', $view->id);
 
-        $get = "cryptographp_mode=audio&cryptographp_id={$view->id}&cryptographp_lang=$sl";
-        $view->audioUrl = "$sn?$get&cryptographp_download=yes";
+        $view->audioUrl = $url->with('cryptographp_mode', 'audio')->with('cryptographp_id', $view->id)
+            ->with('cryptographp_lang', $this->currentLang)->with('cryptographp_download', 'yes');
         $view->audioImage = "{$this->pluginFolder}images/audio.png";
         
-        $view->reloadUrl = "$sn?cryptographp_mode=video&cryptographp_id={$view->id}";
+        $view->reloadUrl = $view->imageUrl;
         $view->reloadImage = "{$this->pluginFolder}images/reload.png";
         $view->render();
     }
