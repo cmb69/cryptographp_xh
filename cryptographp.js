@@ -18,73 +18,77 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var CRYPTOGRAPHP = CRYPTOGRAPHP || {};
-
-CRYPTOGRAPHP.audio = null;
-
-CRYPTOGRAPHP.isAudioSupported = function () {
-    if (typeof window.Audio == "undefined") {
-        return false;
-    }
-    return !!new Audio().canPlayType("audio/mpeg");
-};
-
-CRYPTOGRAPHP.doForEach = function (className, func) {
-    var elements, i, n;
-
-    if (typeof document.getElementsByClassName != "undefined") {
-        elements = document.getElementsByClassName(className);
-    } else if (typeof document.querySelectorAll != "undefined") {
-        elements = document.querySelectorAll("." + className);
-    } else {
-        elements = [];
-    }
-    for (i = 0, n = elements.length; i < n; i++) {
-        func(elements[i]);
-    }
-};
-
-CRYPTOGRAPHP.playAudio = function (link) {
-    this.audio = this.audio || new Audio();
-
-    this.audio.onerror = function () {
-        link.onclick = "";
-    };
-    this.audio.src = link.href.replace("&cryptographp_download=yes", "");
-    this.audio.play();
-};
-
-CRYPTOGRAPHP.onClickAudioLink = function () {
-    CRYPTOGRAPHP.playAudio(this);
-    return false;
-}
-
-CRYPTOGRAPHP.onReload = function () {
-    var image = this.previousSibling.previousSibling;
-
-    image.src = this.href + "&" + new Date().getTime();
-    if (CRYPTOGRAPHP.audio) {
-        CRYPTOGRAPHP.audio.pause();
-    }
-    return false;
-};
-
-CRYPTOGRAPHP.prepareReload = function (audio) {
-    var container, reload;
-
-    container = document.createElement("div");
-    container.innerHTML = audio.nextSibling.nodeValue;
-    reload = container.firstChild;
-    reload.onclick = this.onReload;
-    audio.parentNode.insertBefore(reload, audio.nextSibling);
-};
-
 (function () {
-    var isAudioSupported = CRYPTOGRAPHP.isAudioSupported();
-    CRYPTOGRAPHP.doForEach("cryptographp_audio", function (element) {
-        if (isAudioSupported) {
-            element.onclick = CRYPTOGRAPHP.onClickAudioLink;
+    var currentAudio;
+
+    function find(selector, target) {
+        target = target || document;
+        if (typeof target.querySelectorAll !== "undefined") {
+            return target.querySelectorAll(selector);
+        } else {
+            return [];
         }
-        CRYPTOGRAPHP.prepareReload(element);
+    }
+
+    function each(items, func) {
+        for (var i = 0, length = items.length; i < length; i++) {
+            func(items[i]);
+        }
+    }
+
+    function on(target, event, listener) {
+        if (typeof target.addEventListener !== "undefined") {
+            target.addEventListener(event, listener, false);
+        } else if (typeof target.attachEvent !== "undefined") {
+            target.attachEvent("on" + event, listener);
+        }
+    }
+
+    function firstCommentChild(element) {
+        var comment = element.firstChild;
+        while (comment && comment.nodeType !== 8) {
+            comment = comment.nextSibling;
+        }
+        return comment;
+    }
+
+    function isAudioSupported() {
+        if (typeof window.Audio == "undefined") {
+            return false;
+        }
+        return !!new Audio().canPlayType("audio/mpeg");
+    }
+    
+    on(window, "load", function () {
+        each(find(".cryptographp"), function (captcha) {
+            each(find(".cryptographp_audio", captcha), function (element) {
+                if (isAudioSupported()) {
+                    element.onclick = (function () {
+                        var link = this;
+                        currentAudio = currentAudio || new Audio();
+                        currentAudio.onerror = (function () {
+                            link.onclick = null;
+                        });
+                        currentAudio.src = link.href.replace("&cryptographp_download=yes", "");
+                        currentAudio.play();
+                        return false;
+                    });
+                }
+            });
+            each(find(".cryptographp_reload_container", captcha), function (container) {
+                container.innerHTML = firstCommentChild(container).nodeValue;
+                each(find(".cryptographp_reload", container), function (anchor) {
+                    anchor.onclick = (function () {
+                        each(find(".cryptographp_image", captcha), function (image) {
+                            image.src = anchor.href + "&" + new Date().getTime();
+                        });
+                        if (currentAudio) {
+                            currentAudio.pause();
+                        }
+                        return false;
+                    });
+                });
+            });
+        });
     });
 }());
