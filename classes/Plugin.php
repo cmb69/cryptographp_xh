@@ -106,51 +106,26 @@ class Plugin
      */
     public static function renderCAPTCHA()
     {
-        global $pth, $sn, $sl, $plugin_tx;
+        global $pth, $sn, $sl;
 
         if (session_id() == '') {
             session_start();
         }
-        $_SESSION['cryptographp_id'] = isset($_SESSION['cryptographp_id'])
-            ? $_SESSION['cryptographp_id'] + 1 : 1;
+        $_SESSION['cryptographp_id'] = isset($_SESSION['cryptographp_id']) ? $_SESSION['cryptographp_id'] + 1 : 1;
+        self::emitJavaScript();
         $dir = $pth['folder']['plugins'] . 'cryptographp/';
-        $ptx = $plugin_tx['cryptographp'];
-        $url = $sn . '?cryptographp_mode=video&amp;cryptographp_id='
-            . $_SESSION['cryptographp_id'];
-        $o = '<div class="cryptographp">' . "\n";
-        $alt = XH_hsc($ptx['alt_image']);
-        $o .= tag(
-            'img id="cryptographp' . $_SESSION['cryptographp_id'] . '" src="'
-            . $url . '" alt="' . $alt . '"'
-        );
-        $o .= self::emitJavaScript();
-        $get = 'cryptographp_mode=audio&amp;cryptographp_id='
-            . $_SESSION['cryptographp_id'] . '&amp;cryptographp_lang=' . $sl;
-        $alt = XH_hsc($ptx['alt_audio']);
-        $url = $sn . '?' . $get . '&amp;cryptographp_download=yes';
-        $o .= '<a class="cryptographp_audio" href="' . $url . '">'
-            . tag(
-                'img src="' . $dir . 'images/audio.png" alt="' . $alt . '" title="'
-                . $alt . '"'
-            )
-            . '</a>';
-        $url = $sn . '?cryptographp_mode=video&amp;cryptographp_id='
-            . $_SESSION['cryptographp_id'];
-        $alt = XH_hsc($ptx['alt_reload']);
-        $o .= '<!--<a class="cryptographp_reload" href="' . $url . '">'
-            . tag(
-                'img src="' . $dir . 'images/reload.png" alt="' . $alt . '" title="'
-                . $alt . '"'
-            )
-            . '</a>-->'
-            . '<div>' . $ptx['message_enter_code'] . '</div>' . "\n"
-            . tag('input type="text" name="cryptographp-captcha"')
-            . tag(
-                'input type="hidden" name="cryptographp_id" value="'
-                .$_SESSION['cryptographp_id'] . '"'
-            )
-            . '</div>' . "\n";
-        return $o;
+
+        $view = new View('captcha');
+        $view->id = $_SESSION['cryptographp_id'];
+        $view->imageUrl = "$sn?cryptographp_mode=video&cryptographp_id={$view->id}";
+
+        $get = "cryptographp_mode=audio&cryptographp_id={$view->id}&cryptographp_lang=$sl";
+        $view->audioUrl = "$sn?$get&cryptographp_download=yes";
+        $view->audioImage = "{$dir}images/audio.png";
+        
+        $view->reloadUrl = "$sn?cryptographp_mode=video&cryptographp_id={$view->id}";
+        $view->reloadImage = "{$dir}images/reload.png";
+        return (string) $view;
     }
 
     /**
