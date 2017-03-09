@@ -25,148 +25,114 @@ namespace Cryptographp;
 class VisualCaptcha
 {
     /**
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @var resource
      */
-    protected $img;
+    private $image;
 
     /**
      * @var array
      */
-    protected $tword;
+    private $tword;
+
+    /**
+     * @var int
+     */
+    private $ink;
+
+    /**
+     * @var int
+     */
+    private $bg;
+
+    /**
+     * @var int
+     */
+    private $xvariation;
 
     /**
      * @var string
      */
-    protected $word;
+    private $code;
 
     /**
-     * @var int
+     * @var string
      */
-    protected $ink;
+    private $imageFolder;
 
     /**
-     * @var int
+     * @var string
      */
-    protected $bg;
-
-    /**
-     * @var int
-     */
-    protected $xvariation;
-
-    /**
-     * @var int
-     */
-    protected $charnb;
+    private $fontFolder;
 
     /**
      * @var array
      */
-    protected $fonts;
+    private $fonts;
+
+    /**
+     * @var array
+     */
+    private $config;
 
     public function __construct()
     {
-        global $plugin_cf;
-
-        if (session_id() == '') {
-            session_start();
-        }
-        $this->id = $_GET['cryptographp_id'];
-        $this->fonts = explode(';', $plugin_cf['cryptographp']['char_fonts']);
-    }
-
-    public function render()
-    {
-        global $plugin_cf, $plugin_tx;
-
-        $pcf = $plugin_cf['cryptographp'];
-
-        if (!isset($_SESSION['cryptographp_id'])) {
-            $this->deliverErrorImage(
-                $plugin_tx['cryptographp']['error_cookies']
-            );
-        }
-
-        $delay = time() - $_SESSION['cryptographp_time'][$this->id];
-        if ($delay < $pcf['crypt_use_timer']) {
-            if ($pcf['crypt_use_timer_error']) {
-                $this->deliverErrorImage(
-                    $plugin_tx['cryptographp']['error_user_time']
-                );
-            } else {
-                sleep($pcf['crypt_use_timer'] - $delay);
-            }
-        }
-
-        $this->precalculate();
-
-        // Create the final image
-        $this->img = imagecreatetruecolor($pcf['crypt_width'], $pcf['crypt_height']);
-        $this->renderBackground();
-        if ($pcf['noise_above']) {
-            $this->renderCharacters();
-            $this->renderNoise();
-        } else {
-            $this->renderNoise();
-            $this->renderCharacters();
-        }
-        if ($pcf['bg_frame']) {
-            $this->renderFrame();
-        }
-        if ($pcf['crypt_gray_scale']) {
-            imagefilter($this->img, IMG_FILTER_GRAYSCALE);
-        }
-        if ($pcf['crypt_gaussian_blur']) {
-            imagefilter($this->img, IMG_FILTER_GAUSSIAN_BLUR);
-        }
-
-        $_SESSION['cryptographp_code'][$this->id] = $this->word;
-        $_SESSION['cryptographp_time'][$this->id] = time();
-
-        self::deliverImage();
-        imagedestroy($this->img);
-    }
-
-    protected function precalculate()
-    {
         global $pth, $plugin_cf;
 
-        $pcf = $plugin_cf['cryptographp'];
+        $this->imageFolder = $pth['folder']['images'];
+        $this->fontFolder = "{$pth['folder']['plugins']}cryptographp/fonts/";
+        $this->config = $plugin_cf['cryptographp'];
+        $this->fonts = explode(';', $this->config['char_fonts']);
+    }
 
-        // Creation du cryptogramme temporaire
-        $imgtmp = imagecreatetruecolor($pcf['crypt_width'], $pcf['crypt_height']);
+    /**
+     * @param string $code
+     * @return resource
+     */
+    public function createImage($code)
+    {
+        $this->code = $code;
+        $this->precalculate();
+
+        $this->image = imagecreatetruecolor($this->config['crypt_width'], $this->config['crypt_height']);
+        $this->paintBackground();
+        if ($this->config['noise_above']) {
+            $this->paintCharacters();
+            $this->paintNoise();
+        } else {
+            $this->paintNoise();
+            $this->paintCharacters();
+        }
+        if ($this->config['bg_frame']) {
+            $this->paintFrame();
+        }
+        if ($this->config['crypt_gray_scale']) {
+            imagefilter($this->image, IMG_FILTER_GRAYSCALE);
+        }
+        if ($this->config['crypt_gaussian_blur']) {
+            imagefilter($this->image, IMG_FILTER_GAUSSIAN_BLUR);
+        }
+
+        return $this->image;
+    }
+
+    private function precalculate()
+    {
+        $imgtmp = imagecreatetruecolor($this->config['crypt_width'], $this->config['crypt_height']);
         $blank = imagecolorallocate($imgtmp, 255, 255, 255);
         $black = imagecolorallocate($imgtmp, 0, 0, 0);
         imagefill($imgtmp, 0, 0, $blank);
 
-        $this->word = '';
         $x = 10;
-        $pair = rand(0, 1);
-        $this->charnb = rand($pcf['char_count_min'], $pcf['char_count_max']);
-        for ($i = 1; $i <= $this->charnb; $i++) {
+        for ($i = 1; $i <= strlen($this->code); $i++) {
             $this->tword[$i]['font'] =  $this->fonts[array_rand($this->fonts, 1)];
             $this->tword[$i]['angle'] = rand(1, 2) == 1
-                ? rand(0, $pcf['char_angle_max'])
-                : rand(360 - $pcf['char_angle_max'], 360);
+                ? rand(0, $this->config['char_angle_max'])
+                : rand(360 - $this->config['char_angle_max'], 360);
 
-            if ($pcf['crypt_easy']) {
-                $this->tword[$i]['element'] = !$pair
-                    ? $this->getRandomCharOf($pcf['char_allowed_consonants'])
-                    : $this->getRandomCharOf($pcf['char_allowed_vowels']);
-            } else {
-                $this->tword[$i]['element']
-                    = $this->getRandomCharOf($pcf['char_allowed']);
-            }
+            $this->tword[$i]['element'] = $this->code[$i-1];
 
-            $pair = !$pair;
-            $this->tword[$i]['size'] = rand($pcf['char_size_min'], $pcf['char_size_max']);
-            $lafont = $pth['folder']['plugins'] . 'cryptographp/fonts/'
-                . $this->tword[$i]['font'];
+            $this->tword[$i]['size'] = rand($this->config['char_size_min'], $this->config['char_size_max']);
+            $lafont = $this->fontFolder . $this->tword[$i]['font'];
             $bbox = imagettfbbox(
                 $this->tword[$i]['size'],
                 $this->tword[$i]['angle'],
@@ -175,12 +141,11 @@ class VisualCaptcha
             );
             $min = min($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
             $max = max($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
-            $delta = $pcf['crypt_height'] - $max + $min;
+            $delta = $this->config['crypt_height'] - $max + $min;
             $this->tword[$i]['y'] = $delta / 2 + abs($min) - 1;
-            if ($pcf['char_displace']) {
+            if ($this->config['char_displace']) {
                 $this->tword[$i]['y'] += rand(-intval($delta / 2), intval($delta / 2));
             }
-            $this->word .= $this->tword[$i]['element'];
 
             imagettftext(
                 $imgtmp,
@@ -193,36 +158,34 @@ class VisualCaptcha
                 $this->tword[$i]['element']
             );
 
-            $x += $pcf['char_space'];
+            $x += $this->config['char_space'];
         }
 
         $width = $this->calculateTextWidth($imgtmp, $blank);
-        $this->xvariation = round(($pcf['crypt_width'] - $width) / 2);
+        $this->xvariation = round(($this->config['crypt_width'] - $width) / 2);
         imagedestroy($imgtmp);
     }
 
     /**
-     * @param resource $img
+     * @param resource $image
      * @param int $blank
      * @return int
      */
-    protected function calculateTextWidth($img, $blank)
+    private function calculateTextWidth($image, $blank)
     {
-        global $plugin_cf;
-
-        $width = $plugin_cf['cryptographp']['crypt_width'];
+        $width = $this->config['crypt_width'];
 
         $xbegin = 0;
         $x = 0;
         while ($x < $width && !$xbegin) {
-            $xbegin = $this->scanColumn($img, $x, $blank);
+            $xbegin = $this->scanColumn($image, $x, $blank);
             $x++;
         }
 
         $xend = 0;
         $x = $width - 1;
         while ($x > 0 && !$xend) {
-            $xend = $this->scanColumn($img, $x, $blank);
+            $xend = $this->scanColumn($image, $x, $blank);
             $x--;
         }
         
@@ -230,36 +193,28 @@ class VisualCaptcha
     }
 
     /**
-     * @param resource $img
+     * @param resource $image
      * @param int $x
      * @param int $blank
      * @return int
      */
-    protected function scanColumn($img, $x, $blank)
+    private function scanColumn($image, $x, $blank)
     {
-        global $plugin_cf;
-
-        $res = 0;
-        $y = 0;
-        while ($y < $plugin_cf['cryptographp']['crypt_height'] && !$res) {
-            if (imagecolorat($img, $x, $y) != $blank) {
-                $res = $x;
+        for ($y = 0; $y < $this->config['crypt_height']; $y++) {
+            if (imagecolorat($image, $x, $y) != $blank) {
+                return $x;
             }
-            $y++;
         }
-        return $res;
+        return 0;
     }
     
     /**
      * @return string
      */
-    protected function getBackgroundImage()
+    private function getBackgroundImage()
     {
-        global $pth, $plugin_cf;
-
-        $pcf = $plugin_cf['cryptographp'];
-        if ($pcf['bg_image']) {
-            $filename = $pth['folder']['images'] . $pcf['bg_image'];
+        if ($this->config['bg_image']) {
+            $filename = $this->imageFolder . $this->config['bg_image'];
             if (is_dir($filename)) {
                 if ($dh  = opendir($filename)) {
                     while (($entry = readdir($dh)) != false) {
@@ -281,22 +236,11 @@ class VisualCaptcha
     }
 
     /**
-     * @param string $string
-     * @return string
-     */
-    protected function getRandomCharOf($string)
-    {
-        return $string[rand(0, strlen($string) - 1)];
-    }
-
-    /**
      * @return int
      */
-    protected function noisecolor()
+    private function noisecolor()
     {
-        global $plugin_cf;
-
-        switch ($plugin_cf['cryptographp']['noise_color']) {
+        switch ($this->config['noise_color']) {
             case 1:
                 $noisecol = $this->ink;
                 break;
@@ -305,7 +249,7 @@ class VisualCaptcha
                 break;
             case 3:
             default:
-                $noisecol = imagecolorallocate($this->img, rand(0, 255), rand(0, 255), rand(0, 255));
+                $noisecol = imagecolorallocate($this->image, rand(0, 255), rand(0, 255), rand(0, 255));
         }
         return $noisecol;
     }
@@ -313,11 +257,8 @@ class VisualCaptcha
     /**
      * @return void
      */
-    protected function renderBackground()
+    private function paintBackground()
     {
-        global $plugin_cf;
-
-        $pcf = $plugin_cf['cryptographp'];
         $bgimg = $this->getBackgroundImage();
         if ($bgimg) {
             list($getwidth, $getheight, $gettype) = getimagesize($bgimg);
@@ -333,150 +274,137 @@ class VisualCaptcha
                     break;
             }
             imagecopyresampled(
-                $this->img,
+                $this->image,
                 $imgread,
                 0,
                 0,
                 0,
                 0,
-                $pcf['crypt_width'],
-                $pcf['crypt_height'],
+                $this->config['crypt_width'],
+                $this->config['crypt_height'],
                 $getwidth,
                 $getheight
             );
             imagedestroy($imgread);
         } else {
-            $this->bg = imagecolorallocate($this->img, $pcf['bg_rgb_red'], $pcf['bg_rgb_green'], $pcf['bg_rgb_blue']);
-            imagefill($this->img, 0, 0, $this->bg);
-            if ($pcf['bg_clear']) {
-                imagecolortransparent($this->img, $this->bg);
+            $this->bg = imagecolorallocate(
+                $this->image,
+                $this->config['bg_rgb_red'],
+                $this->config['bg_rgb_green'],
+                $this->config['bg_rgb_blue']
+            );
+            imagefill($this->image, 0, 0, $this->bg);
+            if ($this->config['bg_clear']) {
+                imagecolortransparent($this->image, $this->bg);
             }
         }
     }
 
-    protected function renderCharacters()
+    private function paintCharacters()
     {
-        global $pth, $plugin_cf;
-
-        $pcf = $plugin_cf['cryptographp'];
-
         $this->ink = imagecolorallocatealpha(
-            $this->img,
-            $pcf['char_rgb_red'],
-            $pcf['char_rgb_green'],
-            $pcf['char_rgb_blue'],
-            $pcf['char_clear']
+            $this->image,
+            $this->config['char_rgb_red'],
+            $this->config['char_rgb_green'],
+            $this->config['char_rgb_blue'],
+            $this->config['char_clear']
         );
 
         $x = $this->xvariation;
-        for ($i = 1; $i <= $this->charnb; $i++) {
-            if ($pcf['char_color_random']) {
+        for ($i = 1; $i <= strlen($this->code); $i++) {
+            if ($this->config['char_color_random']) {
                 $rndink = $this->chooseRandomColor();
             }
-            $lafont = $pth['folder']['plugins'] . 'cryptographp/fonts/'
-                . $this->tword[$i]['font'];
+            $lafont = $this->fontFolder . $this->tword[$i]['font'];
             imagettftext(
-                $this->img,
+                $this->image,
                 $this->tword[$i]['size'],
                 $this->tword[$i]['angle'],
                 $x,
                 $this->tword[$i]['y'],
-                $pcf['char_color_random'] ? $rndink : $this->ink,
+                $this->config['char_color_random'] ? $rndink : $this->ink,
                 $lafont,
                 $this->tword[$i]['element']
             );
-            $x += $pcf['char_space'];
+            $x += $this->config['char_space'];
         }
     }
 
     /**
      * @return int
      */
-    protected function chooseRandomColor()
+    private function chooseRandomColor()
     {
-        global $plugin_cf;
-
-        $ok = false;
         do {
-            $rndR = rand(0, 255);
-            $rndG = rand(0, 255);
-            $rndB = rand(0, 255);
-            $rndcolor = $rndR + $rndG + $rndB;
-            $ok = $this->checkRandomColor($rndcolor);
-        } while (!$ok);
-        return imagecolorallocatealpha($this->img, $rndR, $rndG, $rndB, $plugin_cf['cryptographp']['char_clear']);
+            $red = rand(0, 255);
+            $green = rand(0, 255);
+            $blue = rand(0, 255);
+        } while (!$this->isValidRandomColor($red + $green + $blue));
+        return imagecolorallocatealpha($this->image, $red, $green, $blue, $this->config['char_clear']);
     }
 
     /**
      * @param int $color
      * @return bool
      */
-    protected function checkRandomColor($color)
+    private function isValidRandomColor($color)
     {
-        global $plugin_cf;
-
-        $ok = false;
-        switch ($plugin_cf['cryptographp']['char_color_random_level']) {
+        switch ($this->config['char_color_random_level']) {
             case 1: // very dark
                 if ($color < 200) {
-                    $ok = true;
+                    return true;
                 }
-                break;
+                return false;
             case 2: // dark
                 if ($color < 400) {
-                    $ok = true;
+                    return true;
                 }
-                break;
+                return false;
             case 3: // light
                 if ($color > 500) {
-                    $ok = true;
+                    return true;
                 }
-                break;
+                return false;
             case 4: // very light
                 if ($color > 650) {
-                    $ok = true;
+                    return true;
                 }
-                break;
+                return false;
             default:
-                $ok = true;
+                return true;
         }
-        return $ok;
     }
 
-    protected function renderNoise()
+    private function paintNoise()
     {
-        global $plugin_cf;
-
-        $pcf = $plugin_cf['cryptographp'];
-
-        $nbpx = rand($pcf['noise_pixel_min'], $pcf['noise_pixel_max']);
-        $nbline = rand($pcf['noise_line_min'], $pcf['noise_line_max']);
-        $nbcircle = rand($pcf['noise_circle_min'], $pcf['noise_circle_max']);
+        $nbpx = rand($this->config['noise_pixel_min'], $this->config['noise_pixel_max']);
+        $nbline = rand($this->config['noise_line_min'], $this->config['noise_line_max']);
+        $nbcircle = rand($this->config['noise_circle_min'], $this->config['noise_circle_max']);
         for ($i=1; $i < $nbpx; $i++) {
             imagesetpixel(
-                $this->img,
-                rand(0, $pcf['crypt_width'] - 1),
-                rand(0, $pcf['crypt_height'] - 1),
+                $this->image,
+                rand(0, $this->config['crypt_width'] - 1),
+                rand(0, $this->config['crypt_height'] - 1),
                 $this->noisecolor()
             );
         }
-        imagesetthickness($this->img, $pcf['noise_brush_size']);
+        imagesetthickness($this->image, $this->config['noise_brush_size']);
         for ($i=1; $i <= $nbline; $i++) {
             imageline(
-                $this->img,
-                rand(0, $pcf['crypt_width'] - 1),
-                rand(0, $pcf['crypt_height'] - 1),
-                rand(0, $pcf['crypt_width'] - 1),
-                rand(0, $pcf['crypt_height'] - 1),
+                $this->image,
+                rand(0, $this->config['crypt_width'] - 1),
+                rand(0, $this->config['crypt_height'] - 1),
+                rand(0, $this->config['crypt_width'] - 1),
+                rand(0, $this->config['crypt_height'] - 1),
                 $this->noisecolor()
             );
         }
         for ($i=1; $i <= $nbcircle; $i++) {
             imagearc(
-                $this->img,
-                rand(0, $pcf['crypt_width'] - 1),
-                rand(0, $pcf['crypt_height'] - 1),
-                $rayon = rand(5, $pcf['crypt_width'] / 3),
+                $this->image,
+                rand(0, $this->config['crypt_width'] - 1),
+                rand(0, $this->config['crypt_height'] - 1),
+                $rayon = rand(5, $this->config['crypt_width'] / 3),
                 $rayon,
                 0,
                 359,
@@ -485,31 +413,26 @@ class VisualCaptcha
         }
     }
 
-    protected function renderFrame()
+    private function paintFrame()
     {
-        global $plugin_cf;
-
-        $pcf = $plugin_cf['cryptographp'];
         $color = imagecolorallocate(
-            $this->img,
-            ($pcf['bg_rgb_red'] * 3 + $pcf['char_rgb_red']) / 4,
-            ($pcf['bg_rgb_green'] * 3 + $pcf['char_rgb_green']) / 4,
-            ($pcf['bg_rgb_blue'] * 3 + $pcf['char_rgb_blue']) / 4
+            $this->image,
+            ($this->config['bg_rgb_red'] * 3 + $this->config['char_rgb_red']) / 4,
+            ($this->config['bg_rgb_green'] * 3 + $this->config['char_rgb_green']) / 4,
+            ($this->config['bg_rgb_blue'] * 3 + $this->config['char_rgb_blue']) / 4
         );
-        imagerectangle($this->img, 0, 0, $pcf['crypt_width'] - 1, $pcf['crypt_height'] - 1, $color);
+        imagerectangle($this->image, 0, 0, $this->config['crypt_width'] - 1, $this->config['crypt_height'] - 1, $color);
     }
 
     /**
      * @param string $text
-     * @return void
+     * @return resource
      */
-    protected function deliverErrorImage($text)
+    public function createErrorImage($text)
     {
-        global $pth;
-
         $text = wordwrap($text, 15); // FIXME: UTF-8!
         $lines = explode("\n", $text);
-        $font = $pth['folder']['plugins'] . 'cryptographp/fonts/DejaVuSans.ttf';
+        $font = "{$this->fontFolder}DejaVuSans.ttf";
         $fontsize = 12;
         $padding = 5;
         $bbox = imagettfbbox($fontsize, 0, $font, $text);
@@ -521,34 +444,6 @@ class VisualCaptcha
         $fg = imagecolorallocate($img, 192, 0, 0);
         imagefilledrectangle($img, 0, 0, $width-1, $height-1, $bg);
         imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text);
-        header('Content-type: image/png');
-        imagepng($img);
-        exit;
-    }
-
-    protected function deliverImage()
-    {
-        global $plugin_cf;
-
-        switch (strtoupper($plugin_cf['cryptographp']['crypt_format'])) {
-            case 'JPG':
-            case 'JPEG':
-                if (imagetypes() & IMG_JPG) {
-                    header('Content-type: image/jpeg');
-                    imagejpeg($this->img, '', 80);
-                }
-                break;
-            case 'GIF':
-                if (imagetypes() & IMG_GIF) {
-                    header('Content-type: image/gif');
-                    imagegif($this->img);
-                }
-                break;
-            default:
-                if (imagetypes() & IMG_PNG) {
-                    header('Content-type: image/png');
-                    imagepng($this->img);
-                }
-        }
+        return $img;
     }
 }

@@ -25,55 +25,35 @@ namespace Cryptographp;
 class AudioCaptcha
 {
     /**
-     * @return void
+     * @var string
      */
-    public function deliver()
+    private $mp3Folder;
+
+    /**
+     * @var string $lang
+     */
+    public function __construct($lang)
     {
         global $pth;
 
-        $id = $_GET['cryptographp_id'];
-        $lang = basename($_GET['cryptographp_lang']);
-        if (!is_dir($pth['folder']['plugins'] . 'cryptographp/languages/' . $lang)) {
-            $lang = 'en';
-        }
-        if (session_id() == '') {
-            session_start();
-        }
-        if (!isset($_SESSION['cryptographp_code'][$id])) {
-            header('HTTP/1.0 403 Forbidden');
-            exit;
-        }
-        $o = $this->makeAudio($id, $lang);
-        header('Content-Type: audio/mpeg');
-        if (isset($_GET['cryptographp_download'])) {
-            header('Content-Disposition: attachment; filename="captcha.mp3"');
-        }
-        header('Content-Length: ' . strlen($o));
-        echo $o;
+        $this->mp3Folder = "{$pth['folder']['plugins']}cryptographp/languages/$lang/";
     }
 
     /**
-     * @param string $id
-     * @param string $lang
-     * @return string
+     * @param string $code
+     * @return ?string
      */
-    protected function makeAudio($id, $lang)
+    public function createMp3($code)
     {
-        global $pth, $plugin_tx;
-
-        $code = $_SESSION['cryptographp_code'][$id];
-        $o = '';
+        $mp3 = '';
         for ($i = 0; $i < strlen($code); $i++) {
-            $cnt = file_get_contents(
-                $pth['folder']['plugins'] . 'cryptographp/languages/'
-                . $lang . '/' . strtolower($code[$i]) . '.mp3'
-            );
-            if ($cnt !== false) {
-                $o .= $cnt;
+            $filename = $this->mp3Folder . strtolower($code[$i]) . '.mp3';
+            if (is_readable($filename) && ($contents = file_get_contents($filename))) {
+                $mp3 .= $contents;
             } else {
-                exit($plugin_tx['cryptographp']['error_audio']);
+                return null;
             }
         }
-        return $o;
+        return $mp3;
     }
 }

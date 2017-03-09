@@ -29,20 +29,27 @@ class Plugin
      */
     protected static $isJavaScriptEmitted;
 
+    /**
+     * @param string $param
+     * @return string
+     */
+    public static function getControllerAction(CaptchaController $controller, $param)
+    {
+        $action = preg_replace_callback(
+            '/_([a-z])/',
+            function ($matches) {
+                return ucfirst($matches[1]);
+            },
+            isset($_GET[$param]) ? stsl($_GET[$param]) : 'default'
+        );
+        if (!method_exists($controller, "{$action}Action")) {
+            $action = 'default';
+        }
+        return "{$action}Action";
+    }
+
     public static function dispatch()
     {
-        if (isset($_GET['cryptographp_mode'])) {
-            switch ($_GET['cryptographp_mode']) {
-                case 'video':
-                    $video = new VisualCaptcha();
-                    $video->render();
-                    exit;
-                case 'audio':
-                    $captcha = new AudioCaptcha();
-                    $captcha->deliver();
-                    break;
-            }
-        }
         if (XH_ADM) {
             if (function_exists('XH_registerStandardPluginMenuItems')) {
                 XH_registerStandardPluginMenuItems(false);

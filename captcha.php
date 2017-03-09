@@ -26,8 +26,9 @@
 function cryptographp_captcha_display()
 {
     $controller = new Cryptographp\CaptchaController;
+    $action = Cryptographp\Plugin::getControllerAction($controller, 'cryptographp_action');
     ob_start();
-    $controller->defaultAction();
+    $controller->{$action}();
     return ob_get_clean();
 }
 
