@@ -101,6 +101,112 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
         $this->assertSame('3bf1a81ebd43fd93f59429a18ccf65af', $this->calculateImageHash($actual));
     }
 
+    public function testNoiseAbove()
+    {
+        global $plugin_cf;
+
+        $plugin_cf['cryptographp']['noise_above'] = 'true';
+        $subject = new VisualCaptcha;
+        $actual = $subject->createImage('ABCD');
+        $this->assertSame('7cb5f96a68163626578bf100d1dc9768', $this->calculateImageHash($actual));
+    }
+
+    public function testCryptGrayScale()
+    {
+        global $plugin_cf;
+
+        $plugin_cf['cryptographp']['crypt_gray_scale'] = 'true';
+        $subject = new VisualCaptcha;
+        $actual = $subject->createImage('ABCD');
+        $this->assertSame('66f29f71ee6d6b30c08459936e9294d8', $this->calculateImageHash($actual));
+    }
+
+    public function testCryptGaussianBlur()
+    {
+        global $plugin_cf;
+
+        $plugin_cf['cryptographp']['crypt_gaussian_blur'] = 'true';
+        $subject = new VisualCaptcha;
+        $actual = $subject->createImage('ABCD');
+        $this->assertSame('421220c58b7f94f3d9296ebae6fb4ec7', $this->calculateImageHash($actual));
+    }
+
+    /**
+     * @dataProvider provideBgImageData
+     * @param string $type
+     */
+    public function testBgImage($type)
+    {
+        global $plugin_cf;
+
+        $plugin_cf['cryptographp']['bg_image'] = "bg.$type";
+        $this->createYellowBackgroundImage($type);
+        $subject = new VisualCaptcha;
+        $actual = $subject->createImage('ABCD');
+        $this->assertSame('8698d52fa3ca77b981d5fb0cfc389518', $this->calculateImageHash($actual));
+    }
+
+    /**
+     * @return array
+     */
+    public function provideBgImageData()
+    {
+        return array(
+            ['png'],
+            ['gif'],
+            ['jpeg']
+        );
+    }
+
+    public function testBgImages()
+    {
+        global $plugin_cf;
+
+        $plugin_cf['cryptographp']['bg_image'] = '.';
+        $this->createYellowBackgroundImage('png');
+        $this->createYellowBackgroundImage('gif');
+        $subject = new VisualCaptcha;
+        $actual = $subject->createImage('ABCD');
+        $this->assertSame('8698d52fa3ca77b981d5fb0cfc389518', $this->calculateImageHash($actual));
+    }
+
+    /**
+     * @param string $type
+     */
+    private function createYellowBackgroundImage($type)
+    {
+        $backgroundImage = imagecreate(130, 40);
+        imagecolorallocate($backgroundImage, 255, 255, 0);
+        $writeImage = "image$type";
+        $writeImage($backgroundImage, vfsStream::url("test/images/bg.$type"));
+    }
+
+    /**
+     * @dataProvider provideNoiseColorData
+     * @param string $kind
+     * @param string $expected
+     */
+    public function testNoiseColor($kind, $expected)
+    {
+        global $plugin_cf;
+
+        $plugin_cf['cryptographp']['noise_color'] = $kind;
+        $subject = new VisualCaptcha;
+        $actual = $subject->createImage('ABCD');
+        $this->assertSame($expected, $this->calculateImageHash($actual));
+    }
+
+    /**
+     * @return array
+     */
+    public function provideNoiseColorData()
+    {
+        return array(
+            ['1', '81076c5f1afef7c8b471a7e499fdd6cd'],
+            ['2', '2899705886d9c70f85bceecfd03f2320']
+        );
+    }
+
     private function calculateImageHash($image)
     {
         ob_start();

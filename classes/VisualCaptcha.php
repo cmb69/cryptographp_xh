@@ -22,6 +22,8 @@
 
 namespace Cryptographp;
 
+use stdClass;
+
 class VisualCaptcha
 {
     /**
@@ -30,9 +32,9 @@ class VisualCaptcha
     private $image;
 
     /**
-     * @var array
+     * @var object[]
      */
-    private $tword;
+    private $word;
 
     /**
      * @var int
@@ -47,7 +49,7 @@ class VisualCaptcha
     /**
      * @var int
      */
-    private $xvariation;
+    private $xOffset;
 
     /**
      * @var string
@@ -117,53 +119,48 @@ class VisualCaptcha
 
     private function precalculate()
     {
-        $imgtmp = imagecreatetruecolor($this->config['crypt_width'], $this->config['crypt_height']);
-        $blank = imagecolorallocate($imgtmp, 255, 255, 255);
-        $black = imagecolorallocate($imgtmp, 0, 0, 0);
-        imagefill($imgtmp, 0, 0, $blank);
+        $image = imagecreatetruecolor($this->config['crypt_width'], $this->config['crypt_height']);
+        $blank = imagecolorallocate($image, 255, 255, 255);
+        $black = imagecolorallocate($image, 0, 0, 0);
+        imagefill($image, 0, 0, $blank);
 
         $x = 10;
-        for ($i = 1; $i <= strlen($this->code); $i++) {
-            $this->tword[$i]['font'] =  $this->fonts[array_rand($this->fonts, 1)];
-            $this->tword[$i]['angle'] = rand(1, 2) == 1
+        for ($i = 0; $i < strlen($this->code); $i++) {
+            $char = new stdClass;
+            $char->font =  $this->fonts[array_rand($this->fonts, 1)];
+            $char->angle = rand(1, 2) == 1
                 ? rand(0, $this->config['char_angle_max'])
                 : rand(360 - $this->config['char_angle_max'], 360);
 
-            $this->tword[$i]['element'] = $this->code[$i-1];
+            $char->element = $this->code[$i];
 
-            $this->tword[$i]['size'] = rand($this->config['char_size_min'], $this->config['char_size_max']);
-            $lafont = $this->fontFolder . $this->tword[$i]['font'];
-            $bbox = imagettfbbox(
-                $this->tword[$i]['size'],
-                $this->tword[$i]['angle'],
-                $lafont,
-                $this->tword[$i]['element']
-            );
+            $char->size = rand($this->config['char_size_min'], $this->config['char_size_max']);
+            $font = $this->fontFolder . $char->font;
+            $bbox = imagettfbbox($char->size, $char->angle, $font, $char->element);
             $min = min($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
             $max = max($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
             $delta = $this->config['crypt_height'] - $max + $min;
-            $this->tword[$i]['y'] = $delta / 2 + abs($min) - 1;
+            $char->y = $delta / 2 + abs($min) - 1;
             if ($this->config['char_displace']) {
-                $this->tword[$i]['y'] += rand(-intval($delta / 2), intval($delta / 2));
+                $char->y += rand(-intval($delta / 2), intval($delta / 2));
             }
-
             imagettftext(
-                $imgtmp,
-                $this->tword[$i]['size'],
-                $this->tword[$i]['angle'],
+                $image,
+                $char->size,
+                $char->angle,
                 $x,
-                $this->tword[$i]['y'],
+                $char->y,
                 $black,
-                $lafont,
-                $this->tword[$i]['element']
+                $font,
+                $char->element
             );
-
+            $this->word[] = $char;
             $x += $this->config['char_space'];
         }
 
-        $width = $this->calculateTextWidth($imgtmp, $blank);
-        $this->xvariation = round(($this->config['crypt_width'] - $width) / 2);
-        imagedestroy($imgtmp);
+        $width = $this->calculateTextWidth($image, $blank);
+        $this->xOffset = round(($this->config['crypt_width'] - $width) / 2);
+        imagedestroy($image);
     }
 
     /**
@@ -174,21 +171,14 @@ class VisualCaptcha
     private function calculateTextWidth($image, $blank)
     {
         $width = $this->config['crypt_width'];
-
         $xbegin = 0;
-        $x = 0;
-        while ($x < $width && !$xbegin) {
+        for ($x = 0; $x < $width && !$xbegin; $x++) {
             $xbegin = $this->scanColumn($image, $x, $blank);
-            $x++;
         }
-
         $xend = 0;
-        $x = $width - 1;
-        while ($x > 0 && !$xend) {
+        for ($x = $width - 1; $x > 0 && !$xend; $x--) {
             $xend = $this->scanColumn($image, $x, $blank);
-            $x--;
         }
-        
         return $xend - $xbegin;
     }
 
@@ -211,28 +201,20 @@ class VisualCaptcha
     /**
      * @return string
      */
-    private function getBackgroundImage()
+    private function findBackgroundImage()
     {
         if ($this->config['bg_image']) {
             $filename = $this->imageFolder . $this->config['bg_image'];
             if (is_dir($filename)) {
-                if ($dh  = opendir($filename)) {
-                    while (($entry = readdir($dh)) != false) {
-                        if (preg_match('/\.(gif|jpg|png)$/', $entry)) {
-                            $files[] = $entry;
-                        }
-                    }
-                    closedir($dh);
-                }
+                $files = array_filter(scandir($filename), function ($basename) {
+                    return preg_match('/\.(gif|jpg|png)$/', $basename);
+                });
                 return $filename . '/' . $files[array_rand($files, 1)];
             } elseif (is_file($filename)) {
                 return $filename;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -242,16 +224,12 @@ class VisualCaptcha
     {
         switch ($this->config['noise_color']) {
             case 1:
-                $noisecol = $this->ink;
-                break;
+                return $this->ink;
             case 2:
-                $noisecol = $this->bg;
-                break;
-            case 3:
+                return $this->bg;
             default:
-                $noisecol = imagecolorallocate($this->image, rand(0, 255), rand(0, 255), rand(0, 255));
+                return imagecolorallocate($this->image, rand(0, 255), rand(0, 255), rand(0, 255));
         }
-        return $noisecol;
     }
 
     /**
@@ -259,7 +237,7 @@ class VisualCaptcha
      */
     private function paintBackground()
     {
-        $bgimg = $this->getBackgroundImage();
+        $bgimg = $this->findBackgroundImage();
         if ($bgimg) {
             list($getwidth, $getheight, $gettype) = getimagesize($bgimg);
             switch ($gettype) {
@@ -310,21 +288,22 @@ class VisualCaptcha
             $this->config['char_clear']
         );
 
-        $x = $this->xvariation;
-        for ($i = 1; $i <= strlen($this->code); $i++) {
+        $x = $this->xOffset;
+        foreach ($this->word as $char) {
             if ($this->config['char_color_random']) {
-                $rndink = $this->chooseRandomColor();
+                $ink = $this->chooseRandomColor();
+            } else {
+                $ink = $this->ink;
             }
-            $lafont = $this->fontFolder . $this->tword[$i]['font'];
             imagettftext(
                 $this->image,
-                $this->tword[$i]['size'],
-                $this->tword[$i]['angle'],
+                $char->size,
+                $char->angle,
                 $x,
-                $this->tword[$i]['y'],
-                $this->config['char_color_random'] ? $rndink : $this->ink,
-                $lafont,
-                $this->tword[$i]['element']
+                $char->y,
+                $ink,
+                $this->fontFolder . $char->font,
+                $char->element
             );
             $x += $this->config['char_space'];
         }
@@ -351,25 +330,13 @@ class VisualCaptcha
     {
         switch ($this->config['char_color_random_level']) {
             case 1: // very dark
-                if ($color < 200) {
-                    return true;
-                }
-                return false;
+                return $color < 200;
             case 2: // dark
-                if ($color < 400) {
-                    return true;
-                }
-                return false;
+                return $color < 400;
             case 3: // light
-                if ($color > 500) {
-                    return true;
-                }
-                return false;
+                return $color > 500;
             case 4: // very light
-                if ($color > 650) {
-                    return true;
-                }
-                return false;
+                return $color > 650;
             default:
                 return true;
         }
@@ -380,7 +347,7 @@ class VisualCaptcha
         $nbpx = rand($this->config['noise_pixel_min'], $this->config['noise_pixel_max']);
         $nbline = rand($this->config['noise_line_min'], $this->config['noise_line_max']);
         $nbcircle = rand($this->config['noise_circle_min'], $this->config['noise_circle_max']);
-        for ($i=1; $i < $nbpx; $i++) {
+        for ($i = 0; $i < $nbpx; $i++) {
             imagesetpixel(
                 $this->image,
                 rand(0, $this->config['crypt_width'] - 1),
@@ -389,7 +356,7 @@ class VisualCaptcha
             );
         }
         imagesetthickness($this->image, $this->config['noise_brush_size']);
-        for ($i=1; $i <= $nbline; $i++) {
+        for ($i = 0; $i < $nbline; $i++) {
             imageline(
                 $this->image,
                 rand(0, $this->config['crypt_width'] - 1),
@@ -399,13 +366,14 @@ class VisualCaptcha
                 $this->noisecolor()
             );
         }
-        for ($i=1; $i <= $nbcircle; $i++) {
+        for ($i = 0; $i < $nbcircle; $i++) {
+            $diameter = rand(5, $this->config['crypt_width'] / 3);
             imagearc(
                 $this->image,
                 rand(0, $this->config['crypt_width'] - 1),
                 rand(0, $this->config['crypt_height'] - 1),
-                $rayon = rand(5, $this->config['crypt_width'] / 3),
-                $rayon,
+                $diameter,
+                $diameter,
                 0,
                 359,
                 $this->noisecolor()
