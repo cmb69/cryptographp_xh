@@ -67,5 +67,4 @@ class CodeGenerator
     {
         return $string[rand(0, strlen($string) - 1)];
     }
-
 }
