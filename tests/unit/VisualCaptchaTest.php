@@ -22,8 +22,6 @@
 namespace Cryptographp;
 
 use PHPUnit_Framework_TestCase;
-use org\bovigo\vfs\vfsStreamWrapper;
-use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStream;
 
 class VisualCaptchaTest extends PHPUnit_Framework_TestCase
@@ -44,8 +42,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
     {
         global $pth;
 
-        vfsStreamWrapper::register();
-        vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
+        vfsStream::setup('test');
         $pth['folder'] = array(
             'images' => vfsStream::url('test/images/'),
             'plugins' => '../'

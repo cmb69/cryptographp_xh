@@ -22,8 +22,6 @@
 namespace Cryptographp;
 
 use PHPUnit_Framework_TestCase;
-use org\bovigo\vfs\vfsStreamWrapper;
-use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStream;
 
 class AudioCaptchaTest extends PHPUnit_Framework_TestCase
@@ -43,8 +41,7 @@ class AudioCaptchaTest extends PHPUnit_Framework_TestCase
     {
         global $pth;
 
-        vfsStreamWrapper::register();
-        vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
+        vfsStream::setup('test');
         $pth['folder']['plugins'] = vfsStream::url('test/');
         $folder = vfsStream::url('test/cryptographp/languages/en/');
         mkdir($folder, 0777, true);
