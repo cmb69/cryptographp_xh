@@ -127,14 +127,14 @@ class VisualCaptcha
         $x = 10;
         for ($i = 0; $i < strlen($this->code); $i++) {
             $char = new stdClass;
-            $char->font =  $this->fonts[array_rand($this->fonts, 1)];
-            $char->angle = rand(1, 2) == 1
-                ? rand(0, $this->config['char_angle_max'])
-                : rand(360 - $this->config['char_angle_max'], 360);
+            $char->font =  $this->fonts[mt_rand(0, count($this->fonts) - 1)];
+            $char->angle = mt_rand(1, 2) == 1
+                ? mt_rand(0, $this->config['char_angle_max'])
+                : mt_rand(360 - $this->config['char_angle_max'], 360);
 
             $char->element = $this->code[$i];
 
-            $char->size = rand($this->config['char_size_min'], $this->config['char_size_max']);
+            $char->size = mt_rand($this->config['char_size_min'], $this->config['char_size_max']);
             $font = $this->fontFolder . $char->font;
             $bbox = imagettfbbox($char->size, $char->angle, $font, $char->element);
             $min = min($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
@@ -142,7 +142,7 @@ class VisualCaptcha
             $delta = $this->config['crypt_height'] - $max + $min;
             $char->y = $delta / 2 + abs($min) - 1;
             if ($this->config['char_displace']) {
-                $char->y += rand(-intval($delta / 2), intval($delta / 2));
+                $char->y += mt_rand(-intval($delta / 2), intval($delta / 2));
             }
             imagettftext(
                 $image,
@@ -206,10 +206,10 @@ class VisualCaptcha
         if ($this->config['bg_image']) {
             $filename = $this->imageFolder . $this->config['bg_image'];
             if (is_dir($filename)) {
-                $files = array_filter(scandir($filename), function ($basename) {
+                $files = array_values(array_filter(scandir($filename), function ($basename) {
                     return preg_match('/\.(gif|jpg|png)$/', $basename);
-                });
-                return $filename . '/' . $files[array_rand($files, 1)];
+                }));
+                return $filename . '/' . $files[mt_rand(0, count($files) - 1)];
             } elseif (is_file($filename)) {
                 return $filename;
             }
@@ -228,7 +228,7 @@ class VisualCaptcha
             case 2:
                 return $this->bg;
             default:
-                return imagecolorallocate($this->image, rand(0, 255), rand(0, 255), rand(0, 255));
+                return imagecolorallocate($this->image, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
         }
     }
 
@@ -315,9 +315,9 @@ class VisualCaptcha
     private function chooseRandomColor()
     {
         do {
-            $red = rand(0, 255);
-            $green = rand(0, 255);
-            $blue = rand(0, 255);
+            $red = mt_rand(0, 255);
+            $green = mt_rand(0, 255);
+            $blue = mt_rand(0, 255);
         } while (!$this->isValidRandomColor($red + $green + $blue));
         return imagecolorallocatealpha($this->image, $red, $green, $blue, $this->config['char_clear']);
     }
@@ -344,14 +344,14 @@ class VisualCaptcha
 
     private function paintNoise()
     {
-        $nbpx = rand($this->config['noise_pixel_min'], $this->config['noise_pixel_max']);
-        $nbline = rand($this->config['noise_line_min'], $this->config['noise_line_max']);
-        $nbcircle = rand($this->config['noise_circle_min'], $this->config['noise_circle_max']);
+        $nbpx = mt_rand($this->config['noise_pixel_min'], $this->config['noise_pixel_max']);
+        $nbline = mt_rand($this->config['noise_line_min'], $this->config['noise_line_max']);
+        $nbcircle = mt_rand($this->config['noise_circle_min'], $this->config['noise_circle_max']);
         for ($i = 0; $i < $nbpx; $i++) {
             imagesetpixel(
                 $this->image,
-                rand(0, $this->config['crypt_width'] - 1),
-                rand(0, $this->config['crypt_height'] - 1),
+                mt_rand(0, $this->config['crypt_width'] - 1),
+                mt_rand(0, $this->config['crypt_height'] - 1),
                 $this->noisecolor()
             );
         }
@@ -359,19 +359,19 @@ class VisualCaptcha
         for ($i = 0; $i < $nbline; $i++) {
             imageline(
                 $this->image,
-                rand(0, $this->config['crypt_width'] - 1),
-                rand(0, $this->config['crypt_height'] - 1),
-                rand(0, $this->config['crypt_width'] - 1),
-                rand(0, $this->config['crypt_height'] - 1),
+                mt_rand(0, $this->config['crypt_width'] - 1),
+                mt_rand(0, $this->config['crypt_height'] - 1),
+                mt_rand(0, $this->config['crypt_width'] - 1),
+                mt_rand(0, $this->config['crypt_height'] - 1),
                 $this->noisecolor()
             );
         }
         for ($i = 0; $i < $nbcircle; $i++) {
-            $diameter = rand(5, $this->config['crypt_width'] / 3);
+            $diameter = mt_rand(5, $this->config['crypt_width'] / 3);
             imagearc(
                 $this->image,
-                rand(0, $this->config['crypt_width'] - 1),
-                rand(0, $this->config['crypt_height'] - 1),
+                mt_rand(0, $this->config['crypt_width'] - 1),
+                mt_rand(0, $this->config['crypt_height'] - 1),
                 $diameter,
                 $diameter,
                 0,
