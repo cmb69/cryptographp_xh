@@ -79,7 +79,7 @@ class Plugin
         $o .= print_plugin_admin('off');
         switch ($admin) {
             case '':
-                $o .= self::renderVersion() . self::renderSystemCheck();
+                $o .= self::renderInfo();
                 break;
             default:
                 $o .= plugin_admin_common($action, $admin, 'cryptographp');
@@ -89,22 +89,15 @@ class Plugin
     /**
      * @return string
      */
-    protected static function renderVersion()
+    protected static function renderInfo()
     {
         global $pth;
 
         $view = new View('info');
         $view->logo = "{$pth['folder']['plugins']}cryptographp/cryptographp.png";
         $view->version = CRYPTOGRAPHP_VERSION;
+        $view->checks = (new SystemCheckService)->getChecks();
         return (string) $view;
-    }
-
-    /**
-     * @return string
-     */
-    protected static function renderSystemCheck()
-    {
-        return (new SystemCheck())->render();
     }
 
     /**
