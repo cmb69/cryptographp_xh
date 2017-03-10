@@ -50,14 +50,14 @@ class Plugin
         return "{$action}Action";
     }
 
-    public static function dispatch()
+    public function run()
     {
         if (XH_ADM) {
             if (function_exists('XH_registerStandardPluginMenuItems')) {
                 XH_registerStandardPluginMenuItems(false);
             }
-            if (self::isAdministrationRequested()) {
-                self::handleAdministration();
+            if ($this->isAdministrationRequested()) {
+                $this->handleAdministration();
             }
         }
     }
@@ -65,7 +65,7 @@ class Plugin
     /**
      * @return bool
      */
-    protected static function isAdministrationRequested()
+    private function isAdministrationRequested()
     {
         global $cryptographp;
 
@@ -74,14 +74,14 @@ class Plugin
             || isset($cryptographp) && $cryptographp == 'true';
     }
 
-    protected static function handleAdministration()
+    private function handleAdministration()
     {
         global $admin, $action, $o;
 
         $o .= print_plugin_admin('off');
         switch ($admin) {
             case '':
-                $o .= self::renderInfo();
+                $o .= $this->renderInfo();
                 break;
             default:
                 $o .= plugin_admin_common($action, $admin, 'cryptographp');
@@ -91,7 +91,7 @@ class Plugin
     /**
      * @return string
      */
-    protected static function renderInfo()
+    private function renderInfo()
     {
         global $pth;
 

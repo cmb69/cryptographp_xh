@@ -20,4 +20,4 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-Cryptographp\Plugin::dispatch();
+(new Cryptographp\Plugin)->run();
