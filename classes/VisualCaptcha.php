@@ -220,7 +220,7 @@ class VisualCaptcha
     /**
      * @return int
      */
-    private function noisecolor()
+    private function getNoiseColor()
     {
         switch ($this->config['noise_color']) {
             case 1:
@@ -352,7 +352,7 @@ class VisualCaptcha
                 $this->image,
                 mt_rand(0, $this->config['crypt_width'] - 1),
                 mt_rand(0, $this->config['crypt_height'] - 1),
-                $this->noisecolor()
+                $this->getNoiseColor()
             );
         }
         imagesetthickness($this->image, $this->config['noise_brush_size']);
@@ -363,7 +363,7 @@ class VisualCaptcha
                 mt_rand(0, $this->config['crypt_height'] - 1),
                 mt_rand(0, $this->config['crypt_width'] - 1),
                 mt_rand(0, $this->config['crypt_height'] - 1),
-                $this->noisecolor()
+                $this->getNoiseColor()
             );
         }
         for ($i = 0; $i < $nbcircle; $i++) {
@@ -376,7 +376,7 @@ class VisualCaptcha
                 $diameter,
                 0,
                 359,
-                $this->noisecolor()
+                $this->getNoiseColor()
             );
         }
     }
