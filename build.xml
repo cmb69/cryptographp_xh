@@ -68,6 +68,11 @@
         <exec command="phpunit --configuration coverage.xml" logoutput="true"/>
     </target>
 
+    <target name="uml" description="generates UML diagram">
+        <exec command="umlwriter diagram:render --reflector=reflect --processor=graphviz classes | dot -Tpng -o UML.png"
+              logoutput="true"/>
+    </target>
+
     <target name="build" description="builds a distributable ZIP archive">
         <fail unless="version" message="version is not defined!"/>
         <exec command="git archive -o export.tar HEAD" checkreturn="true"/>
