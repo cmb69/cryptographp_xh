@@ -398,7 +398,7 @@ class VisualCaptcha
      */
     public function createErrorImage($text)
     {
-        $text = wordwrap($text, 15); // FIXME: UTF-8!
+        $text = preg_replace('/(?=\s)(.{1,15})(?:\s|$)/u', "\$1\n", $text);
         $lines = explode("\n", $text);
         $font = "{$this->fontFolder}DejaVuSans.ttf";
         $fontsize = 12;

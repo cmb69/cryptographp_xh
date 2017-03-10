@@ -207,6 +207,15 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @link https://github.com/cmb69/cryptographp_xh/issues/5
+     */
+    public function testWordwrapInErrorImage()
+    {
+        $actual = $this->subject->createErrorImage('Перезагрузка слишком быстро!');
+        $this->assertSame('b85e626ee614a5fa29012defdd9667dc', $this->calculateImageHash($actual));
+    }
+
     private function calculateImageHash($image)
     {
         ob_start();
