@@ -104,8 +104,7 @@ class Plugin
      */
     protected static function renderSystemCheck()
     {
-        $systemCheck = new SystemCheck();
-        return $systemCheck->render();
+        return (new SystemCheck())->render();
     }
 
     /**

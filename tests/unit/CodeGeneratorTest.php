@@ -60,7 +60,6 @@ class CodeGeneratorTest extends PHPUnit_Framework_TestCase
         global $plugin_cf;
 
         $plugin_cf['cryptographp']['crypt_easy'] = '';
-        $subject = new CodeGenerator;
-        $this->assertSame('RRRR', $subject->createCode());
+        $this->assertSame('RRRR', (new CodeGenerator)->createCode());
     }
 }

@@ -106,8 +106,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
         global $plugin_cf;
 
         $plugin_cf['cryptographp']['noise_above'] = 'true';
-        $subject = new VisualCaptcha;
-        $actual = $subject->createImage('ABCD');
+        $actual = (new VisualCaptcha)->createImage('ABCD');
         $this->assertSame('7cb5f96a68163626578bf100d1dc9768', $this->calculateImageHash($actual));
     }
 
@@ -116,8 +115,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
         global $plugin_cf;
 
         $plugin_cf['cryptographp']['crypt_gray_scale'] = 'true';
-        $subject = new VisualCaptcha;
-        $actual = $subject->createImage('ABCD');
+        $actual = (new VisualCaptcha)->createImage('ABCD');
         $this->assertSame('66f29f71ee6d6b30c08459936e9294d8', $this->calculateImageHash($actual));
     }
 
@@ -126,8 +124,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
         global $plugin_cf;
 
         $plugin_cf['cryptographp']['crypt_gaussian_blur'] = 'true';
-        $subject = new VisualCaptcha;
-        $actual = $subject->createImage('ABCD');
+        $actual = (new VisualCaptcha)->createImage('ABCD');
         $this->assertSame('421220c58b7f94f3d9296ebae6fb4ec7', $this->calculateImageHash($actual));
     }
 
@@ -141,8 +138,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
 
         $plugin_cf['cryptographp']['bg_image'] = "bg.$type";
         $this->createYellowBackgroundImage($type);
-        $subject = new VisualCaptcha;
-        $actual = $subject->createImage('ABCD');
+        $actual = (new VisualCaptcha)->createImage('ABCD');
         $this->assertSame('8698d52fa3ca77b981d5fb0cfc389518', $this->calculateImageHash($actual));
     }
 
@@ -165,8 +161,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
         $plugin_cf['cryptographp']['bg_image'] = '.';
         $this->createYellowBackgroundImage('png');
         $this->createYellowBackgroundImage('gif');
-        $subject = new VisualCaptcha;
-        $actual = $subject->createImage('ABCD');
+        $actual = (new VisualCaptcha)->createImage('ABCD');
         $this->assertSame('8698d52fa3ca77b981d5fb0cfc389518', $this->calculateImageHash($actual));
     }
 
@@ -191,8 +186,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
         global $plugin_cf;
 
         $plugin_cf['cryptographp']['noise_color'] = $kind;
-        $subject = new VisualCaptcha;
-        $actual = $subject->createImage('ABCD');
+        $actual = (new VisualCaptcha)->createImage('ABCD');
         $this->assertSame($expected, $this->calculateImageHash($actual));
     }
 

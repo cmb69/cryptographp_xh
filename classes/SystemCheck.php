@@ -32,15 +32,14 @@ class SystemCheck
         global $plugin_tx;
 
         $o = '<h4>' . $plugin_tx['cryptographp']['syscheck_title'] . '</h4>'
-            . $this->checkPHPVersion('5.1.2') . tag('br');
-        foreach (array('gd', 'pcre', 'session', 'spl') as $ext) {
+            . $this->checkPHPVersion('5.4.0') . tag('br');
+        foreach (array('gd', 'session') as $ext) {
             $o .= $this->checkExtension($ext) . tag('br');
         }
         if (function_exists('gd_info')) {
             $o .= $this->checkGDSupport();
         }
-        $o .= $this->checkMagicQuotesRuntime() . tag('br') . tag('br')
-            . $this->checkXHVersion('1.6') . tag('br') . tag('br');
+        $o .= tag('br') . $this->checkXHVersion('1.6') . tag('br') . tag('br');
         foreach ($this->getWritableFolders() as $folder) {
             $o .= $this->checkWritability($folder) . tag('br');
         }
@@ -98,18 +97,6 @@ class SystemCheck
                 . tag('br');
         }
         return $html;
-    }
-
-    /**
-     * @return string
-     */
-    protected function checkMagicQuotesRuntime()
-    {
-        global $plugin_tx;
-
-        $kind = get_magic_quotes_runtime() ? 'fail' : 'ok';
-        return $this->renderCheckIcon($kind). '&nbsp;&nbsp;'
-            . $plugin_tx['cryptographp']['syscheck_magic_quotes'];
     }
 
     /**

@@ -110,8 +110,7 @@ class CaptchaController
                 sleep($this->config['crypt_use_timer'] - $delay);
             }
         }
-        $codeGenerator = new CodeGenerator;
-        $code = $codeGenerator->createCode();
+        $code = (new CodeGenerator)->createCode();
         $image = $captcha->createImage($code);
         $_SESSION['cryptographp_code'][$id] = $code;
         $_SESSION['cryptographp_time'][$id] = time();
@@ -157,8 +156,7 @@ class CaptchaController
             header('HTTP/1.0 403 Forbidden');
             exit;
         }
-        $captcha = new AudioCaptcha($lang);
-        $mp3 = $captcha->createMp3($_SESSION['cryptographp_code'][$id]);
+        $mp3 = (new AudioCaptcha($lang))->createMp3($_SESSION['cryptographp_code'][$id]);
         if (!isset($mp3)) {
             exit($this->lang['error_audio']);
         }
