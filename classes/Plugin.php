@@ -24,6 +24,8 @@ namespace Cryptographp;
 
 class Plugin
 {
+    const VERSION = '@CRYPTOGRAPHP_VERSION@';
+
     /**
      * @var bool
      */
@@ -95,7 +97,7 @@ class Plugin
 
         $view = new View('info');
         $view->logo = "{$pth['folder']['plugins']}cryptographp/cryptographp.png";
-        $view->version = CRYPTOGRAPHP_VERSION;
+        $view->version = self::VERSION;
         $view->checks = (new SystemCheckService)->getChecks();
         return (string) $view;
     }

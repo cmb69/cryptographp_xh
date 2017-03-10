@@ -20,6 +20,4 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('CRYPTOGRAPHP_VERSION', '@CRYPTOGRAPHP_VERSION@');
-
 Cryptographp\Plugin::dispatch();
