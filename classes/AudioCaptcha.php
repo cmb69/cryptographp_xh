@@ -24,36 +24,109 @@ namespace Cryptographp;
 
 class AudioCaptcha
 {
+    const NOISE_PEAK = 4000;
+
     /**
      * @var string
      */
-    private $mp3Folder;
+    private $audioFolder;
 
     /**
-     * @var string $lang
+     * @param string $lang
      */
     public function __construct($lang)
     {
         global $pth;
 
-        $this->mp3Folder = "{$pth['folder']['plugins']}cryptographp/languages/$lang/";
+        $this->audioFolder = "{$pth['folder']['plugins']}cryptographp/languages/$lang/";
     }
 
     /**
      * @param string $code
-     * @return ?string
+     * @return string
      */
-    public function createMp3($code)
+    public function createWav($code)
     {
-        $mp3 = '';
+        if (!($samples = $this->concatenateRawAudio($code))) {
+            return;
+        }
+        $dataChunk = $this->createDataChunk($this->applyWhiteNoise($samples));
+        return $this->createRiffChunk($dataChunk) . $this->createFmtChunk() . $dataChunk;
+    }
+
+    /**
+     * @param string $dataChunk
+     * @return string
+     */
+    private function createRiffChunk($dataChunk)
+    {
+        return pack('A4Va4', 'RIFF', 4 + 24 + strlen($dataChunk), 'WAVE');
+    }
+
+    /**
+     * @return string
+     */
+    private function createFmtChunk()
+    {
+        return pack('A4VvvVVvv', 'fmt', 16, 1, 1, 8000, 16000, 2, 16);
+    }
+
+    /**
+     * @param string $data
+     * @return string
+     */
+    private function createDataChunk($data)
+    {
+        return pack('A4V', 'data', strlen($data)) . $data;
+    }
+
+    /**
+     * The raw audio files are supposed to contain mono *unsigned* 16-bit LPCM
+     * samples with a sampling rate of 8000 Hz in little-endian byte order.
+     *
+     * @param string $code
+     * @return ?int[]
+     */
+    private function concatenateRawAudio($code)
+    {
+        $data = '';
         for ($i = 0; $i < strlen($code); $i++) {
-            $filename = $this->mp3Folder . strtolower($code[$i]) . '.mp3';
+            $filename = $this->audioFolder . strtolower($code[$i]) . '.raw';
             if (is_readable($filename) && ($contents = file_get_contents($filename))) {
-                $mp3 .= $contents;
+                $data .= $contents;
             } else {
                 return null;
             }
         }
-        return $mp3;
+        return unpack('v*', $data);
+    }
+
+    /**
+     * @param int[] $samples
+     * @return string
+     */
+    private function applyWhiteNoise($samples)
+    {
+        $gain = (65535 - self::NOISE_PEAK) / $this->getPeak($samples);
+        ob_start();
+        foreach ($samples as $sample) {
+            echo pack('v', (int) ($gain * $sample) + mt_rand(0, self::NOISE_PEAK) - 32768);
+        }
+        return ob_get_clean();
+    }
+
+    /**
+     * @param int[] $samples
+     * @return int
+     */
+    private function getPeak($samples)
+    {
+        $peak = 0;
+        foreach ($samples as $sample) {
+            if ($sample > $peak) {
+                $peak = $sample;
+            }
+        }
+        return $peak;
     }
 }

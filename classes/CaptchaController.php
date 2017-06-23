@@ -156,16 +156,16 @@ class CaptchaController
             header('HTTP/1.0 403 Forbidden');
             exit;
         }
-        $mp3 = (new AudioCaptcha($lang))->createMp3($_SESSION['cryptographp_code'][$id]);
-        if (!isset($mp3)) {
+        $wav = (new AudioCaptcha($lang))->createWav($_SESSION['cryptographp_code'][$id]);
+        if (!isset($wav)) {
             exit($this->lang['error_audio']);
         }
-        header('Content-Type: audio/mpeg');
+        header('Content-Type: audio/x-wav');
         if (isset($_GET['cryptographp_download'])) {
-            header('Content-Disposition: attachment; filename="captcha.mp3"');
+            header('Content-Disposition: attachment; filename="captcha.wav"');
         }
-        header('Content-Length: ' . strlen($mp3));
-        echo $mp3;
+        header('Content-Length: ' . strlen($wav));
+        echo $wav;
         exit;
     }
 }
