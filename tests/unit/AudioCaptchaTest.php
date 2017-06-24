@@ -45,18 +45,18 @@ class AudioCaptchaTest extends PHPUnit_Framework_TestCase
         $pth['folder']['plugins'] = vfsStream::url('test/');
         $folder = vfsStream::url('test/cryptographp/languages/en/');
         mkdir($folder, 0777, true);
-        file_put_contents("{$folder}a.mp3", 'foo');
-        file_put_contents("{$folder}b.mp3", 'bar');
-        file_put_contents("{$folder}c.mp3", 'baz');
+        file_put_contents("{$folder}a.raw", 'foo');
+        file_put_contents("{$folder}b.raw", 'bar');
+        file_put_contents("{$folder}c.raw", 'baz');
     }
 
-    public function testCreateMp3()
+    public function testCreateWav()
     {
-        $this->assertSame('foobarbaz', $this->subject->createMp3('abc'));
+        $this->assertStringStartsWith('RIFF', $this->subject->createWav('abc'));
     }
 
-    public function testCreateMp3Fails()
+    public function testCreateWavFails()
     {
-        $this->assertNull($this->subject->createMp3('xyz'));
+        $this->assertNull($this->subject->createWav('xyz'));
     }
 }
