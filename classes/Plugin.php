@@ -53,25 +53,11 @@ class Plugin
     public function run()
     {
         if (XH_ADM) {
-            if (function_exists('XH_registerStandardPluginMenuItems')) {
-                XH_registerStandardPluginMenuItems(false);
-            }
-            if ($this->isAdministrationRequested()) {
+            XH_registerStandardPluginMenuItems(false);
+            if (XH_wantsPluginAdministration('cryptographp')) {
                 $this->handleAdministration();
             }
         }
-    }
-
-    /**
-     * @return bool
-     */
-    private function isAdministrationRequested()
-    {
-        global $cryptographp;
-
-        return function_exists('XH_wantsPluginAdministration')
-            && XH_wantsPluginAdministration('cryptographp')
-            || isset($cryptographp) && $cryptographp == 'true';
     }
 
     private function handleAdministration()
