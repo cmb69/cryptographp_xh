@@ -91,7 +91,10 @@ class CaptchaController
         global $bjs;
 
         if (!self::$isJavaScriptEmitted) {
-            $bjs .= "<script type=\"text/javascript\" src=\"{$this->pluginFolder}cryptographp.js\"></script>";
+            $bjs .= sprintf(
+                '<script type="text/javascript" src="%s"></script>',
+                "{$this->pluginFolder}cryptographp.min.js"
+            );
             self::$isJavaScriptEmitted = true;
         }
     }
