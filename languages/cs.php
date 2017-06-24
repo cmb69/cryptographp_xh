@@ -21,7 +21,7 @@
 	$plugin_tx['cryptographp']['cf_char_rgb_blue']="RGB barva znaků: intenzita modré";
 	$plugin_tx['cryptographp']['cf_char_color_random']="Má se barva volit náhodně?";
 	$plugin_tx['cryptographp']['cf_char_color_random_level']="Světlost náhodných barev: <em>0</em> (nezměněná), <em>1</em> (jen velmi jasné barvy), <em>2</em> (jen jasné barvy), <em>3</em> (jen tmavé barvy) nebo <em>4</em> (jen velmi tmavé barvy)";
-	$plugin_tx['cryptographp']['cf_char_clear']="Průhlednost písmen: od <em>0</em> (plné) do <em>127</em> (úplně průhledné). Vyžaduje PHP >= 4.3.2";
+	$plugin_tx['cryptographp']['cf_char_clear']="Průhlednost písmen: od <em>0</em> (plné) do <em>127</em> (úplně průhledné).";
 	$plugin_tx['cryptographp']['cf_char_fonts']="Středníkem oddělený seznam fontů, které jsou k dispozici v adresáři fonts/";
 	$plugin_tx['cryptographp']['cf_char_allowed']="Povolené znaky";
 	$plugin_tx['cryptographp']['cf_crypt_easy']="Mají být kryptogramy vytvářeny alternativně ze souhlásek a samohlásek?";
@@ -34,8 +34,8 @@
 	$plugin_tx['cryptographp']['cf_char_size_max']="Maximální velikost fontu pro znaky";
 	$plugin_tx['cryptographp']['cf_char_angle_max']="Max. uhel naklonění znaků";
 	$plugin_tx['cryptographp']['cf_char_displace']="Mají se znaky zobrazit náhodně vertikálně?";
-	$plugin_tx['cryptographp']['cf_crypt_gaussian_blur']="Má být obrázek rozoostřený Gausianovou metodou? Vyžaduje PHP > 5.0.0";
-	$plugin_tx['cryptographp']['cf_crypt_gray_scale']="Má být obrázek konvertován do šedé škály? Vyžaduje PHP > 5.0.0";
+	$plugin_tx['cryptographp']['cf_crypt_gaussian_blur']="Má být obrázek rozoostřený Gausianovou metodou?";
+	$plugin_tx['cryptographp']['cf_crypt_gray_scale']="Má být obrázek konvertován do šedé škály?";
 	$plugin_tx['cryptographp']['cf_noise_pixel_min']="Minimální počet náhodných pixelů.";
 	$plugin_tx['cryptographp']['cf_noise_pixel_max']="Maximální počet náhodných pixelů.";
 	$plugin_tx['cryptographp']['cf_noise_line_min']="Minimální počet náhodných čar.";
