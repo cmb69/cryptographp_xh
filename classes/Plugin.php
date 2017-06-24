@@ -42,7 +42,7 @@ class Plugin
             function ($matches) {
                 return ucfirst($matches[1]);
             },
-            isset($_GET[$param]) ? stsl($_GET[$param]) : 'default'
+            isset($_GET[$param]) ? $_GET[$param] : 'default'
         );
         if (!method_exists($controller, "{$action}Action")) {
             $action = 'default';
@@ -112,8 +112,8 @@ class Plugin
         if (session_id() == '') {
             session_start();
         }
-        $id = stsl($_POST['cryptographp_id']);
-        $code = stsl($_POST['cryptographp-captcha']);
+        $id = $_POST['cryptographp_id'];
+        $code = $_POST['cryptographp-captcha'];
         $ok = isset($_SESSION['cryptographp_code'][$id])
             && $_SESSION['cryptographp_code'][$id] == $code
             && $_SESSION['cryptographp_time'][$id]
