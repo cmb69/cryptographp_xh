@@ -51,8 +51,6 @@ class SystemCheckService
             $this->checkExtension('gd'),
             $this->checkGdFreetype(),
             $this->checkGdPng(),
-            $this->checkGdJpeg(),
-            $this->checkGdGif(),
             $this->checkExtension('session'),
             $this->checkXhVersion('1.6'),
             $this->checkWritability("$this->pluginFolder/config/"),
@@ -96,26 +94,9 @@ class SystemCheckService
         return (object) compact('state', 'label', 'stateLabel');
     }
 
-    private function checkGdGif()
-    {
-        $gdInfo = gd_info();
-        $state = $gdInfo['GIF Read Support'] && $gdInfo['GIF Create Support'] ? 'success' : 'warning';
-        $label = sprintf($this->lang['syscheck_gd_feature'], 'GIF');
-        $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
-    }
-
-    private function checkGdJpeg()
-    {
-        $state = gd_info()['JPEG Support'] ? 'success' : 'warning';
-        $label = sprintf($this->lang['syscheck_gd_feature'], 'JPEG');
-        $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
-    }
-
     private function checkGdPng()
     {
-        $state = gd_info()['PNG Support'] ? 'success' : 'warning';
+        $state = (imagetypes() & IMG_PNG) ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_gd_feature'], 'PNG');
         $stateLabel = $this->lang["syscheck_$state"];
         return (object) compact('state', 'label', 'stateLabel');

@@ -13,7 +13,7 @@
 	$plugin_tx['cryptographp']['cf_bg_rgb_red']="RGB barva pozadí: intenzita červené";
 	$plugin_tx['cryptographp']['cf_bg_rgb_green']="RGB barva pozadí: intenzita zelené";
 	$plugin_tx['cryptographp']['cf_bg_rgb_blue']="RGB barva pozadí: intenzita modré";
-	$plugin_tx['cryptographp']['cf_bg_clear']="Má se použít průhledné pozadí? (jen pro formát PNG): <em>yes</em> nebo <em>no</em>";
+	$plugin_tx['cryptographp']['cf_bg_clear']="Má se použít průhledné pozadí? <em>yes</em> nebo <em>no</em>";
 	$plugin_tx['cryptographp']['cf_bg_image']="Název souboru obrázku pozadí. Velikost obrázku se přizpůsobí velikosti kryptogramu. Pokud se uvede název adresáře, mohou se použít náhodné obrázky z adresáře.";
 	$plugin_tx['cryptographp']['cf_bg_frame']="Má se okolo kryptogramu použít rámeček? <em>yes</em> nebo <em>no</em>";
 	$plugin_tx['cryptographp']['cf_char_rgb_red']="RGB barva znaků: intenzita červené";
@@ -45,7 +45,6 @@
 	$plugin_tx['cryptographp']['cf_noise_color']="Barva šumu: <em>1</em> (Barva znaků), <em>2</em> (Barva pozadí) nebo <em>3</em> (Náhodná barva)";
 	$plugin_tx['cryptographp']['cf_noise_brush_size']="Tloušťka čar a kroužků.";
 	$plugin_tx['cryptographp']['cf_noise_above']="Má se kolem znaků zobrazit šum? <em>yes</em> nebo <em>no</em>";
-	$plugin_tx['cryptographp']['cf_crypt_format']="Formát obrázku: <em>gif</em>, <em>png</em> nebo <em>jpeg</em>";
 	$plugin_tx['cryptographp']['cf_crypt_use_timer']="Čas mezi jednotlivými obnovami kryptogramu.";
 	$plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Ohlásit chybu, pokud je kryptogram obnoven příliš rychle (\"yes\"), nebo čekat po nějakou dobu (\"no\")";
 	$plugin_tx['cryptographp']['cf_crypt_expiration']="Kolik sekund smí být každý kryptogram použit (v sekundách)";

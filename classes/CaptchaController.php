@@ -125,26 +125,8 @@ class CaptchaController
         while (ob_get_level()) {
             ob_end_clean();
         }
-        switch (strtoupper($this->config['crypt_format'])) {
-            case 'JPG':
-            case 'JPEG':
-                if (imagetypes() & IMG_JPG) {
-                    header('Content-type: image/jpeg');
-                    imagejpeg($image, '', 80);
-                }
-                break;
-            case 'GIF':
-                if (imagetypes() & IMG_GIF) {
-                    header('Content-type: image/gif');
-                    imagegif($image);
-                }
-                break;
-            default:
-                if (imagetypes() & IMG_PNG) {
-                    header('Content-type: image/png');
-                    imagepng($image);
-                }
-        }
+        header('Content-type: image/png');
+        imagepng($image);
         exit;
     }
 

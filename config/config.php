@@ -5,7 +5,6 @@ $plugin_cf['cryptographp']['crypt_height']="40";
 $plugin_cf['cryptographp']['crypt_easy']="true";
 $plugin_cf['cryptographp']['crypt_gaussian_blur']="";
 $plugin_cf['cryptographp']['crypt_gray_scale']="";
-$plugin_cf['cryptographp']['crypt_format']="png";
 $plugin_cf['cryptographp']['crypt_use_timer']="0";
 $plugin_cf['cryptographp']['crypt_use_timer_error']="true";
 $plugin_cf['cryptographp']['crypt_expiration']="600";
