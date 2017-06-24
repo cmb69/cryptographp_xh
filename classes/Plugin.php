@@ -112,16 +112,15 @@ class Plugin
         if (session_id() == '') {
             session_start();
         }
-        $id = $_POST['cryptographp_id'];
         $code = $_POST['cryptographp-captcha'];
-        $ok = isset($_SESSION['cryptographp_code'][$id])
-            && $_SESSION['cryptographp_code'][$id] == $code
-            && $_SESSION['cryptographp_time'][$id]
-            + $plugin_cf['cryptographp']['crypt_expiration'] >= time();
-        unset(
-            $_SESSION['cryptographp_code'][$id],
-            $_SESSION['cryptographp_time'][$id]
-        );
+        $unexpired = isset($_SESSION['cryptographp_time'])
+            && $_SESSION['cryptographp_time'] + $plugin_cf['cryptographp']['crypt_expiration'] >= time();
+        $ok = isset($_SESSION['cryptographp_code'])
+            && $_SESSION['cryptographp_code'] == $code
+            && $unexpired;
+        if ($ok || !$unexpired) {
+            unset($_SESSION['cryptographp_code'], $_SESSION['cryptographp_time']);
+        }
         return $ok;
     }
 }

@@ -12,5 +12,4 @@
     </span>
     <div><?=$this->text('message_enter_code')?></div>
     <input type="text" name="cryptographp-captcha">
-    <input type="hidden" name="cryptographp_id" value="<?=$this->id()?>">
 </div>
