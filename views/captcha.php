@@ -1,5 +1,5 @@
 <div class="cryptographp">
-    <img id="cryptographp<?=$this->id()?>" class="cryptographp_image" src="<?=$this->imageUrl()?>" alt="<?=$this->text('alt_image')?>">
+    <img class="cryptographp_image" src="<?=$this->imageUrl()?>" alt="<?=$this->text('alt_image')?>">
     <a class="cryptographp_audio" href="<?=$this->audioUrl()?>">
         <img src="<?=$this->audioImage()?>" alt="<?=$this->text('alt_audio')?>" title="<?=$this->text('alt_audio')?>">
     </a>
