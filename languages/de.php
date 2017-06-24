@@ -40,8 +40,8 @@ $plugin_tx['cryptographp']['cf_char_rgb_red']="RGB Farbe der Zeichen: Rot-Intens
 $plugin_tx['cryptographp']['cf_char_rgb_green']="RGB Farbe der Zeichen: Grün-Intensität (0-255)";
 $plugin_tx['cryptographp']['cf_char_rgb_blue']="RGB Farbe der Zeichen: Blau-Intensität (0-255)";
 $plugin_tx['cryptographp']['cf_char_color_random']="Zufällige Farben verwenden";
-$plugin_tx['cryptographp']['cf_char_color_random_level']="Die Helligkeit der zufälligen Farben: <em>0</em> (beliebige Farben), <em>1</em> (nur sehr helle Farben), <em>2</em> (nur helle Farben), <em>3</em> (nur dunkle Farben) oder <em>4</em> (nur sehr dunkle Farben)";
-$plugin_tx['cryptographp']['cf_char_clear']="Transparenz der Zeichen: zwischen <em>0</em> (undurchsichtig) und <em>127</em> (völlig transparent)";
+$plugin_tx['cryptographp']['cf_char_color_random_level']="Die Helligkeit der zufälligen Farben: 0 = beliebige Farben, 1 = nur sehr helle Farben, 2 = nur helle Farben, 3 = nur dunkle Farben, 4 = nur sehr dunkle Farben";
+$plugin_tx['cryptographp']['cf_char_clear']="Transparenz der Zeichen: zwischen 0 (undurchsichtig) und 127 (völlig transparent)";
 $plugin_tx['cryptographp']['cf_char_fonts']="Durch Strichpunkte getrennte Liste von TrueType Schriftarten, die im fonts/ Ordner vorhanden sind";
 $plugin_tx['cryptographp']['cf_char_allowed']="Erlaubte Zeichen, wenn \"crypt easy\" deaktiviert ist (vom Audio-CAPTCHA werden nur A-Z und 0-9 unterstützt).";
 $plugin_tx['cryptographp']['cf_char_allowed_consonants']="Erlaubte Konsonanten, wenn \"crypt easy\" aktiviert ist (vom Audio-CAPTCHA werden nur A-Z und 0-9 unterstützt).";
@@ -59,8 +59,8 @@ $plugin_tx['cryptographp']['cf_noise_line_min']="Mindestanzahl von zufälligen L
 $plugin_tx['cryptographp']['cf_noise_line_max']="Höchstanzahl von zufälligen Linien";
 $plugin_tx['cryptographp']['cf_noise_circle_min']="Mindestanzahl von zufälligen Kreisen";
 $plugin_tx['cryptographp']['cf_noise_circle_max']="Höchstanzahl von zufälligen Kreisen";
-$plugin_tx['cryptographp']['cf_noise_color']="Die Farbe des Rauschens:: <em>1</em> (Zeichenfarbe), <em>2</em> (Hintergrundfarbe) or <em>3</em> (Zufallsfarbe)";
+$plugin_tx['cryptographp']['cf_noise_color']="Die Farbe des Rauschens:: 1 = Zeichenfarbe, 2 = Hintergrundfarbe, 3 = Zufallsfarbe";
 $plugin_tx['cryptographp']['cf_noise_brush_size']="Die Dicke der Linien und Kreise";
-$plugin_tx['cryptographp']['cf_noise_above']="Rauschen <em>über</em> die Zeichen legen";
+$plugin_tx['cryptographp']['cf_noise_above']="Rauschen über die Zeichen legen";
 
 ?>

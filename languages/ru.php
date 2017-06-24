@@ -28,9 +28,9 @@ $plugin_tx['cryptographp']['cf_char_rgb_red']="Цвет символов (RGB): 
 $plugin_tx['cryptographp']['cf_char_rgb_green']="Цвет символов (RGB): насыщенность зеленого цвета";
 $plugin_tx['cryptographp']['cf_char_rgb_blue']="Цвет символов (RGB):  насыщенность синего цвета";
 $plugin_tx['cryptographp']['cf_char_color_random']="Выбирать случайный цвет";
-$plugin_tx['cryptographp']['cf_char_color_random_level']="Яркость случайного цвета: <em>0</em> (без ограничений), <em>1</em> (только очень светлые цвета), <em>2</em> (только светлые цвета), <em>3</em> (только темные цвета) or <em>4</em> (только очень темные цвета)";
-$plugin_tx['cryptographp']['cf_char_clear']="Прозрачность символов: от <em>0</em> (непрозрачный) до <em>127</em> (полностью прозрачный).";
-$plugin_tx['cryptographp']['cf_fonts']="Разделенный точкой с запятой список шрифтов TrueType, доступных в папке шрифтов (<b>fonts/<b/>)";
+$plugin_tx['cryptographp']['cf_char_color_random_level']="Яркость случайного цвета: 0 = без ограничений, 1 = только очень светлые цвета, 2 = только светлые цвета, 3 = только темные цвета, 4 = только очень темные цвета";
+$plugin_tx['cryptographp']['cf_char_clear']="Прозрачность символов: от 0 (непрозрачный) до 127 (полностью прозрачный).";
+$plugin_tx['cryptographp']['cf_fonts']="Разделенный точкой с запятой список шрифтов TrueType, доступных в папке шрифтов (fonts/)";
 $plugin_tx['cryptographp']['cf_char_allowed']="Разрешить символы, если для режима \"crypt easy/легкое шифрование\" указано \"нет\" (аудио капча поддерживает только A-Z и 0-9).";
 $plugin_tx['cryptographp']['cf_crypt_easy']="Криптограмма может содержать гласные и согласные";
 $plugin_tx['cryptographp']['cf_char_allowed_consonants']="Разрешить согласные, если для режима \"crypt easy/легкое шифрование\" указано \"нет\" (аудио капча поддерживает только A-Z и 0-9).";
@@ -50,7 +50,7 @@ $plugin_tx['cryptographp']['cf_noise_line_min']="Минимальное коли
 $plugin_tx['cryptographp']['cf_noise_line_max']="Максимальное количество случайных линий";
 $plugin_tx['cryptographp']['cf_noise_circle_min']="Минимальное количество случайных окружностей";
 $plugin_tx['cryptographp']['cf_noise_circle_max']="Максимальное количество случайных окружностей";
-$plugin_tx['cryptographp']['cf_noise_color_char']="Цвет шума: <em>1</em> (цвет символа), <em>2</em> (цвет фона) или <em>3</em> (случайный цвет)";
+$plugin_tx['cryptographp']['cf_noise_color_char']="Цвет шума: 1 = цвет символа, 2 = цвет фона, 3 = случайный цвет";
 $plugin_tx['cryptographp']['cf_noise_brush_size']="Толщина линий и окружностей";
 $plugin_tx['cryptographp']['cf_noise_above']="\"Зашумленность\" символов";
 $plugin_tx['cryptographp']['cf_crypt_use_timer']="Доступная задержка (секунд) перед перезагрузкой новой криптограммы";
