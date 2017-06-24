@@ -95,7 +95,9 @@ class Plugin
     {
         global $plugin_cf;
 
-        if (session_id() == '') {
+        if (function_exists('XH_startSession')) {
+            XH_startSession();
+        } elseif (session_id() == '') {
             session_start();
         }
         $code = $_POST['cryptographp-captcha'];
