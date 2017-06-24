@@ -82,7 +82,6 @@ class CaptchaController
         $view->audioUrl = $url->with('cryptographp_action', 'audio')
             ->with('cryptographp_lang', $this->currentLang)->with('cryptographp_download', 'yes');
         $view->audioImage = "{$this->pluginFolder}images/audio.png";
-        $view->reloadUrl = $view->imageUrl;
         $view->reloadImage = "{$this->pluginFolder}images/reload.png";
         $view->render();
     }

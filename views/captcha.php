@@ -5,7 +5,7 @@
     </a>
     <span class="cryptographp_reload_container">
         <!--
-            <a class="cryptographp_reload" href="<?=$this->reloadUrl()?>">
+            <a class="cryptographp_reload" data-image="<?=$this->imageUrl()?>" data-audio="<?=$this->audioUrl()?>">
                 <img src="<?=$this->reloadImage()?>" alt="<?=$this->text('alt_reload')?>" title="<?=$this->text('alt_reload')?>">
             </a>
         -->

@@ -80,7 +80,10 @@
                 each(find(".cryptographp_reload", container), function (anchor) {
                     anchor.onclick = (function () {
                         each(find(".cryptographp_image", captcha), function (image) {
-                            image.src = anchor.href + "&" + new Date().getTime();
+                            image.src = anchor.getAttribute("data-image") + "&" + new Date().getTime();
+                        });
+                        each(find(".cryptographp_audio", captcha), function (link) {
+                            link.href = anchor.getAttribute("data-audio") + "&" + new Date().getTime();
                         });
                         if (currentAudio) {
                             currentAudio.pause();
