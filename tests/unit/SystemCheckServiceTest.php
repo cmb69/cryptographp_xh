@@ -75,16 +75,16 @@ class SystemCheckServiceTest extends PHPUnit_Framework_TestCase
     {
         $actual = $this->subject->getChecks();
         $this->assertContainsOnlyInstancesOf(stdClass::class, $actual);
-        $this->assertCount(11, $actual);
+        $this->assertCount(9, $actual);
         $this->assertSame('phpversion', $actual[0]->label);
         $this->assertSame('success', $actual[0]->state);
         $this->assertSame('extension', $actual[1]->label);
         $this->assertSame('success', $actual[1]->state);
         $this->assertSame('gdfeature', $actual[2]->label);
         $this->assertSame('success', $actual[2]->state);
-        $this->assertSame('xhversion', $actual[7]->label);
-        $this->assertSame('success', $actual[7]->state);
-        $this->assertSame('writable', $actual[8]->label);
-        $this->assertSame('success', $actual[8]->state);
+        $this->assertSame('xhversion', $actual[5]->label);
+        $this->assertSame('success', $actual[5]->state);
+        $this->assertSame('writable', $actual[6]->label);
+        $this->assertSame('success', $actual[6]->state);
     }
 }
