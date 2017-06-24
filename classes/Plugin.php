@@ -120,7 +120,6 @@ class Plugin
             + $plugin_cf['cryptographp']['crypt_expiration'] >= time();
         unset(
             $_SESSION['cryptographp_code'][$id],
-            $_SESSION['cryptographp_lang'][$id],
             $_SESSION['cryptographp_time'][$id]
         );
         return $ok;
