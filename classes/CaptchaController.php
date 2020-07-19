@@ -144,6 +144,9 @@ class CaptchaController
         if (!isset($wav)) {
             exit($this->lang['error_audio']);
         }
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
         header('Content-Type: audio/x-wav');
         if (isset($_GET['cryptographp_download'])) {
             header('Content-Disposition: attachment; filename="captcha.wav"');
