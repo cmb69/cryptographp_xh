@@ -81,7 +81,7 @@ class VisualCaptcha
         global $pth, $plugin_cf;
 
         $this->imageFolder = $pth['folder']['images'];
-        $this->fontFolder = "{$pth['folder']['plugins']}cryptographp/fonts/";
+        $this->fontFolder = realpath("{$pth['folder']['plugins']}cryptographp/fonts") . '/';
         $this->config = $plugin_cf['cryptographp'];
         $this->fonts = explode(';', $this->config['char_fonts']);
     }
