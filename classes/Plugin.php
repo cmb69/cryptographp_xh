@@ -24,7 +24,7 @@ namespace Cryptographp;
 
 class Plugin
 {
-    const VERSION = '@CRYPTOGRAPHP_VERSION@';
+    const VERSION = '1.0beta6';
 
     /**
      * @var bool
