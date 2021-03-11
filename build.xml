@@ -2,24 +2,6 @@
 
 <project name="Cryptographp" default="help">
 
-    <fileset id="php-sources" dir=".">
-        <include name="captcha.php"/>
-        <include name="index.php"/>
-        <include name="classes/*.php"/>
-    </fileset>
-
-    <fileset id="js-sources" dir=".">
-        <include name="cryptographp.js"/>
-    </fileset>
-
-    <fileset id="unit-tests" dir="tests/unit">
-        <include name="*Test.php"/>
-    </fileset>
-
-    <fileset id="attack-tests" dir="tests/attack">
-        <include name="*Test.php"/>
-    </fileset>
-
     <target name="help" description="lists available targets">
         <exec command="phing -l" outputProperty="help"/>
         <echo>${help}</echo>
@@ -39,9 +21,9 @@
     </target>
 
     <target name="mess" description="detects code flaws">
-        <phpmd>
-            <fileset refid="php-sources"/>
-         </phpmd>
+        <exec executable="phpmd" passthru="true" checkreturn="true">
+            <arg line="captcha.php,index.php,classes ansi codesize,unusedcode"/>
+        </exec>
     </target>
 
     <target name="compat"
@@ -50,27 +32,25 @@
     </target>
 
     <target name="unit-tests" description="runs all unit tests">
-        <phpunit bootstrap="tests/unit/bootstrap.php"
-                 haltonerror="true" haltonfailure="true">
-            <formatter type="plain" usefile="false"/>
-            <batchtest>
-                <fileset refid="unit-tests"/>
-            </batchtest>
-        </phpunit>
+        <exec executable="phpunit" passthru="true" checkreturn="true">
+            <arg value="--bootstrap"/>
+            <arg file="tests/unit/bootstrap.php"/>
+            <arg file="tests/unit"/>
+        </exec>
     </target>
 
     <target name="attack-tests" description="runs all attack tests">
         <fail unless="env.CMSIMPLEDIR" message="CMSIMPLEDIR undefined!"/>
-        <phpunit haltonerror="true" haltonfailure="true">
-            <formatter type="plain" usefile="false"/>
-            <batchtest>
-                <fileset refid="attack-tests"/>
-            </batchtest>
-        </phpunit>
+        <exec executable="phpunit" passthru="true" checkreturn="true">
+            <arg file="tests/attack"/>
+        </exec>
     </target>
 
     <target name="coverage" description="generates coverage report">
-        <exec command="phpunit --configuration coverage.xml" logoutput="true"/>
+        <exec executable="phpunit" passthru="true" checkreturn="true">
+            <arg value="--configuration"/>
+            <arg file="coverage.xml"/>
+        </exec>
     </target>
 
     <target name="build" description="builds a distributable ZIP archive">
@@ -85,6 +65,7 @@
         </jsMin>
         <move todir="dist">
             <fileset dir="export">
+                <exclude name=".phive/**"/>
                 <exclude name="README.md"/>
                 <exclude name="build.xml"/>
                 <exclude name="composer.*"/>
