@@ -21,17 +21,17 @@
 
 namespace Cryptographp;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 
-class VisualCaptchaTest extends PHPUnit_Framework_TestCase
+class VisualCaptchaTest extends TestCase
 {
     /**
      * @var VisualCaptcha
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpFilesystem();
         $this->setUpConfig();

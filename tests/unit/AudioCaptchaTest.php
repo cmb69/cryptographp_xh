@@ -21,17 +21,17 @@
 
 namespace Cryptographp;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 
-class AudioCaptchaTest extends PHPUnit_Framework_TestCase
+class AudioCaptchaTest extends TestCase
 {
     /**
      * @var AudioCaptcha
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpFilesystem();
         $this->subject = new AudioCaptcha('en');

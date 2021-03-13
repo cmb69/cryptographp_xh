@@ -21,16 +21,16 @@
 
 namespace Cryptographp;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class CodeGeneratorTest extends PHPUnit_Framework_TestCase
+class CodeGeneratorTest extends TestCase
 {
     /**
      * @var CodeGenerator
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpConfig();
         mt_srand(12345);

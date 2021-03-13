@@ -21,20 +21,20 @@
 
 namespace Cryptographp;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStream;
 
-class SystemCheckServiceTest extends PHPUnit_Framework_TestCase
+class SystemCheckServiceTest extends TestCase
 {
     /**
      * @var SystemCheckService
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.6.9');
         $this->setUpLanguage();

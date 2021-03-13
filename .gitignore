@@ -3,4 +3,5 @@
 /tests/unit/images/*.diff.png
 /tools
 /vendor
+/.phpunit.result.cache
 /composer.lock
