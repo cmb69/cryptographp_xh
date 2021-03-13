@@ -2,3 +2,5 @@ tests/coverage
 vendor
 /composer.lock
 /tools
+/tests/unit/images/*.out.png
+/tests/unit/images/*.diff.png

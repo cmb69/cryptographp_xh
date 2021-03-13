@@ -33,6 +33,7 @@ class CodeGeneratorTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->setUpConfig();
+        mt_srand(12345);
         $this->subject = new CodeGenerator;
     }
 
@@ -52,7 +53,7 @@ class CodeGeneratorTest extends PHPUnit_Framework_TestCase
 
     public function testCreateCode()
     {
-        $this->assertSame('MIMI', $this->subject->createCode());
+        $this->assertSame('HOGE', $this->subject->createCode());
     }
 
     public function testCryptUneasy()
@@ -60,6 +61,6 @@ class CodeGeneratorTest extends PHPUnit_Framework_TestCase
         global $plugin_cf;
 
         $plugin_cf['cryptographp']['crypt_easy'] = '';
-        $this->assertSame('RRRR', (new CodeGenerator)->createCode());
+        $this->assertSame('7BEK', (new CodeGenerator)->createCode());
     }
 }

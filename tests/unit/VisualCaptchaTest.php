@@ -35,6 +35,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
     {
         $this->setUpFilesystem();
         $this->setUpConfig();
+        mt_srand(12345);
         $this->subject = new VisualCaptcha;
     }
 
@@ -92,13 +93,13 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
     public function testCreateImage()
     {
         $actual = $this->subject->createImage('ABCD');
-        $this->assertSame('7cb5f96a68163626578bf100d1dc9768', $this->calculateImageHash($actual));
+        $this->assertImageEquals('image', $actual);
     }
 
     public function testCreateErrorImage()
     {
         $actual = $this->subject->createErrorImage('Cookies must be enabled!');
-        $this->assertSame('3bf1a81ebd43fd93f59429a18ccf65af', $this->calculateImageHash($actual));
+        $this->assertImageEquals('error_image', $actual);
     }
 
     public function testNoiseAbove()
@@ -107,7 +108,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
 
         $plugin_cf['cryptographp']['noise_above'] = 'true';
         $actual = (new VisualCaptcha)->createImage('ABCD');
-        $this->assertSame('7cb5f96a68163626578bf100d1dc9768', $this->calculateImageHash($actual));
+        $this->assertImageEquals('noise_above', $actual);
     }
 
     public function testCryptGrayScale()
@@ -116,7 +117,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
 
         $plugin_cf['cryptographp']['crypt_gray_scale'] = 'true';
         $actual = (new VisualCaptcha)->createImage('ABCD');
-        $this->assertSame('66f29f71ee6d6b30c08459936e9294d8', $this->calculateImageHash($actual));
+        $this->assertImageEquals('gray_scale', $actual);
     }
 
     public function testCryptGaussianBlur()
@@ -125,7 +126,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
 
         $plugin_cf['cryptographp']['crypt_gaussian_blur'] = 'true';
         $actual = (new VisualCaptcha)->createImage('ABCD');
-        $this->assertSame('421220c58b7f94f3d9296ebae6fb4ec7', $this->calculateImageHash($actual));
+        $this->assertImageEquals('gaussian_blur', $actual);
     }
 
     /**
@@ -139,7 +140,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
         $plugin_cf['cryptographp']['bg_image'] = "bg.$type";
         $this->createYellowBackgroundImage($type);
         $actual = (new VisualCaptcha)->createImage('ABCD');
-        $this->assertSame('8698d52fa3ca77b981d5fb0cfc389518', $this->calculateImageHash($actual));
+        $this->assertImageEquals('bg_image', $actual);
     }
 
     /**
@@ -162,7 +163,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
         $this->createYellowBackgroundImage('png');
         $this->createYellowBackgroundImage('gif');
         $actual = (new VisualCaptcha)->createImage('ABCD');
-        $this->assertSame('8698d52fa3ca77b981d5fb0cfc389518', $this->calculateImageHash($actual));
+        $this->assertImageEquals('bg_images', $actual);
     }
 
     /**
@@ -187,7 +188,7 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
 
         $plugin_cf['cryptographp']['noise_color'] = $kind;
         $actual = (new VisualCaptcha)->createImage('ABCD');
-        $this->assertSame($expected, $this->calculateImageHash($actual));
+        $this->assertImageEquals($expected, $actual);
     }
 
     /**
@@ -196,8 +197,8 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
     public function provideNoiseColorData()
     {
         return array(
-            ['1', '81076c5f1afef7c8b471a7e499fdd6cd'],
-            ['2', '2899705886d9c70f85bceecfd03f2320']
+            ['1', 'noise_color_1'],
+            ['2', 'noise_color_2']
         );
     }
 
@@ -207,15 +208,73 @@ class VisualCaptchaTest extends PHPUnit_Framework_TestCase
     public function testWordwrapInErrorImage()
     {
         $actual = $this->subject->createErrorImage('Перезагрузка слишком быстро!');
-        $this->assertSame('b85e626ee614a5fa29012defdd9667dc', $this->calculateImageHash($actual));
+        $this->assertImageEquals('word_wrap_in_error', $actual);
     }
 
-    private function calculateImageHash($image)
+    /**
+     * @param string $expected
+     * @param resource $actual
+     * @return void
+     */
+    private function assertImageEquals($expected, $actual)
     {
-        ob_start();
-        imagepng($image);
-        $hash = md5(ob_get_clean());
-        //imagepng($image, "$hash.png"); // for visual inspection
-        return $hash;
+        $im1 = imagecreatefrompng(__DIR__ . "/images/$expected.png");
+        $im2 = $actual;
+
+        $w1 = imagesx($im1);
+        $h1 = imagesy($im1);
+
+        $w2 = imagesx($im2);
+        $h2 = imagesy($im2);
+
+        if ($w1 !== $w2 || $h1 !== $h2) {
+            $this->assertTrue(false);
+        }
+
+        $im3 = imagecreatetruecolor($w1, $h1);
+        imagealphablending($im3, false);
+
+        $difference = 0.0;
+        for ($i = 0; $i < $w1; $i++) {
+            for ($j = 0; $j < $h1; $j++) {
+                $c1 = imagecolorat($im1, $i, $j);
+                $c2 = imagecolorat($im2, $i, $j);
+
+                $a1 = ($c1 >> 24) & 0x7f;
+                $r1 = ($c1 >> 16) & 0xff;
+                $g1 = ($c1 >>  8) & 0xff;
+                $b1 = ($c1 >>  0) & 0xff;
+
+                $a2 = ($c2 >> 24) & 0x7f;
+                $r2 = ($c2 >> 16) & 0xff;
+                $g2 = ($c2 >>  8) & 0xff;
+                $b2 = ($c2 >>  0) & 0xff;
+
+                if ($a1 !== 0 || $a2 !== 0) {
+                    $this->assertTrue(false);
+                }
+
+                $d = sqrt(($r1 - $r2)**2 + ($g1 - $g2)**2 + ($b1 - $b2)**2) / sqrt(3 * 255**2);
+                $difference += $d;
+
+                $a3 = 127 - (int) (127 * $d);
+                $r3 = (int) (sqrt($r1**2 + $r2**2) / sqrt(2 * 255**2) * 255);
+                $g3 = (int) (sqrt($g1**2 + $g2**2) / sqrt(2 * 255**2) * 255);
+                $b3 = (int) (sqrt($b1**2 + $b2**2) / sqrt(2 * 255**2) * 255);
+        
+                $c3 = ($a3 << 24) | ($r3 << 16) | ($g3 << 8) | $b3;
+        
+                imagesetpixel($im3, $i, $j, $c3);
+            }
+        }
+
+        if ($difference > 0.0) {
+            imagesavealpha($im2, true);
+            imagepng($im2, __DIR__ . "/images/$expected.out.png");
+            imagesavealpha($im3, true);
+            imagepng($im3, __DIR__ . "/images/$expected.diff.png");
+        }
+
+        return $this->assertTrue($difference === 0.0);
     }
 }
