@@ -31,7 +31,7 @@ class View
     /**
      * @var array
      */
-    private $data = array();
+    public $data = array();
 
     /**
      * @param string $template
@@ -39,15 +39,6 @@ class View
     public function __construct($template)
     {
         $this->template = $template;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed $value
-     */
-    public function __set($name, $value)
-    {
-        $this->data[$name] = $value;
     }
 
     /**
