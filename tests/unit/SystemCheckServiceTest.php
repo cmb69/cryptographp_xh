@@ -36,7 +36,7 @@ class SystemCheckServiceTest extends TestCase
 
     public function setUp(): void
     {
-        define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.6.9');
+        define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.7.0');
         $this->setUpLanguage();
         $this->setUpVfs();
         $this->subject = new SystemCheckService;
@@ -75,16 +75,16 @@ class SystemCheckServiceTest extends TestCase
     {
         $actual = $this->subject->getChecks();
         $this->assertContainsOnlyInstancesOf(stdClass::class, $actual);
-        $this->assertCount(9, $actual);
+        $this->assertCount(8, $actual);
         $this->assertSame('phpversion', $actual[0]->label);
         $this->assertSame('success', $actual[0]->state);
         $this->assertSame('extension', $actual[1]->label);
         $this->assertSame('success', $actual[1]->state);
         $this->assertSame('gdfeature', $actual[2]->label);
         $this->assertSame('success', $actual[2]->state);
-        $this->assertSame('xhversion', $actual[5]->label);
+        $this->assertSame('xhversion', $actual[4]->label);
+        $this->assertSame('success', $actual[4]->state);
+        $this->assertSame('writable', $actual[5]->label);
         $this->assertSame('success', $actual[5]->state);
-        $this->assertSame('writable', $actual[6]->label);
-        $this->assertSame('success', $actual[6]->state);
     }
 }

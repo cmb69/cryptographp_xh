@@ -63,11 +63,7 @@ class CaptchaController
         $this->currentLang = $sl;
         $this->config = $plugin_cf['cryptographp'];
         $this->lang = $plugin_tx['cryptographp'];
-        if (function_exists('XH_startSession')) {
-            XH_startSession();
-        } elseif (session_id() == '') {
-            session_start();
-        }
+        XH_startSession();
     }
 
     public function defaultAction()

@@ -95,11 +95,7 @@ class Plugin
     {
         global $plugin_cf;
 
-        if (function_exists('XH_startSession')) {
-            XH_startSession();
-        } elseif (session_id() == '') {
-            session_start();
-        }
+        XH_startSession();
         $code = $_POST['cryptographp-captcha'];
         $unexpired = isset($_SESSION['cryptographp_time'])
             && $_SESSION['cryptographp_time'] + $plugin_cf['cryptographp']['crypt_expiration'] >= time();
