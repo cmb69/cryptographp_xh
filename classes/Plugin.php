@@ -2,7 +2,7 @@
 
 /**
  * Copyright 2006-2007 Sylvain Brison
- * Copyright 2011-2017 Christoph M. Becker
+ * Copyright 2011-2021 Christoph M. Becker
  *
  * This file is part of Cryptographp_XH.
  *

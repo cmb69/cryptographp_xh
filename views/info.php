@@ -3,7 +3,7 @@
 <p>Version: <?=$this->version()?></p>
 <p>
     Copyright &copy; 2006-2007 Sylvain Brison<br>
-    Copyright &copy; 2011-2017 <a href="http://3-magi.net/">Christoph M. Becker</a>
+    Copyright &copy; 2011-2021 <a href="http://3-magi.net/">Christoph M. Becker</a>
 </p>
 <p class="cryptographp_license">
     Cryptographp_XH is free software: you can redistribute it and/or modify it

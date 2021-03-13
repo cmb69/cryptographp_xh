@@ -98,7 +98,7 @@ Sie sollten ein Exemplar der GNU General Public License zusammen mit
 Cryptographp\_XH erhalten haben. Falls nicht, siehe
 <https://www.gnu.org/licenses/>.
 
-Copyright © 2011-2017 Christoph M. Becker
+Copyright © 2011-2021 Christoph M. Becker
 
 Slovakische Übersetzung © 2012 Dr. Martin Sereday  
 Tschechische Übersetzung © 2012 Josef Němec  
