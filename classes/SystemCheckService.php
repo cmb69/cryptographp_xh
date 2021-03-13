@@ -29,7 +29,7 @@ class SystemCheckService
     private $pluginFolder;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $lang;
 
@@ -93,6 +93,9 @@ class SystemCheckService
         return (object) compact('state', 'label', 'stateLabel');
     }
 
+    /**
+     * @return object
+     */
     private function checkGdPng()
     {
         $state = (imagetypes() & IMG_PNG) ? 'success' : 'fail';

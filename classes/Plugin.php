@@ -50,9 +50,12 @@ class Plugin
         return "{$action}Action";
     }
 
+    /**
+     * @return void
+     */
     public function run()
     {
-        if (XH_ADM) {
+        if (XH_ADM) { // @phpstan-ignore-line
             XH_registerStandardPluginMenuItems(false);
             if (XH_wantsPluginAdministration('cryptographp')) {
                 $this->handleAdministration();
@@ -60,9 +63,12 @@ class Plugin
         }
     }
 
+    /**
+     * @return void
+     */
     private function handleAdministration()
     {
-        global $admin, $action, $o;
+        global $admin, $o;
 
         $o .= print_plugin_admin('off');
         switch ($admin) {
@@ -70,7 +76,7 @@ class Plugin
                 $o .= $this->renderInfo();
                 break;
             default:
-                $o .= plugin_admin_common($action, $admin, 'cryptographp');
+                $o .= plugin_admin_common();
         }
     }
 
@@ -100,7 +106,7 @@ class Plugin
         XH_startSession();
         $code = $_POST['cryptographp-captcha'];
         $unexpired = isset($_SESSION['cryptographp_time'])
-            && $_SESSION['cryptographp_time'] + $plugin_cf['cryptographp']['crypt_expiration'] >= time();
+            && $_SESSION['cryptographp_time'] + (int) $plugin_cf['cryptographp']['crypt_expiration'] >= time();
         $ok = isset($_SESSION['cryptographp_code'])
             && $_SESSION['cryptographp_code'] == $code
             && $unexpired;

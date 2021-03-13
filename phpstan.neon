@@ -1,0 +1,11 @@
+parameters:
+  level: 6
+  paths:
+    - classes/
+    - captcha.php
+    - index.php
+  bootstrapFiles:
+    - constants.php
+  scanFiles:
+    - ../../cmsimple/adminfuncs.php
+    - ../../cmsimple/functions.php

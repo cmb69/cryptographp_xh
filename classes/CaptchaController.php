@@ -45,12 +45,12 @@ class CaptchaController
     private $currentLang;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $config;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $lang;
 
@@ -66,6 +66,9 @@ class CaptchaController
         XH_startSession();
     }
 
+    /**
+     * @return void
+     */
     public function defaultAction()
     {
         if (!isset($_SESSION['cryptographp_code'])) {
@@ -86,6 +89,9 @@ class CaptchaController
         $view->render();
     }
 
+    /**
+     * @return void
+     */
     private function emitJavaScript()
     {
         global $bjs;
@@ -99,6 +105,9 @@ class CaptchaController
         }
     }
 
+    /**
+     * @return void
+     */
     public function videoAction()
     {
         $captcha = new VisualCaptcha();
@@ -111,13 +120,17 @@ class CaptchaController
             if ($this->config['crypt_use_timer_error']) {
                 $this->deliverImage($captcha->createErrorImage($this->lang['error_user_time']));
             } else {
-                sleep($this->config['crypt_use_timer'] - $delay);
+                sleep((int) $this->config['crypt_use_timer'] - $delay);
             }
         }
         $image = $captcha->createImage($_SESSION['cryptographp_code']);
         $this->deliverImage($image);
     }
 
+    /**
+     * @param resource $image
+     * @return never
+     */
     private function deliverImage($image)
     {
         while (ob_get_level()) {
@@ -128,6 +141,9 @@ class CaptchaController
         exit;
     }
 
+    /**
+     * @return never
+     */
     public function audioAction()
     {
         $lang = basename($_GET['cryptographp_lang']);

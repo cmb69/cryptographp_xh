@@ -43,12 +43,12 @@ class AudioCaptcha
 
     /**
      * @param string $code
-     * @return string
+     * @return string|null
      */
     public function createWav($code)
     {
         if (!($samples = $this->concatenateRawAudio($code))) {
-            return;
+            return null;
         }
         $dataChunk = $this->createDataChunk($this->applyWhiteNoise($samples));
         return $this->createRiffChunk($dataChunk) . $this->createFmtChunk() . $dataChunk;

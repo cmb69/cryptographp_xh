@@ -25,7 +25,7 @@ namespace Cryptographp;
 class CodeGenerator
 {
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $config;
 
@@ -43,7 +43,7 @@ class CodeGenerator
     {
         $code = '';
         $isVowel = mt_rand(0, 1);
-        $count = mt_rand($this->config['char_count_min'], $this->config['char_count_max']);
+        $count = mt_rand((int) $this->config['char_count_min'], (int) $this->config['char_count_max']);
         for ($i = 0; $i < $count; $i++) {
             if ($this->config['crypt_easy']) {
                 if ($isVowel) {
