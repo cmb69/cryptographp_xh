@@ -27,11 +27,6 @@ class Plugin
     const VERSION = '1.0beta6';
 
     /**
-     * @var bool
-     */
-    protected static $isJavaScriptEmitted;
-
-    /**
      * @param string $param
      * @return string
      */
