@@ -41,30 +41,30 @@ class View
 
     /**
      * @param string $key
+     * @param mixed $args
      * @return string
      */
-    public function text($key)
+    public function text($key, ...$args)
     {
-        $args = func_get_args();
-        array_shift($args);
-        return $this->esc(vsprintf($this->lang[$key], $args));
+        $args = array_map([$this, "esc"], $args);
+        return sprintf($this->esc($this->lang[$key]), ...$args);
     }
 
     /**
      * @param string $key
      * @param int $count
+     * @param mixed $args
      * @return string
      */
-    public function plural($key, $count)
+    public function plural($key, $count, ...$args)
     {
         if ($count == 0) {
             $key .= '_0';
         } else {
             $key .= XH_numberSuffix($count);
         }
-        $args = func_get_args();
-        array_shift($args);
-        return $this->esc(vsprintf($this->lang[$key], $args));
+        $args = array_map([$this, "esc"], $args);
+        return sprintf($this->esc($this->lang[$key]), $count, ...$args);
     }
 
     /**
