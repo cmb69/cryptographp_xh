@@ -85,11 +85,8 @@ class Plugin
      */
     private function renderInfo()
     {
-        global $pth;
-
         $view = new View();
         return $view->render('info', [
-            'logo' => "{$pth['folder']['plugins']}cryptographp/cryptographp.png",
             'version' => self::VERSION,
             'checks' => (new SystemCheckService)->getChecks(),
         ]);
