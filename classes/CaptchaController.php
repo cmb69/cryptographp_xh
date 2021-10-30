@@ -37,11 +37,6 @@ class CaptchaController
     /**
      * @var string
      */
-    private $scriptName;
-
-    /**
-     * @var string
-     */
     private $currentLang;
 
     /**
@@ -56,10 +51,9 @@ class CaptchaController
 
     public function __construct()
     {
-        global $pth, $sn, $sl, $plugin_cf, $plugin_tx;
+        global $pth, $sl, $plugin_cf, $plugin_tx;
 
         $this->pluginFolder = "{$pth['folder']['plugins']}cryptographp/";
-        $this->scriptName = $sn;
         $this->currentLang = $sl;
         $this->config = $plugin_cf['cryptographp'];
         $this->lang = $plugin_tx['cryptographp'];
