@@ -93,7 +93,7 @@ class Plugin
             'version' => self::VERSION,
             'checks' => (new SystemCheckService)->getChecks(),
         ];
-        return (string) $view;
+        return $view->render();
     }
 
     /**

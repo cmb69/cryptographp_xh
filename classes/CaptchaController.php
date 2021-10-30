@@ -86,7 +86,7 @@ class CaptchaController
             'audioImage' => "{$this->pluginFolder}images/audio.png",
             'reloadImage' => "{$this->pluginFolder}images/reload.png",
             ];
-        $view->render();
+        echo $view->render();
     }
 
     /**
