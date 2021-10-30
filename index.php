@@ -20,4 +20,6 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(new Cryptographp\Plugin)->run();
+use Cryptographp\Plugin;
+
+Plugin::run();

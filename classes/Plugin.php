@@ -48,12 +48,12 @@ class Plugin
     /**
      * @return void
      */
-    public function run()
+    public static function run()
     {
         if (XH_ADM) { // @phpstan-ignore-line
             XH_registerStandardPluginMenuItems(false);
             if (XH_wantsPluginAdministration('cryptographp')) {
-                $this->handleAdministration();
+                self::handleAdministration();
             }
         }
     }
@@ -61,14 +61,14 @@ class Plugin
     /**
      * @return void
      */
-    private function handleAdministration()
+    private static function handleAdministration()
     {
         global $admin, $o;
 
         $o .= print_plugin_admin('off');
         switch ($admin) {
             case '':
-                $o .= $this->renderInfo();
+                $o .= self::renderInfo();
                 break;
             default:
                 $o .= plugin_admin_common();
@@ -78,7 +78,7 @@ class Plugin
     /**
      * @return string
      */
-    private function renderInfo()
+    private static function renderInfo()
     {
         global $pth, $plugin_tx;
 
