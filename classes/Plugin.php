@@ -64,9 +64,13 @@ class Plugin
         global $pth, $plugin_tx;
 
         $view = new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"]);
+        $systemCheckService = new SystemCheckService(
+            "{$pth['folder']['plugins']}cryptographp",
+            $plugin_tx["cryptographp"]
+        );
         return $view->render('info', [
             'version' => self::VERSION,
-            'checks' => (new SystemCheckService)->getChecks(),
+            'checks' => $systemCheckService->getChecks(),
         ]);
     }
 

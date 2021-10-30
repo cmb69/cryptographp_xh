@@ -37,16 +37,13 @@ class SystemCheckServiceTest extends TestCase
     public function setUp(): void
     {
         define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.7.0');
-        $this->setUpLanguage();
         $this->setUpVfs();
-        $this->subject = new SystemCheckService;
+        $this->subject = new SystemCheckService(vfsStream::url("test/plugins/cryptographp"), $this->getLanguage());
     }
 
-    private function setUpLanguage()
+    private function getLanguage()
     {
-        global $plugin_tx;
-
-        $plugin_tx['cryptographp'] = array(
+        return array(
             'syscheck_extension' => 'extension',
             'syscheck_gd_feature' => 'gdfeature',
             'syscheck_phpversion' => 'phpversion',
@@ -60,14 +57,8 @@ class SystemCheckServiceTest extends TestCase
 
     private function setUpVfs()
     {
-        global $pth;
-
         vfsStreamWrapper::register();
         vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
-        $pth['folder'] = array(
-            'base' => vfsStream::url('test/'),
-            'plugins' => vfsStream::url('test/plugins/')
-        );
         mkdir(vfsStream::url('test/plugins/cryptographp/config'), 0777, true);
     }
 
