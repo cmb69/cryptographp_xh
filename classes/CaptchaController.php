@@ -78,7 +78,7 @@ class CaptchaController
         }
         $this->emitJavaScript();
         $view = new View('captcha');
-        $url = new Url($this->scriptName, $_GET);
+        $url = Url::current();
         $view->data = [
             'imageUrl' => $url->with('cryptographp_action', 'video'),
             'audioUrl' => $url->with('cryptographp_action', 'audio')

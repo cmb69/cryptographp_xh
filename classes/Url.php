@@ -28,18 +28,38 @@ class Url
      */
     private $path;
 
+    /** @var string */
+    private $page;
+
     /**
      * @var array<string,string>
      */
     private $params;
 
     /**
+     * @return self
+     */
+    public static function current()
+    {
+        global $sn, $su;
+
+        if ($su) {
+            $params = array_slice($_GET, 1);
+        } else {
+            $params = $_GET;
+        }
+        return new self($sn, $su, $params);
+    }
+
+    /**
      * @param string $path
+     * @param string $page
      * @param array<string,string> $params
      */
-    public function __construct($path, array $params)
+    private function __construct($path, $page, array $params)
     {
         $this->path = $path;
+        $this->page = $page;
         $this->params = $params;
     }
 
@@ -57,8 +77,8 @@ class Url
     public function relative()
     {
         $result = $this->path;
-        if (!empty($this->params)) {
-            $result .= '?' . $this->queryString();
+        if (($query = $this->query())) {
+            $result = "?$query";
         }
         return $result;
     }
@@ -69,8 +89,8 @@ class Url
     public function absolute()
     {
         $result = CMSIMPLE_URL;
-        if (!empty($this->params)) {
-            $result .= '?' . $this->queryString();
+        if (($query = $this->query())) {
+            $result = "?$query";
         }
         return $result;
     }
@@ -78,9 +98,14 @@ class Url
     /**
      * @return string
      */
-    private function queryString()
+    private function query()
     {
-        return preg_replace('/=(?=&|$)/', '', http_build_query($this->params, '', '&'));
+        $result = "{$this->page}";
+        $additional = preg_replace('/=(?=&|$)/', "", http_build_query($this->params, "", "&"));
+        if ($additional) {
+            $result .= "&$additional";
+        }
+        return $result;
     }
 
     /**
@@ -92,7 +117,7 @@ class Url
     {
         $params = $this->params;
         $params[$param] = (string) $value;
-        return new self($this->path, $params);
+        return new self($this->path, $this->page, $params);
     }
 
     /**
@@ -103,6 +128,6 @@ class Url
     {
         $params = $this->params;
         unset($params[$param]);
-        return new self($this->path, $params);
+        return new self($this->path, $this->page, $params);
     }
 }
