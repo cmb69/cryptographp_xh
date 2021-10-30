@@ -34,7 +34,7 @@ class HtmlString
         $this->value = $string;
     }
 
-    public function __toString()
+    public function toString(): string
     {
         return $this->value;
     }

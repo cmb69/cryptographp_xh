@@ -66,14 +66,6 @@ class Url
     /**
      * @return string
      */
-    public function __toString()
-    {
-        return $this->relative();
-    }
-
-    /**
-     * @return string
-     */
     public function relative()
     {
         $result = $this->path;
