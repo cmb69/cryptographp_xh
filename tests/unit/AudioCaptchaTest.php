@@ -39,10 +39,7 @@ class AudioCaptchaTest extends TestCase
 
     private function setUpFilesystem()
     {
-        global $pth;
-
         vfsStream::setup('test');
-        $pth['folder']['plugins'] = vfsStream::url('test/');
         $folder = vfsStream::url('test/cryptographp/languages/en/');
         mkdir($folder, 0777, true);
         file_put_contents("{$folder}a.raw", 'foo');
