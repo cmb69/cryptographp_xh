@@ -27,25 +27,6 @@ class Plugin
     const VERSION = '1.0beta6';
 
     /**
-     * @param string $param
-     * @return string
-     */
-    public static function getControllerAction(CaptchaController $controller, $param)
-    {
-        $action = preg_replace_callback(
-            '/_([a-z])/',
-            function ($matches) {
-                return ucfirst($matches[1]);
-            },
-            isset($_GET[$param]) ? $_GET[$param] : 'default'
-        );
-        if (!method_exists($controller, "{$action}Action")) {
-            $action = 'default';
-        }
-        return "{$action}Action";
-    }
-
-    /**
      * @return void
      */
     public static function run()
@@ -87,6 +68,53 @@ class Plugin
             'version' => self::VERSION,
             'checks' => (new SystemCheckService)->getChecks(),
         ]);
+    }
+
+    public static function renderCaptcha(): string
+    {
+        global $pth, $sl, $plugin_cf, $plugin_tx;
+
+        $lang = basename($_GET['cryptographp_lang'] ?? "en");
+        if (!is_dir("{$pth['folder']['plugins']}cryptographp/languages/$lang")) {
+            $lang = 'en';
+        }
+        $controller = new CaptchaController(
+            "{$pth['folder']['plugins']}cryptographp/",
+            $sl,
+            $plugin_cf['cryptographp'],
+            $plugin_tx['cryptographp'],
+            new CodeGenerator($plugin_cf['cryptographp']),
+            new VisualCaptcha(
+                $pth['folder']['images'],
+                "{$pth['folder']['plugins']}cryptographp/fonts",
+                $plugin_cf['cryptographp']
+            ),
+            new AudioCaptcha("{$pth['folder']['plugins']}cryptographp/languages/$lang/"),
+            new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"])
+        );
+        $action = self::getControllerAction($controller, 'cryptographp_action');
+        ob_start();
+        $controller->{$action}();
+        return ob_get_clean();
+    }
+
+    /**
+     * @param string $param
+     * @return string
+     */
+    private static function getControllerAction(CaptchaController $controller, $param)
+    {
+        $action = preg_replace_callback(
+            '/_([a-z])/',
+            function ($matches) {
+                return ucfirst($matches[1]);
+            },
+            isset($_GET[$param]) ? $_GET[$param] : 'default'
+        );
+        if (!method_exists($controller, "{$action}Action")) {
+            $action = 'default';
+        }
+        return "{$action}Action";
     }
 
     /**

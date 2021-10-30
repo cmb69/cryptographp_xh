@@ -20,40 +20,14 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Cryptographp\AudioCaptcha;
-use Cryptographp\CodeGenerator;
-use Cryptographp\View;
-use Cryptographp\VisualCaptcha;
+use Cryptographp\Plugin;
 
 /**
  * @return string
  */
 function cryptographp_captcha_display()
 {
-    global $pth, $sl, $plugin_cf, $plugin_tx;
-
-    $lang = basename($_GET['cryptographp_lang'] ?? "en");
-    if (!is_dir("{$pth['folder']['plugins']}cryptographp/languages/$lang")) {
-        $lang = 'en';
-    }
-    $controller = new Cryptographp\CaptchaController(
-        "{$pth['folder']['plugins']}cryptographp/",
-        $sl,
-        $plugin_cf['cryptographp'],
-        $plugin_tx['cryptographp'],
-        new CodeGenerator($plugin_cf['cryptographp']),
-        new VisualCaptcha(
-            $pth['folder']['images'],
-            "{$pth['folder']['plugins']}cryptographp/fonts",
-            $plugin_cf['cryptographp']
-        ),
-        new AudioCaptcha("{$pth['folder']['plugins']}cryptographp/languages/$lang/"),
-        new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"])
-    );
-    $action = Cryptographp\Plugin::getControllerAction($controller, 'cryptographp_action');
-    ob_start();
-    $controller->{$action}();
-    return ob_get_clean();
+    return Plugin::renderCaptcha();
 }
 
 /**
@@ -61,5 +35,5 @@ function cryptographp_captcha_display()
  */
 function cryptographp_captcha_check()
 {
-    return Cryptographp\Plugin::checkCAPTCHA();
+    return Plugin::checkCAPTCHA();
 }
