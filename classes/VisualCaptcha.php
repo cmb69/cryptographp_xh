@@ -76,13 +76,14 @@ class VisualCaptcha
      */
     private $config;
 
-    public function __construct()
+    /**
+     * @param array<string,string> $config
+     */
+    public function __construct(string $imageFolder, string $fontFolder, array $config)
     {
-        global $pth, $plugin_cf;
-
-        $this->imageFolder = $pth['folder']['images'];
-        $this->fontFolder = realpath("{$pth['folder']['plugins']}cryptographp/fonts") . '/';
-        $this->config = $plugin_cf['cryptographp'];
+        $this->imageFolder = $imageFolder;
+        $this->fontFolder = realpath($fontFolder) . "/";
+        $this->config = $config;
         $this->fonts = explode(';', $this->config['char_fonts']);
     }
 

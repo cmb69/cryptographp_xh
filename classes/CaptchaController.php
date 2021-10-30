@@ -29,6 +29,9 @@ class CaptchaController
      */
     private static $isJavaScriptEmitted = false;
 
+    /** @var string */
+    private $imageFolder;
+
     /**
      * @var string
      */
@@ -52,14 +55,25 @@ class CaptchaController
     /** @var View */
     private $view;
 
-    public function __construct(View $view)
-    {
-        global $pth, $sl, $plugin_cf, $plugin_tx;
-
-        $this->pluginFolder = "{$pth['folder']['plugins']}cryptographp/";
-        $this->currentLang = $sl;
-        $this->config = $plugin_cf['cryptographp'];
-        $this->lang = $plugin_tx['cryptographp'];
+    /**
+     * @param string $pluginFolder
+     * @param string $currentLang
+     * @param array<string,string> $config
+     * @param array<string,string> $lang
+     */
+    public function __construct(
+        string $imageFolder,
+        $pluginFolder,
+        $currentLang,
+        array $config,
+        array $lang,
+        View $view
+    ) {
+        $this->imageFolder = $imageFolder;
+        $this->pluginFolder = $pluginFolder;
+        $this->currentLang = $currentLang;
+        $this->config = $config;
+        $this->lang = $lang;
         $this->view = $view;
         XH_startSession();
     }
@@ -70,7 +84,7 @@ class CaptchaController
     public function defaultAction()
     {
         if (!isset($_SESSION['cryptographp_code'])) {
-            $code = (new CodeGenerator)->createCode();
+            $code = (new CodeGenerator($this->config))->createCode();
             $_SESSION['cryptographp_code'] = $code;
             $_SESSION['cryptographp_time'] = time();
         }
@@ -106,7 +120,7 @@ class CaptchaController
      */
     public function videoAction()
     {
-        $captcha = new VisualCaptcha();
+        $captcha = new VisualCaptcha($this->imageFolder, "{$this->pluginFolder}fonts", $this->config);
 
         if (!isset($_SESSION['cryptographp_code'])) {
             $this->deliverImage($captcha->createErrorImage($this->lang['error_cookies']));
@@ -150,7 +164,7 @@ class CaptchaController
             header('HTTP/1.0 403 Forbidden');
             exit;
         }
-        $wav = (new AudioCaptcha($lang))->createWav($_SESSION['cryptographp_code']);
+        $wav = (new AudioCaptcha("{$this->pluginFolder}languages/$lang/"))->createWav($_SESSION['cryptographp_code']);
         if (!isset($wav)) {
             exit($this->lang['error_audio']);
         }

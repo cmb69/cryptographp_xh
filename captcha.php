@@ -27,10 +27,17 @@ use Cryptographp\View;
  */
 function cryptographp_captcha_display()
 {
-    global $pth, $plugin_tx;
+    global $pth, $sl, $plugin_cf, $plugin_tx;
 
     $view = new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"]);
-    $controller = new Cryptographp\CaptchaController($view);
+    $controller = new Cryptographp\CaptchaController(
+        $pth['folder']['images'],
+        "{$pth['folder']['plugins']}cryptographp/",
+        $sl,
+        $plugin_cf['cryptographp'],
+        $plugin_tx['cryptographp'],
+        $view
+    );
     $action = Cryptographp\Plugin::getControllerAction($controller, 'cryptographp_action');
     ob_start();
     $controller->{$action}();

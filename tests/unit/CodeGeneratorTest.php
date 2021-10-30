@@ -32,23 +32,15 @@ class CodeGeneratorTest extends TestCase
 
     public function setUp(): void
     {
-        $this->setUpConfig();
         mt_srand(12345);
-        $this->subject = new CodeGenerator;
-    }
-
-    private function setUpConfig()
-    {
-        global $plugin_cf;
-
-        $plugin_cf['cryptographp'] = array(
+        $this->subject = new CodeGenerator([
             'char_allowed' => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
             'char_allowed_consonants' => 'BCDFGHJKLMNPQRSTVWXZ',
             'char_allowed_vowels' => 'AEIOUY',
             'char_count_max' => '4',
             'char_count_min' => '4',
-            'crypt_easy' => 'true'
-        );
+            'crypt_easy' => 'true',
+        ]);
     }
 
     public function testCreateCode()
@@ -58,9 +50,14 @@ class CodeGeneratorTest extends TestCase
 
     public function testCryptUneasy()
     {
-        global $plugin_cf;
-
-        $plugin_cf['cryptographp']['crypt_easy'] = '';
-        $this->assertSame('7BEK', (new CodeGenerator)->createCode());
+        $subject = new CodeGenerator([
+            'char_allowed' => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
+            'char_allowed_consonants' => 'BCDFGHJKLMNPQRSTVWXZ',
+            'char_allowed_vowels' => 'AEIOUY',
+            'char_count_max' => '4',
+            'char_count_min' => '4',
+            'crypt_easy' => '',
+        ]);
+        $this->assertSame('7BEK', $subject->createCode());
     }
 }

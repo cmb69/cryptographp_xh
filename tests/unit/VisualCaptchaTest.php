@@ -26,6 +26,40 @@ use org\bovigo\vfs\vfsStream;
 
 class VisualCaptchaTest extends TestCase
 {
+    const CONFIG = [
+        'bg_clear' => 'true',
+        'bg_frame' => 'true',
+        'bg_image' => '',
+        'bg_rgb_blue' => '255',
+        'bg_rgb_green' => '255',
+        'bg_rgb_red' => '255',
+        'char_angle_max' => '25',
+        'char_clear' => '0',
+        'char_color_random' => 'true',
+        'char_color_random_level' => '2',
+        'char_displace' => 'true',
+        'char_fonts' => 'luggerbu.ttf',
+        'char_rgb_blue' => '0',
+        'char_rgb_green' => '0',
+        'char_rgb_red' => '0',
+        'char_size_max' => '16',
+        'char_size_min' => '14',
+        'char_space' => '20',
+        'crypt_gaussian_blur' => '',
+        'crypt_gray_scale' => '',
+        'crypt_width' => '130',
+        'crypt_height' => '40',
+        'noise_above' => '',
+        'noise_brush_size' => '3',
+        'noise_circle_max' => '1',
+        'noise_circle_min' => '1',
+        'noise_color' => '3',
+        'noise_line_max' => '1',
+        'noise_line_min' => '1',
+        'noise_pixel_max' => '500',
+        'noise_pixel_min' => '500'
+    ];
+
     /**
      * @var VisualCaptcha
      */
@@ -34,60 +68,14 @@ class VisualCaptchaTest extends TestCase
     public function setUp(): void
     {
         $this->setUpFilesystem();
-        $this->setUpConfig();
         mt_srand(12345);
-        $this->subject = new VisualCaptcha;
+        $this->subject = new VisualCaptcha(vfsStream::url('test/images/'), '../cryptographp/fonts', self::CONFIG);
     }
 
     private function setUpFilesystem()
     {
-        global $pth;
-
         vfsStream::setup('test');
-        $pth['folder'] = array(
-            'images' => vfsStream::url('test/images/'),
-            'plugins' => '../'
-        );
         mkdir(vfsStream::url('test/images'), 0777, true);
-    }
-
-    private function setUpConfig()
-    {
-        global $plugin_cf;
-
-        $plugin_cf['cryptographp'] = array(
-            'bg_clear' => 'true',
-            'bg_frame' => 'true',
-            'bg_image' => '',
-            'bg_rgb_blue' => '255',
-            'bg_rgb_green' => '255',
-            'bg_rgb_red' => '255',
-            'char_angle_max' => '25',
-            'char_clear' => '0',
-            'char_color_random' => 'true',
-            'char_color_random_level' => '2',
-            'char_displace' => 'true',
-            'char_fonts' => 'luggerbu.ttf',
-            'char_rgb_blue' => '0',
-            'char_rgb_green' => '0',
-            'char_rgb_red' => '0',
-            'char_size_max' => '16',
-            'char_size_min' => '14',
-            'char_space' => '20',
-            'crypt_gaussian_blur' => '',
-            'crypt_gray_scale' => '',
-            'crypt_width' => '130',
-            'crypt_height' => '40',
-            'noise_above' => '',
-            'noise_brush_size' => '3',
-            'noise_circle_max' => '1',
-            'noise_circle_min' => '1',
-            'noise_color' => '3',
-            'noise_line_max' => '1',
-            'noise_line_min' => '1',
-            'noise_pixel_max' => '500',
-            'noise_pixel_min' => '500'
-        );
     }
 
     public function testCreateImage()
@@ -104,28 +92,25 @@ class VisualCaptchaTest extends TestCase
 
     public function testNoiseAbove()
     {
-        global $plugin_cf;
-
-        $plugin_cf['cryptographp']['noise_above'] = 'true';
-        $actual = (new VisualCaptcha)->createImage('ABCD');
+        $config = array_merge(self::CONFIG, ['noise_above' => 'true']);
+        $subject = new VisualCaptcha(vfsStream::url('test/images/'), '../cryptographp/fonts', $config);
+        $actual = $subject->createImage('ABCD');
         $this->assertImageEquals('noise_above', $actual);
     }
 
     public function testCryptGrayScale()
     {
-        global $plugin_cf;
-
-        $plugin_cf['cryptographp']['crypt_gray_scale'] = 'true';
-        $actual = (new VisualCaptcha)->createImage('ABCD');
+        $config = array_merge(self::CONFIG, ['crypt_gray_scale' => 'true']);
+        $subject = new VisualCaptcha(vfsStream::url('test/images/'), '../cryptographp/fonts', $config);
+        $actual = $subject->createImage('ABCD');
         $this->assertImageEquals('gray_scale', $actual);
     }
 
     public function testCryptGaussianBlur()
     {
-        global $plugin_cf;
-
-        $plugin_cf['cryptographp']['crypt_gaussian_blur'] = 'true';
-        $actual = (new VisualCaptcha)->createImage('ABCD');
+        $config = array_merge(self::CONFIG, ['crypt_gaussian_blur' => 'true']);
+        $subject = new VisualCaptcha(vfsStream::url('test/images/'), '../cryptographp/fonts', $config);
+        $actual = $subject->createImage('ABCD');
         $this->assertImageEquals('gaussian_blur', $actual);
     }
 
@@ -135,11 +120,10 @@ class VisualCaptchaTest extends TestCase
      */
     public function testBgImage($type)
     {
-        global $plugin_cf;
-
-        $plugin_cf['cryptographp']['bg_image'] = "bg.$type";
+        $config = array_merge(self::CONFIG, ['bg_image' => "bg.$type"]);
+        $subject = new VisualCaptcha(vfsStream::url('test/images/'), '../cryptographp/fonts', $config);
         $this->createYellowBackgroundImage($type);
-        $actual = (new VisualCaptcha)->createImage('ABCD');
+        $actual = $subject->createImage('ABCD');
         $this->assertImageEquals('bg_image', $actual);
     }
 
@@ -157,12 +141,11 @@ class VisualCaptchaTest extends TestCase
 
     public function testBgImages()
     {
-        global $plugin_cf;
-
-        $plugin_cf['cryptographp']['bg_image'] = '.';
+        $config = array_merge(self::CONFIG, ['bg_image' => "."]);
+        $subject = new VisualCaptcha(vfsStream::url('test/images/'), '../cryptographp/fonts', $config);
         $this->createYellowBackgroundImage('png');
         $this->createYellowBackgroundImage('gif');
-        $actual = (new VisualCaptcha)->createImage('ABCD');
+        $actual = $subject->createImage('ABCD');
         $this->assertImageEquals('bg_images', $actual);
     }
 
@@ -184,10 +167,9 @@ class VisualCaptchaTest extends TestCase
      */
     public function testNoiseColor($kind, $expected)
     {
-        global $plugin_cf;
-
-        $plugin_cf['cryptographp']['noise_color'] = $kind;
-        $actual = (new VisualCaptcha)->createImage('ABCD');
+        $config = array_merge(self::CONFIG, ['noise_color' => $kind]);
+        $subject = new VisualCaptcha(vfsStream::url('test/images/'), '../cryptographp/fonts', $config);
+        $actual = $subject->createImage('ABCD');
         $this->assertImageEquals($expected, $actual);
     }
 

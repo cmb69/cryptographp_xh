@@ -32,13 +32,11 @@ class AudioCaptcha
     private $audioFolder;
 
     /**
-     * @param string $lang
+     * @param string $audioFolder
      */
-    public function __construct($lang)
+    public function __construct($audioFolder)
     {
-        global $pth;
-
-        $this->audioFolder = "{$pth['folder']['plugins']}cryptographp/languages/$lang/";
+        $this->audioFolder = $audioFolder;
     }
 
     /**

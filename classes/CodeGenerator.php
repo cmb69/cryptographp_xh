@@ -29,11 +29,12 @@ class CodeGenerator
      */
     private $config;
 
-    public function __construct()
+    /**
+     * @param array<string,string> $config
+     */
+    public function __construct(array $config)
     {
-        global $plugin_cf;
-
-        $this->config = $plugin_cf['cryptographp'];
+        $this->config = $config;
     }
 
     /**

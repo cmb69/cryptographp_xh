@@ -34,7 +34,7 @@ class AudioCaptchaTest extends TestCase
     public function setUp(): void
     {
         $this->setUpFilesystem();
-        $this->subject = new AudioCaptcha('en');
+        $this->subject = new AudioCaptcha(vfsStream::url('test/cryptographp/languages/en/'));
     }
 
     private function setUpFilesystem()
