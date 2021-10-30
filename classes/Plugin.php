@@ -85,7 +85,9 @@ class Plugin
      */
     private function renderInfo()
     {
-        $view = new View();
+        global $pth, $plugin_tx;
+
+        $view = new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"]);
         return $view->render('info', [
             'version' => self::VERSION,
             'checks' => (new SystemCheckService)->getChecks(),

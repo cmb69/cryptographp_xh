@@ -23,17 +23,31 @@ namespace Cryptographp;
 
 class View
 {
+    /** @var string $templateDir */
+    private $templateDir;
+
+    /** @var array<string,string> */
+    private $lang;
+
+    /**
+     * @param string $templateDir
+     * @param array<string,string> $lang
+     */
+    public function __construct($templateDir, $lang)
+    {
+        $this->templateDir = $templateDir;
+        $this->lang = $lang;
+    }
+
     /**
      * @param string $key
      * @return string
      */
     public function text($key)
     {
-        global $plugin_tx;
-
         $args = func_get_args();
         array_shift($args);
-        return $this->esc(vsprintf($plugin_tx['cryptographp'][$key], $args));
+        return $this->esc(vsprintf($this->lang[$key], $args));
     }
 
     /**
@@ -43,8 +57,6 @@ class View
      */
     public function plural($key, $count)
     {
-        global $plugin_tx;
-
         if ($count == 0) {
             $key .= '_0';
         } else {
@@ -52,7 +64,7 @@ class View
         }
         $args = func_get_args();
         array_shift($args);
-        return $this->esc(vsprintf($plugin_tx['cryptographp'][$key], $args));
+        return $this->esc(vsprintf($this->lang[$key], $args));
     }
 
     /**
@@ -62,12 +74,10 @@ class View
      */
     public function render($_template, array $_data)
     {
-        global $pth;
-
         extract($_data);
         ob_start();
         echo "<!-- {$_template} -->", PHP_EOL;
-        include "{$pth['folder']['plugins']}cryptographp/views/{$_template}.php";
+        include "{$this->templateDir}/{$_template}.php";
         return ob_get_clean();
     }
 
