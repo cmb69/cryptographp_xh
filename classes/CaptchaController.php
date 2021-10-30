@@ -29,9 +29,6 @@ class CaptchaController
      */
     private static $isJavaScriptEmitted = false;
 
-    /** @var string */
-    private $imageFolder;
-
     /**
      * @var string
      */
@@ -52,6 +49,15 @@ class CaptchaController
      */
     private $lang;
 
+    /** @var CodeGenerator */
+    private $codeGenerator;
+
+    /** @var VisualCaptcha */
+    private $visualCaptcha;
+
+    /** @var AudioCaptcha */
+    private $audioCaptcha;
+
     /** @var View */
     private $view;
 
@@ -62,18 +68,22 @@ class CaptchaController
      * @param array<string,string> $lang
      */
     public function __construct(
-        string $imageFolder,
         $pluginFolder,
         $currentLang,
         array $config,
         array $lang,
+        CodeGenerator $codeGenerator,
+        VisualCaptcha $visualCaptcha,
+        AudioCaptcha $audioCaptcha,
         View $view
     ) {
-        $this->imageFolder = $imageFolder;
         $this->pluginFolder = $pluginFolder;
         $this->currentLang = $currentLang;
         $this->config = $config;
         $this->lang = $lang;
+        $this->codeGenerator = $codeGenerator;
+        $this->visualCaptcha = $visualCaptcha;
+        $this->audioCaptcha = $audioCaptcha;
         $this->view = $view;
         XH_startSession();
     }
@@ -84,7 +94,7 @@ class CaptchaController
     public function defaultAction()
     {
         if (!isset($_SESSION['cryptographp_code'])) {
-            $code = (new CodeGenerator($this->config))->createCode();
+            $code = $this->codeGenerator->createCode();
             $_SESSION['cryptographp_code'] = $code;
             $_SESSION['cryptographp_time'] = time();
         }
@@ -120,20 +130,18 @@ class CaptchaController
      */
     public function videoAction()
     {
-        $captcha = new VisualCaptcha($this->imageFolder, "{$this->pluginFolder}fonts", $this->config);
-
         if (!isset($_SESSION['cryptographp_code'])) {
-            $this->deliverImage($captcha->createErrorImage($this->lang['error_cookies']));
+            $this->deliverImage($this->visualCaptcha->createErrorImage($this->lang['error_cookies']));
         }
         $delay = time() - $_SESSION['cryptographp_time'];
         if ($delay < $this->config['crypt_use_timer']) {
             if ($this->config['crypt_use_timer_error']) {
-                $this->deliverImage($captcha->createErrorImage($this->lang['error_user_time']));
+                $this->deliverImage($this->visualCaptcha->createErrorImage($this->lang['error_user_time']));
             } else {
                 sleep((int) $this->config['crypt_use_timer'] - $delay);
             }
         }
-        $image = $captcha->createImage($_SESSION['cryptographp_code']);
+        $image = $this->visualCaptcha->createImage($_SESSION['cryptographp_code']);
         $this->deliverImage($image);
     }
 
@@ -156,15 +164,11 @@ class CaptchaController
      */
     public function audioAction()
     {
-        $lang = basename($_GET['cryptographp_lang']);
-        if (!is_dir("{$this->pluginFolder}languages/$lang")) {
-            $lang = 'en';
-        }
         if (!isset($_SESSION['cryptographp_code'])) {
             header('HTTP/1.0 403 Forbidden');
             exit;
         }
-        $wav = (new AudioCaptcha("{$this->pluginFolder}languages/$lang/"))->createWav($_SESSION['cryptographp_code']);
+        $wav = $this->audioCaptcha->createWav($_SESSION['cryptographp_code']);
         if (!isset($wav)) {
             exit($this->lang['error_audio']);
         }
