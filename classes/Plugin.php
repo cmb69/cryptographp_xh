@@ -88,12 +88,11 @@ class Plugin
         global $pth;
 
         $view = new View('info');
-        $view->data = [
+        return $view->render([
             'logo' => "{$pth['folder']['plugins']}cryptographp/cryptographp.png",
             'version' => self::VERSION,
             'checks' => (new SystemCheckService)->getChecks(),
-        ];
-        return $view->render();
+        ]);
     }
 
     /**

@@ -79,14 +79,13 @@ class CaptchaController
         $this->emitJavaScript();
         $view = new View('captcha');
         $url = Url::current();
-        $view->data = [
+        echo $view->render([
             'imageUrl' => $url->with('cryptographp_action', 'video'),
             'audioUrl' => $url->with('cryptographp_action', 'audio')
                 ->with('cryptographp_lang', $this->currentLang)->with('cryptographp_download', 'yes'),
             'audioImage' => "{$this->pluginFolder}images/audio.png",
             'reloadImage' => "{$this->pluginFolder}images/reload.png",
-            ];
-        echo $view->render();
+        ]);
     }
 
     /**

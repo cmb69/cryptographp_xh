@@ -31,7 +31,7 @@ class View
     /**
      * @var array<string,mixed>
      */
-    public $data = array();
+    private $data = array();
 
     /**
      * @param string $template
@@ -102,12 +102,14 @@ class View
     }
 
     /**
+     * @param array<string,mixed> $data
      * @return string
      */
-    public function render()
+    public function render(array $data)
     {
         global $pth;
 
+        $this->data = $data;
         ob_start();
         echo "<!-- {$this->template} -->", PHP_EOL;
         include "{$pth['folder']['plugins']}cryptographp/views/{$this->template}.php";
