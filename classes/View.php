@@ -24,49 +24,16 @@ namespace Cryptographp;
 class View
 {
     /**
-     * @var array<string,mixed>
-     */
-    private $data = array();
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    public function __get($name)
-    {
-        return $this->data[$name];
-    }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function __isset($name)
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * @param string $name
-     * @param mixed[] $args
-     * @return string
-     */
-    public function __call($name, array $args)
-    {
-        return $this->escape($this->data[$name]);
-    }
-
-    /**
      * @param string $key
      * @return string
      */
-    protected function text($key)
+    public function text($key)
     {
         global $plugin_tx;
 
         $args = func_get_args();
         array_shift($args);
-        return $this->escape(vsprintf($plugin_tx['cryptographp'][$key], $args));
+        return $this->esc(vsprintf($plugin_tx['cryptographp'][$key], $args));
     }
 
     /**
@@ -74,7 +41,7 @@ class View
      * @param int $count
      * @return string
      */
-    protected function plural($key, $count)
+    public function plural($key, $count)
     {
         global $plugin_tx;
 
@@ -85,22 +52,22 @@ class View
         }
         $args = func_get_args();
         array_shift($args);
-        return $this->escape(vsprintf($plugin_tx['cryptographp'][$key], $args));
+        return $this->esc(vsprintf($plugin_tx['cryptographp'][$key], $args));
     }
 
     /**
-     * @param string $template
-     * @param array<string,mixed> $data
+     * @param string $_template
+     * @param array<string,mixed> $_data
      * @return string
      */
-    public function render($template, array $data)
+    public function render($_template, array $_data)
     {
         global $pth;
 
-        $this->data = $data;
+        extract($_data);
         ob_start();
-        echo "<!-- {$template} -->", PHP_EOL;
-        include "{$pth['folder']['plugins']}cryptographp/views/{$template}.php";
+        echo "<!-- {$_template} -->", PHP_EOL;
+        include "{$pth['folder']['plugins']}cryptographp/views/{$_template}.php";
         return ob_get_clean();
     }
 
@@ -108,7 +75,7 @@ class View
      * @param mixed $value
      * @return mixed
      */
-    protected function escape($value)
+    public function esc($value)
     {
         if ($value instanceof HtmlString || $value instanceof View) {
             return $value;
