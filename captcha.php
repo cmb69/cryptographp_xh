@@ -20,12 +20,14 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Cryptographp\View;
+
 /**
  * @return string
  */
 function cryptographp_captcha_display()
 {
-    $controller = new Cryptographp\CaptchaController;
+    $controller = new Cryptographp\CaptchaController(new View());
     $action = Cryptographp\Plugin::getControllerAction($controller, 'cryptographp_action');
     ob_start();
     $controller->{$action}();

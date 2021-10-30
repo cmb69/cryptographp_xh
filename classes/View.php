@@ -24,22 +24,9 @@ namespace Cryptographp;
 class View
 {
     /**
-     * @var string
-     */
-    protected $template;
-
-    /**
      * @var array<string,mixed>
      */
     private $data = array();
-
-    /**
-     * @param string $template
-     */
-    public function __construct($template)
-    {
-        $this->template = $template;
-    }
 
     /**
      * @param string $name
@@ -102,17 +89,18 @@ class View
     }
 
     /**
+     * @param string $template
      * @param array<string,mixed> $data
      * @return string
      */
-    public function render(array $data)
+    public function render($template, array $data)
     {
         global $pth;
 
         $this->data = $data;
         ob_start();
-        echo "<!-- {$this->template} -->", PHP_EOL;
-        include "{$pth['folder']['plugins']}cryptographp/views/{$this->template}.php";
+        echo "<!-- {$template} -->", PHP_EOL;
+        include "{$pth['folder']['plugins']}cryptographp/views/{$template}.php";
         return ob_get_clean();
     }
 

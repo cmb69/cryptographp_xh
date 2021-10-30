@@ -87,8 +87,8 @@ class Plugin
     {
         global $pth;
 
-        $view = new View('info');
-        return $view->render([
+        $view = new View();
+        return $view->render('info', [
             'logo' => "{$pth['folder']['plugins']}cryptographp/cryptographp.png",
             'version' => self::VERSION,
             'checks' => (new SystemCheckService)->getChecks(),

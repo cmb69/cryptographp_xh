@@ -49,7 +49,10 @@ class CaptchaController
      */
     private $lang;
 
-    public function __construct()
+    /** @var View */
+    private $view;
+
+    public function __construct(View $view)
     {
         global $pth, $sl, $plugin_cf, $plugin_tx;
 
@@ -57,6 +60,7 @@ class CaptchaController
         $this->currentLang = $sl;
         $this->config = $plugin_cf['cryptographp'];
         $this->lang = $plugin_tx['cryptographp'];
+        $this->view = $view;
         XH_startSession();
     }
 
@@ -71,9 +75,8 @@ class CaptchaController
             $_SESSION['cryptographp_time'] = time();
         }
         $this->emitJavaScript();
-        $view = new View('captcha');
         $url = Url::current();
-        echo $view->render([
+        echo $this->view->render('captcha', [
             'imageUrl' => $url->with('cryptographp_action', 'video'),
             'audioUrl' => $url->with('cryptographp_action', 'audio')
                 ->with('cryptographp_lang', $this->currentLang)->with('cryptographp_download', 'yes'),
