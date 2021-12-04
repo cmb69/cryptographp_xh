@@ -14,7 +14,6 @@ to deter spambots from successfully submitting forms.
 - [Installation](#installation)
 - [Settings](#settings)
 - [Usage](#usage)
-- [Limitations](#limitations)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
 - [Credits](#credits)
@@ -66,11 +65,6 @@ Cryptographp\_XH is a utility plugin serving other plugins.
 As such it has no usage on its own.
 How it can be used by developers of other plugins is explained in the
 [CMSimple\_XH Wiki](https://www.cmsimple-xh.org/wiki/doku.php/captcha_plugins).
-
-## Limitations
-
-To successfully submit forms protected by Cryptographp\_XH,
-the browser of the visitor must accept cookies.
 
 ## Troubleshooting
 

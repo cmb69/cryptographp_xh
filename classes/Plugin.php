@@ -87,6 +87,7 @@ class Plugin
             $sl,
             $plugin_cf['cryptographp'],
             $plugin_tx['cryptographp'],
+            self::codeStore(),
             new CodeGenerator($plugin_cf['cryptographp']),
             new VisualCaptcha(
                 $pth['folder']['images'],
@@ -126,18 +127,27 @@ class Plugin
      */
     public static function checkCAPTCHA()
     {
-        global $plugin_cf;
-
-        XH_startSession();
-        $code = $_POST['cryptographp-captcha'];
-        $unexpired = isset($_SESSION['cryptographp_time'])
-            && $_SESSION['cryptographp_time'] + (int) $plugin_cf['cryptographp']['crypt_expiration'] >= time();
-        $ok = isset($_SESSION['cryptographp_code'])
-            && $_SESSION['cryptographp_code'] == $code
-            && $unexpired;
-        if ($ok || !$unexpired) {
-            unset($_SESSION['cryptographp_code'], $_SESSION['cryptographp_time']);
+        $code = $_POST['cryptographp-captcha'] ?? "";
+        if (!isset($_POST['cryptographp_nonce'])) {
+            return false;
         }
-        return $ok;
+        $codeStore = self::codeStore();
+        $storedCode = $codeStore->find(base64_decode($_POST['cryptographp_nonce']));
+        if ($code !== $storedCode) {
+            return false;
+        }
+        $codeStore->invalidate(base64_decode($_POST['cryptographp_nonce']));
+        return true;
+    }
+
+    private static function codeStore(): CodeStore
+    {
+        global $pth, $plugin_cf;
+
+        return new CodeStore(
+            "{$pth['folder']['content']}cryptographp.dat",
+            time(),
+            (int) $plugin_cf['cryptographp']['crypt_expiration']
+        );
     }
 }

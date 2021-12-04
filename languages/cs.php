@@ -6,7 +6,6 @@
 	$plugin_tx['cryptographp']['message_enter_code']="Vložte antiSPAMový kód!";
 	$plugin_tx['cryptographp']['syscheck_title']="Kontola systému";
 	$plugin_tx['cryptographp']['syscheck_phpversion']="PHP verze ≥ %s";
-	$plugin_tx['cryptographp']['error_cookies']="Cookies musí být zapnuto!";
 	$plugin_tx['cryptographp']['cf_crypt_width']="Šířka kryptogramu v px.";
 	$plugin_tx['cryptographp']['cf_crypt_height']="Výška kryptogramu v pixelech";
 	$plugin_tx['cryptographp']['cf_bg_rgb_red']="RGB barva pozadí: intenzita červené";

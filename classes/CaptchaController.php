@@ -49,6 +49,9 @@ class CaptchaController
      */
     private $lang;
 
+    /** @var CodeStore */
+    private $codeStore;
+
     /** @var CodeGenerator */
     private $codeGenerator;
 
@@ -72,6 +75,7 @@ class CaptchaController
         $currentLang,
         array $config,
         array $lang,
+        CodeStore $codeStore,
         CodeGenerator $codeGenerator,
         VisualCaptcha $visualCaptcha,
         AudioCaptcha $audioCaptcha,
@@ -81,11 +85,11 @@ class CaptchaController
         $this->currentLang = $currentLang;
         $this->config = $config;
         $this->lang = $lang;
+        $this->codeStore = $codeStore;
         $this->codeGenerator = $codeGenerator;
         $this->visualCaptcha = $visualCaptcha;
         $this->audioCaptcha = $audioCaptcha;
         $this->view = $view;
-        XH_startSession();
     }
 
     /**
@@ -93,19 +97,19 @@ class CaptchaController
      */
     public function defaultAction()
     {
-        if (!isset($_SESSION['cryptographp_code'])) {
-            $code = $this->codeGenerator->createCode();
-            $_SESSION['cryptographp_code'] = $code;
-            $_SESSION['cryptographp_time'] = time();
-        }
+        $code = $this->codeGenerator->createCode();
+        $key = random_bytes(15);
+        $this->codeStore->put($key, $code);
         $this->emitJavaScript();
         $url = Url::current();
+        $nonce = rtrim(base64_encode($key), "=");
         echo $this->view->render('captcha', [
-            'imageUrl' => $url->with('cryptographp_action', 'video'),
-            'audioUrl' => $url->with('cryptographp_action', 'audio')
+            'imageUrl' => $url->with('cryptographp_action', 'video')->with('cryptographp_nonce', $nonce),
+            'audioUrl' => $url->with('cryptographp_action', 'audio')->with('cryptographp_nonce', $nonce)
                 ->with('cryptographp_lang', $this->currentLang)->with('cryptographp_download', 'yes'),
             'audioImage' => "{$this->pluginFolder}images/audio.png",
             'reloadImage' => "{$this->pluginFolder}images/reload.png",
+            'nonce' => $nonce,
         ]);
     }
 
@@ -130,10 +134,11 @@ class CaptchaController
      */
     public function videoAction()
     {
-        if (!isset($_SESSION['cryptographp_code'])) {
-            $this->deliverImage($this->visualCaptcha->createErrorImage($this->lang['error_cookies']));
+        if (!isset($_GET['cryptographp_nonce'])) {
+            $this->deliverImage($this->visualCaptcha->createErrorImage($this->lang['error_video']));
         }
-        $image = $this->visualCaptcha->createImage($_SESSION['cryptographp_code']);
+        $code = $this->codeStore->find(base64_decode($_GET['cryptographp_nonce']));
+        $image = $this->visualCaptcha->createImage($code);
         $this->deliverImage($image);
     }
 
@@ -156,11 +161,12 @@ class CaptchaController
      */
     public function audioAction()
     {
-        if (!isset($_SESSION['cryptographp_code'])) {
+        if (!isset($_GET['cryptographp_nonce'])) {
             header('HTTP/1.0 403 Forbidden');
             exit;
         }
-        $wav = $this->audioCaptcha->createWav($_SESSION['cryptographp_code']);
+        $code = $this->codeStore->find(base64_decode($_GET['cryptographp_nonce']));
+        $wav = $this->audioCaptcha->createWav($code);
         if (!isset($wav)) {
             exit($this->lang['error_audio']);
         }

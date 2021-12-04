@@ -9,6 +9,7 @@ use Cryptographp\View;
  * @var Url $audioUrl
  * @var string $audioImage
  * @var string $reloadImage
+ * @var string $nonce
  */
 
 ?>
@@ -26,5 +27,6 @@ use Cryptographp\View;
         -->
     </span>
     <div><?=$this->text('message_enter_code')?></div>
+    <input type="hidden" name="cryptographp_nonce" value="<?=$this->esc($nonce)?>">
     <input type="text" name="cryptographp-captcha">
 </div>

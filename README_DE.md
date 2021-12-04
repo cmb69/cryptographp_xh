@@ -15,7 +15,6 @@ um Spam-Bots vom erfolgreichen Versenden von Formularen abzuhalten.
 - [Installation](#installation)
 - [Einstellungen](#einstellungen)
 - [Verwendung](#verwendung)
-- [Einschränkungen](#einschränkungen)
 - [Problembehebung](#problembehebung)
 - [Lizenz](#lizenz)
 - [Danksagung](#danksagung)
@@ -70,11 +69,6 @@ Als solches hat es keine eigene Verwendung.
 Wie es von Entwicklern anderer Plugins verwendet werden kann,
 wird im [CMSimple\_XH Wiki](https://www.cmsimple-xh.org/wiki/doku.php/captcha_plugins)
 erklärt.
-
-## Einschränkungen
-
-Um erfolgreich Formulare, die durch Cryptographp\_XH geschützt werden,
-zu versenden, muss der Browser des Besuchers Cookies akzeptieren.
 
 ## Problembehebung
 

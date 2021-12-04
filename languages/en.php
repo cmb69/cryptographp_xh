@@ -18,7 +18,7 @@ $plugin_tx['cryptographp']['syscheck_warning']="warning";
 $plugin_tx['cryptographp']['syscheck_writable']="'%s' is writable";
 $plugin_tx['cryptographp']['syscheck_xhversion']="CMSimple_XH version ≥ %s";
 
-$plugin_tx['cryptographp']['error_cookies']="Cookies must be enabled!";
+$plugin_tx['cryptographp']['error_video']="Invalid nonce!";
 $plugin_tx['cryptographp']['error_audio']="The audio CAPTCHA couldn't be generated! Please get a new challenge and try again.";
 
 $plugin_tx['cryptographp']['cf_crypt_width']="Width of the image in pixels";
