@@ -19,7 +19,6 @@ $plugin_tx['cryptographp']['syscheck_writable']="'%s' schreibbar ist";
 $plugin_tx['cryptographp']['syscheck_xhversion']="die CMSimple_XH-Version ≥ %s";
 
 $plugin_tx['cryptographp']['error_cookies']="Cookies müssen aktiviert sein!";
-$plugin_tx['cryptographp']['error_user_time']="Zu schnell nachgeladen!";
 $plugin_tx['cryptographp']['error_audio']="Das Audio-CAPTCHA konnte nicht erzeugt werden! Bitte versuchen Sie es mit einer neuen Aufgabe noch einmal.";
 
 $plugin_tx['cryptographp']['cf_crypt_width']="Breite des Bildes in Pixel";
@@ -27,8 +26,6 @@ $plugin_tx['cryptographp']['cf_crypt_height']="Höhe des Bildes in Pixel";
 $plugin_tx['cryptographp']['cf_crypt_easy']="Abwechselnd Konsonanten und Vokale für die CAPTCHAs verwenden";
 $plugin_tx['cryptographp']['cf_crypt_gaussian_blur']="Bild mit der Gaußschen Methode verwischen";
 $plugin_tx['cryptographp']['cf_crypt_gray_scale']="Schwarz-Weiß-Bild erzeugen";
-$plugin_tx['cryptographp']['cf_crypt_use_timer']="Verzögerung (in Sekunden) bevor ein neues CAPTCHA nachgeladen werden kann";
-$plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Fehler melden, wenn das CAPTCHA zu schnell nachgeladen wurde (alternativ für eine Weile warten)";
 $plugin_tx['cryptographp']['cf_crypt_expiration']="Wie lange jedes CAPTCHA verwendet werden kann (in Sekunden)";
 $plugin_tx['cryptographp']['cf_bg_rgb_red']="RGB Hintergrundfarbe: Rot-Intensität (0-255)";
 $plugin_tx['cryptographp']['cf_bg_rgb_green']="RGB Hintergrundfarbe: Grün-Intensität (0-255)";

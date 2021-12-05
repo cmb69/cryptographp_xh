@@ -3,7 +3,6 @@
 $plugin_mcf['cryptographp']['crypt_easy']="bool";
 $plugin_mcf['cryptographp']['crypt_gaussian_blur']="bool";
 $plugin_mcf['cryptographp']['crypt_gray_scale']="bool";
-$plugin_mcf['cryptographp']['crypt_use_timer_error']="bool";
 $plugin_mcf['cryptographp']['bg_clear']="bool";
 $plugin_mcf['cryptographp']['bg_frame']="bool";
 $plugin_mcf['cryptographp']['char_color_random']="bool";

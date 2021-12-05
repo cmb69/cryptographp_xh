@@ -14,7 +14,6 @@ $plugin_tx['cryptographp']['message_enter_code']="Введите код защи
 $plugin_tx['cryptographp']['syscheck_title']="Проверка системы";
 $plugin_tx['cryptographp']['syscheck_phpversion']="Версия PHP &ge; %s";
 $plugin_tx['cryptographp']['error_cookies']="Необходимо разрешить куки (сookies!";
-$plugin_tx['cryptographp']['error_user_time']="Очень быстрая перезагрузка!";
 $plugin_tx['cryptographp']['error_audio']="Аудио капча не генерирована! Пожалуйста, получите новый запрос и повторите попытку.";
 $plugin_tx['cryptographp']['cf_crypt_width']="Ширина криптограммы в пикселях";
 $plugin_tx['cryptographp']['cf_crypt_height']="Высота  криптограммы в пикселях";
@@ -53,8 +52,6 @@ $plugin_tx['cryptographp']['cf_noise_circle_max']="Максимальное ко
 $plugin_tx['cryptographp']['cf_noise_color_char']="Цвет шума: 1 = цвет символа, 2 = цвет фона, 3 = случайный цвет";
 $plugin_tx['cryptographp']['cf_noise_brush_size']="Толщина линий и окружностей";
 $plugin_tx['cryptographp']['cf_noise_above']="\"Зашумленность\" символов";
-$plugin_tx['cryptographp']['cf_crypt_use_timer']="Доступная задержка (секунд) перед перезагрузкой новой криптограммы";
-$plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Сообщать об ошибках, если криптограмма перезагружена слишком быстро (\"да\") или подождать (\"нет\")";
 $plugin_tx['cryptographp']['cf_crypt_expiration']="Продолжительность использования криптограммы (секунд)";
 
 ?>

@@ -8,7 +8,6 @@
  */
 
 $plugin_tx['cryptographp']['message_enter_code']="Vložte antiSPAMový kód!";
-$plugin_tx['cryptographp']['error_user_time']="Príliš rýchle pokusy!";
 $plugin_tx['cryptographp']['cf_crypt_width']="Šírka kryptogramu v px.";
 $plugin_tx['cryptographp']['cf_crypt_height']="Výška kryptogramu v px.";
 $plugin_tx['cryptographp']['cf_bg_rgb_red']="RGB farba pozadia: intenzita červenej";
@@ -46,6 +45,5 @@ $plugin_tx['cryptographp']['cf_noise_circle_max']="Maximálny počet náhodných
 $plugin_tx['cryptographp']['cf_noise_color']="Farba šumu: 1 = Farba znakov, 2 = Farba pozadia, 3 = náhodná farba";
 $plugin_tx['cryptographp']['cf_noise_brush_size']="Hrúbka čiar a krúžkov.";
 $plugin_tx['cryptographp']['cf_noise_above']="Má sa okolo znakov zobraziť šum?";
-$plugin_tx['cryptographp']['cf_crypt_use_timer']="Čas medzi jednotlivými obnovami kryptogramu.";
 
 ?>

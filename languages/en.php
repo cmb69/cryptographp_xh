@@ -19,7 +19,6 @@ $plugin_tx['cryptographp']['syscheck_writable']="'%s' is writable";
 $plugin_tx['cryptographp']['syscheck_xhversion']="CMSimple_XH version ≥ %s";
 
 $plugin_tx['cryptographp']['error_cookies']="Cookies must be enabled!";
-$plugin_tx['cryptographp']['error_user_time']="Reloaded too fast!";
 $plugin_tx['cryptographp']['error_audio']="The audio CAPTCHA couldn't be generated! Please get a new challenge and try again.";
 
 $plugin_tx['cryptographp']['cf_crypt_width']="Width of the image in pixels";
@@ -27,8 +26,6 @@ $plugin_tx['cryptographp']['cf_crypt_height']="Height of the image in pixels";
 $plugin_tx['cryptographp']['cf_crypt_easy']="Alternate consonants and vowels in the CAPTCHAs";
 $plugin_tx['cryptographp']['cf_crypt_gaussian_blur']="Blur image using the Gaussian method";
 $plugin_tx['cryptographp']['cf_crypt_gray_scale']="Create grayscale image";
-$plugin_tx['cryptographp']['cf_crypt_use_timer']="Delay (in seconds) before reloading a new cryptogram is possible";
-$plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Report an error, if the CAPTCHA is reloaded too fast (alternatively, wait for some time)";
 $plugin_tx['cryptographp']['cf_crypt_expiration']="How long each cryptogram can be used (in seconds)";
 $plugin_tx['cryptographp']['cf_bg_rgb_red']="RGB background color: intensity of red (0-255)";
 $plugin_tx['cryptographp']['cf_bg_rgb_green']="RGB background color: intensity of green (0-255)";

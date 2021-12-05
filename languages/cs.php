@@ -7,7 +7,6 @@
 	$plugin_tx['cryptographp']['syscheck_title']="Kontola systému";
 	$plugin_tx['cryptographp']['syscheck_phpversion']="PHP verze ≥ %s";
 	$plugin_tx['cryptographp']['error_cookies']="Cookies musí být zapnuto!";
-	$plugin_tx['cryptographp']['error_user_time']="Příliš rychlé pokusy!";
 	$plugin_tx['cryptographp']['cf_crypt_width']="Šířka kryptogramu v px.";
 	$plugin_tx['cryptographp']['cf_crypt_height']="Výška kryptogramu v pixelech";
 	$plugin_tx['cryptographp']['cf_bg_rgb_red']="RGB barva pozadí: intenzita červené";
@@ -45,8 +44,6 @@
 	$plugin_tx['cryptographp']['cf_noise_color']="Barva šumu: 1 = Barva znaků, 2 = Barva pozadí, 3 = Náhodná barva";
 	$plugin_tx['cryptographp']['cf_noise_brush_size']="Tloušťka čar a kroužků.";
 	$plugin_tx['cryptographp']['cf_noise_above']="Má se kolem znaků zobrazit šum?";
-	$plugin_tx['cryptographp']['cf_crypt_use_timer']="Čas mezi jednotlivými obnovami kryptogramu.";
-	$plugin_tx['cryptographp']['cf_crypt_use_timer_error']="Ohlásit chybu, pokud je kryptogram obnoven příliš rychle (\"yes\"), nebo čekat po nějakou dobu (\"no\")";
 	$plugin_tx['cryptographp']['cf_crypt_expiration']="Kolik sekund smí být každý kryptogram použit (v sekundách)";
 
 ?>

@@ -133,14 +133,6 @@ class CaptchaController
         if (!isset($_SESSION['cryptographp_code'])) {
             $this->deliverImage($this->visualCaptcha->createErrorImage($this->lang['error_cookies']));
         }
-        $delay = time() - $_SESSION['cryptographp_time'];
-        if ($delay < $this->config['crypt_use_timer']) {
-            if ($this->config['crypt_use_timer_error']) {
-                $this->deliverImage($this->visualCaptcha->createErrorImage($this->lang['error_user_time']));
-            } else {
-                sleep((int) $this->config['crypt_use_timer'] - $delay);
-            }
-        }
         $image = $this->visualCaptcha->createImage($_SESSION['cryptographp_code']);
         $this->deliverImage($image);
     }
