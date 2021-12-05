@@ -100,7 +100,9 @@ class Plugin
         $action = self::getControllerAction($controller, 'cryptographp_action');
         ob_start();
         $controller->{$action}();
-        return ob_get_clean();
+        $result = ob_get_clean();
+        assert($result !== false);
+        return $result;
     }
 
     /**

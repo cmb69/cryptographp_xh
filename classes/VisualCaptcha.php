@@ -96,7 +96,9 @@ class VisualCaptcha
         $this->code = $code;
         $this->precalculate();
 
-        $this->image = imagecreatetruecolor((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
+        $image = imagecreatetruecolor((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
+        assert($image !== false);
+        $this->image = $image;
         $this->paintBackground();
         if ($this->config['noise_above']) {
             $this->paintCharacters();
@@ -124,8 +126,11 @@ class VisualCaptcha
     private function precalculate()
     {
         $image = imagecreatetruecolor((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
+        assert($image !== false);
         $blank = imagecolorallocate($image, 255, 255, 255);
+        assert($blank !== false);
         $black = imagecolorallocate($image, 0, 0, 0);
+        assert($black !== false);
         imagefill($image, 0, 0, $blank);
 
         $x = 10;
@@ -141,6 +146,7 @@ class VisualCaptcha
             $char->size = mt_rand((int) $this->config['char_size_min'], (int) $this->config['char_size_max']);
             $font = $this->fontFolder . $char->font;
             $bbox = imagettfbbox($char->size, $char->angle, $font, $char->element);
+            assert($bbox !== false);
             $min = min($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
             $max = max($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
             $delta = $this->config['crypt_height'] - $max + $min;
@@ -232,7 +238,9 @@ class VisualCaptcha
             case 2:
                 return $this->bg;
             default:
-                return imagecolorallocate($this->image, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
+                $color = imagecolorallocate($this->image, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
+                assert($color !== false);
+                return $color;
         }
     }
 
@@ -281,12 +289,14 @@ class VisualCaptcha
      */
     private function paintStaticBackground()
     {
-        $this->bg = imagecolorallocate(
+        $color = imagecolorallocate(
             $this->image,
             (int) $this->config['bg_rgb_red'],
             (int) $this->config['bg_rgb_green'],
             (int) $this->config['bg_rgb_blue']
         );
+        assert($color !== false);
+        $this->bg = $color;
         imagefill($this->image, 0, 0, $this->bg);
         if ($this->config['bg_clear']) {
             imagecolortransparent($this->image, $this->bg);
@@ -298,13 +308,15 @@ class VisualCaptcha
      */
     private function paintCharacters()
     {
-        $this->ink = imagecolorallocatealpha(
+        $ink = imagecolorallocatealpha(
             $this->image,
             (int) $this->config['char_rgb_red'],
             (int) $this->config['char_rgb_green'],
             (int) $this->config['char_rgb_blue'],
             (int) $this->config['char_clear']
         );
+        assert($ink !== false);
+        $this->ink = $ink;
 
         $x = $this->xOffset;
         foreach ($this->word as $char) {
@@ -337,7 +349,9 @@ class VisualCaptcha
             $green = mt_rand(0, 255);
             $blue = mt_rand(0, 255);
         } while (!$this->isValidRandomColor($red + $green + $blue));
-        return imagecolorallocatealpha($this->image, $red, $green, $blue, (int) $this->config['char_clear']);
+        $color = imagecolorallocatealpha($this->image, $red, $green, $blue, (int) $this->config['char_clear']);
+        assert($color !== false);
+        return $color;
     }
 
     /**
@@ -413,6 +427,7 @@ class VisualCaptcha
             ((int) $this->config['bg_rgb_green'] * 3 + (int) $this->config['char_rgb_green']) / 4,
             ((int) $this->config['bg_rgb_blue'] * 3 + (int) $this->config['char_rgb_blue']) / 4
         );
+        assert($color !== false);
         imagerectangle(
             $this->image,
             0,
@@ -435,12 +450,17 @@ class VisualCaptcha
         $fontsize = 12;
         $padding = 5;
         $bbox = imagettfbbox($fontsize, 0, $font, $text);
+        assert($bbox !== false);
         $width = $bbox[2] - $bbox[0] + 1 + 2 * $padding;
         $height = $bbox[1] - $bbox[7] + 1 + 2 * $padding;
         $bbox = imagettfbbox($fontsize, 0, $font, $lines[0]);
+        assert($bbox !== false);
         $img = imagecreatetruecolor($width, $height);
+        assert($img != false);
         $bg = imagecolorallocate($img, 255, 255, 255);
+        assert($bg !== false);
         $fg = imagecolorallocate($img, 192, 0, 0);
+        assert($fg !== false);
         imagefilledrectangle($img, 0, 0, $width-1, $height-1, $bg);
         imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text);
         return $img;

@@ -209,6 +209,7 @@ final class CodeStore
             ftruncate($this->stream, self::HEADER_SIZE + self::START_SIZE * self::RECORD_SIZE);
         }
         $header = unpack("Vtotal/Voccupied", $bytes);
+        assert($header !== false);
         $this->total = $header["total"];
         $this->occupied = $header["occupied"];
     }

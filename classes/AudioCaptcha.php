@@ -96,7 +96,9 @@ class AudioCaptcha
                 return null;
             }
         }
-        return unpack('v*', $data);
+        $binary = unpack('v*', $data);
+        assert($binary !== false);
+        return $binary;
     }
 
     /**
@@ -110,7 +112,9 @@ class AudioCaptcha
         foreach ($samples as $sample) {
             echo pack('v', (int) ($gain * $sample) + mt_rand(0, self::NOISE_PEAK) - 32768);
         }
-        return ob_get_clean();
+        $string = ob_get_clean();
+        assert($string !== false);
+        return $string;
     }
 
     /**
