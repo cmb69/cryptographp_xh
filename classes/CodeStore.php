@@ -23,7 +23,7 @@ namespace Cryptographp;
 
 /**
  * A persistent hashtable with expiration
- * 
+ *
  * Based on ideas an algorithms of
  * <https://en.wikipedia.org/wiki/Open_addressing>
  */
