@@ -72,7 +72,6 @@
         </jsMin>
         <move todir="dist">
             <fileset dir="export">
-                <exclude name=".phive/**"/>
                 <exclude name="help/template.htm"/>
                 <exclude name="README.md"/>
                 <exclude name="README_DE.md"/>
