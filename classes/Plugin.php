@@ -76,27 +76,13 @@ class Plugin
 
     public static function renderCaptcha(): string
     {
-        global $pth, $sl, $plugin_cf, $plugin_tx;
+        global $pth;
 
         $lang = basename($_GET['cryptographp_lang'] ?? "en");
         if (!is_dir("{$pth['folder']['plugins']}cryptographp/languages/$lang")) {
             $lang = 'en';
         }
-        $controller = new CaptchaController(
-            "{$pth['folder']['plugins']}cryptographp/",
-            $sl,
-            $plugin_cf['cryptographp'],
-            $plugin_tx['cryptographp'],
-            self::codeStore(),
-            new CodeGenerator($plugin_cf['cryptographp']),
-            new VisualCaptcha(
-                $pth['folder']['images'],
-                "{$pth['folder']['plugins']}cryptographp/fonts",
-                $plugin_cf['cryptographp']
-            ),
-            new AudioCaptcha("{$pth['folder']['plugins']}cryptographp/languages/$lang/"),
-            new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"])
-        );
+        $controller = Dic::makeCaptchaController($lang);
         $action = self::getControllerAction($controller, 'cryptographp_action');
         ob_start();
         $controller->{$action}();
@@ -133,23 +119,12 @@ class Plugin
         if (!isset($_POST['cryptographp_nonce'])) {
             return false;
         }
-        $codeStore = self::codeStore();
+        $codeStore = Dic::makeCodeStore();
         $storedCode = $codeStore->find(base64_decode($_POST['cryptographp_nonce']));
         if ($code !== $storedCode) {
             return false;
         }
         $codeStore->invalidate(base64_decode($_POST['cryptographp_nonce']));
         return true;
-    }
-
-    private static function codeStore(): CodeStore
-    {
-        global $pth, $plugin_cf;
-
-        return new CodeStore(
-            "{$pth['folder']['content']}cryptographp.dat",
-            time(),
-            (int) $plugin_cf['cryptographp']['crypt_expiration']
-        );
     }
 }
