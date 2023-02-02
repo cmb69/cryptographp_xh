@@ -43,7 +43,7 @@ class SystemCheckService
     }
 
     /**
-     * @return object[]
+     * @return array<array{state:string,label:string,stateLabel:string}>
      */
     public function getChecks()
     {
@@ -61,71 +61,71 @@ class SystemCheckService
 
     /**
      * @param string $version
-     * @return object
+     * @return array{state:string,label:string,stateLabel:string}
      */
     private function checkPhpVersion($version)
     {
         $state = version_compare(PHP_VERSION, $version, 'ge') ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_phpversion'], $version);
         $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
+        return compact('state', 'label', 'stateLabel');
     }
 
     /**
      * @param string $extension
-     * @return object
+     * @return array{state:string,label:string,stateLabel:string}
      */
     private function checkExtension($extension)
     {
         $state = extension_loaded($extension) ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_extension'], $extension);
         $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
+        return compact('state', 'label', 'stateLabel');
     }
 
     /**
-     * @return object
+     * @return array{state:string,label:string,stateLabel:string}
      */
     private function checkGdFreetype()
     {
         $state = gd_info()['FreeType Support'] ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_gd_feature'], 'TrueType');
         $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
+        return compact('state', 'label', 'stateLabel');
     }
 
     /**
-     * @return object
+     * @return array{state:string,label:string,stateLabel:string}
      */
     private function checkGdPng()
     {
         $state = (imagetypes() & IMG_PNG) ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_gd_feature'], 'PNG');
         $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
+        return compact('state', 'label', 'stateLabel');
     }
 
     /**
      * @param string $version
-     * @return object
+     * @return array{state:string,label:string,stateLabel:string}
      */
     private function checkXhVersion($version)
     {
         $state = version_compare(CMSIMPLE_XH_VERSION, "CMSimple_XH $version", 'ge') ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_xhversion'], $version);
         $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
+        return compact('state', 'label', 'stateLabel');
     }
 
     /**
      * @param string $folder
-     * @return object
+     * @return array{state:string,label:string,stateLabel:string}
      */
     private function checkWritability($folder)
     {
         $state = is_writable($folder) ? 'success' : 'warning';
         $label = sprintf($this->lang['syscheck_writable'], $folder);
         $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
+        return compact('state', 'label', 'stateLabel');
     }
 }

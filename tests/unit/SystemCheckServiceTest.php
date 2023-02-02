@@ -65,17 +65,17 @@ class SystemCheckServiceTest extends TestCase
     public function testGetChecks()
     {
         $actual = $this->subject->getChecks();
-        $this->assertContainsOnlyInstancesOf(stdClass::class, $actual);
+        $this->assertContainsOnly('array', $actual);
         $this->assertCount(8, $actual);
-        $this->assertSame('phpversion', $actual[0]->label);
-        $this->assertSame('success', $actual[0]->state);
-        $this->assertSame('extension', $actual[1]->label);
-        $this->assertSame('success', $actual[1]->state);
-        $this->assertSame('gdfeature', $actual[2]->label);
-        $this->assertSame('success', $actual[2]->state);
-        $this->assertSame('xhversion', $actual[4]->label);
-        $this->assertSame('success', $actual[4]->state);
-        $this->assertSame('writable', $actual[5]->label);
-        $this->assertSame('success', $actual[5]->state);
+        $this->assertSame('phpversion', $actual[0]['label']);
+        $this->assertSame('success', $actual[0]['state']);
+        $this->assertSame('extension', $actual[1]['label']);
+        $this->assertSame('success', $actual[1]['state']);
+        $this->assertSame('gdfeature', $actual[2]['label']);
+        $this->assertSame('success', $actual[2]['state']);
+        $this->assertSame('xhversion', $actual[4]['label']);
+        $this->assertSame('success', $actual[4]['state']);
+        $this->assertSame('writable', $actual[5]['label']);
+        $this->assertSame('success', $actual[5]['state']);
     }
 }
