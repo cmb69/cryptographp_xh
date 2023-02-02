@@ -1,4 +1,3 @@
-/tests/coverage
 /tests/unit/images/*.out.png
 /tests/unit/images/*.diff.png
 /tools
@@ -6,3 +5,4 @@
 /.phpunit.result.cache
 /composer.lock
 /.phpunit.cache
+/coverage

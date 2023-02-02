@@ -14,8 +14,8 @@
             <arg file="captcha.php"/>
             <arg file="index.php"/>
             <arg file="classes"/>
-            <arg file="tests/unit/"/>
-            <arg value="--ignore=tests/unit/bootstrap.php"/>
+            <arg file="tests"/>
+            <arg value="--ignore=tests/bootstrap.php"/>
         </exec>
     </target>
 
@@ -37,14 +37,14 @@
         <exec command="phpcompatinfo analyser:run classes" passthru="true"/>
     </target>
 
-    <target name="unit-tests" description="runs all unit tests">
+    <target name="test" description="runs all developer tests">
         <exec executable="phpunit" passthru="true" checkreturn="true"/>
     </target>
 
     <target name="coverage" description="generates coverage report">
         <exec executable="phpunit" passthru="true" checkreturn="true">
             <arg value="--coverage-html"/>
-            <arg file="tests/coverage"/>
+            <arg file="coverage"/>
         </exec>
     </target>
 
