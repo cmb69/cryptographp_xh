@@ -36,10 +36,7 @@ class Url
      */
     private $params;
 
-    /**
-     * @return self
-     */
-    public static function current()
+    public static function current(): self
     {
         global $sn, $su;
 
@@ -52,21 +49,16 @@ class Url
     }
 
     /**
-     * @param string $path
-     * @param string $page
      * @param array<string,string> $params
      */
-    private function __construct($path, $page, array $params)
+    private function __construct(string $path, string $page, array $params)
     {
         $this->path = $path;
         $this->page = $page;
         $this->params = $params;
     }
 
-    /**
-     * @return string
-     */
-    public function relative()
+    public function relative(): string
     {
         $result = $this->path;
         if (($query = $this->query())) {
@@ -75,10 +67,7 @@ class Url
         return $result;
     }
 
-    /**
-     * @return string
-     */
-    public function absolute()
+    public function absolute(): string
     {
         $result = CMSIMPLE_URL;
         if (($query = $this->query())) {
@@ -87,10 +76,7 @@ class Url
         return $result;
     }
 
-    /**
-     * @return string
-     */
-    private function query()
+    private function query(): string
     {
         $result = "{$this->page}";
         $additional = preg_replace('/=(?=&|$)/', "", http_build_query($this->params, "", "&"));
@@ -100,23 +86,14 @@ class Url
         return $result;
     }
 
-    /**
-     * @param string $param
-     * @param string $value
-     * @return self
-     */
-    public function with($param, $value)
+    public function with(string $param, string $value): self
     {
         $params = $this->params;
         $params[$param] = (string) $value;
         return new self($this->path, $this->page, $params);
     }
 
-    /**
-     * @param string $param
-     * @return self
-     */
-    public function without($param)
+    public function without(string $param): self
     {
         $params = $this->params;
         unset($params[$param]);

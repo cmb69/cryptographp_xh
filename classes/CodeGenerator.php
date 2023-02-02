@@ -37,10 +37,7 @@ class CodeGenerator
         $this->config = $config;
     }
 
-    /**
-     * @return string
-     */
-    public function createCode()
+    public function createCode(): string
     {
         $code = '';
         $isVowel = mt_rand(0, 1);
@@ -60,11 +57,7 @@ class CodeGenerator
         return $code;
     }
 
-    /**
-     * @param string $string
-     * @return string
-     */
-    private function getRandomCharOf($string)
+    private function getRandomCharOf(string $string): string
     {
         return $string[mt_rand(0, strlen($string) - 1)];
     }

@@ -30,33 +30,27 @@ class View
     private $lang;
 
     /**
-     * @param string $templateDir
      * @param array<string,string> $lang
      */
-    public function __construct($templateDir, $lang)
+    public function __construct(string $templateDir, array $lang)
     {
         $this->templateDir = $templateDir;
         $this->lang = $lang;
     }
 
     /**
-     * @param string $key
      * @param mixed $args
-     * @return string
      */
-    public function text($key, ...$args)
+    public function text(string $key, ...$args): string
     {
         $args = array_map([$this, "esc"], $args);
         return sprintf($this->esc($this->lang[$key]), ...$args);
     }
 
     /**
-     * @param string $key
-     * @param int $count
      * @param mixed $args
-     * @return string
      */
-    public function plural($key, $count, ...$args)
+    public function plural(string $key, int $count, ...$args): string
     {
         if ($count == 0) {
             $key .= '_0';
@@ -68,11 +62,9 @@ class View
     }
 
     /**
-     * @param string $_template
      * @param array<string,mixed> $_data
-     * @return string
      */
-    public function render($_template, array $_data)
+    public function render(string $_template, array $_data): string
     {
         extract($_data);
         ob_start();
@@ -83,9 +75,8 @@ class View
 
     /**
      * @param string|HtmlString $value
-     * @return string
      */
-    public function esc($value)
+    public function esc($value): string
     {
         if ($value instanceof HtmlString) {
             return $value->toString();

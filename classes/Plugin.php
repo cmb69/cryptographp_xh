@@ -73,11 +73,7 @@ class Plugin
         return $result;
     }
 
-    /**
-     * @param string $param
-     * @return string
-     */
-    private static function getControllerAction(CaptchaController $controller, $param)
+    private static function getControllerAction(CaptchaController $controller, string $param): string
     {
         $action = preg_replace_callback(
             '/_([a-z])/',
@@ -92,10 +88,7 @@ class Plugin
         return "{$action}Action";
     }
 
-    /**
-     * @return bool
-     */
-    public static function checkCAPTCHA()
+    public static function checkCAPTCHA(): bool
     {
         $code = $_POST['cryptographp-captcha'] ?? "";
         if (!isset($_POST['cryptographp_nonce'])) {

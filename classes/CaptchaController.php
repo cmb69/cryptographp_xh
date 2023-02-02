@@ -62,13 +62,11 @@ class CaptchaController
     private $view;
 
     /**
-     * @param string $pluginFolder
-     * @param string $currentLang
      * @param array<string,string> $lang
      */
     public function __construct(
-        $pluginFolder,
-        $currentLang,
+        string $pluginFolder,
+        string $currentLang,
         array $lang,
         CodeStore $codeStore,
         CodeGenerator $codeGenerator,

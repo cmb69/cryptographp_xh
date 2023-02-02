@@ -88,10 +88,9 @@ class VisualCaptcha
     }
 
     /**
-     * @param string $code
-     * @return resource
+     * @return resource|GdImage
      */
-    public function createImage($code)
+    public function createImage(string $code)
     {
         $this->code = $code;
         $this->precalculate();
@@ -175,10 +174,8 @@ class VisualCaptcha
 
     /**
      * @param resource|GdImage $image
-     * @param int $blank
-     * @return int
      */
-    private function calculateTextWidth($image, $blank)
+    private function calculateTextWidth($image, int $blank): int
     {
         $width = (int) $this->config['crypt_width'];
         $xbegin = 0;
@@ -194,11 +191,8 @@ class VisualCaptcha
 
     /**
      * @param resource|GdImage $image
-     * @param int $x
-     * @param int $blank
-     * @return int
      */
-    private function scanColumn($image, $x, $blank)
+    private function scanColumn($image, int $x, int $blank): int
     {
         for ($y = 0; $y < $this->config['crypt_height']; $y++) {
             if (imagecolorat($image, $x, $y) != $blank) {
@@ -227,10 +221,7 @@ class VisualCaptcha
         return false;
     }
 
-    /**
-     * @return int
-     */
-    private function getNoiseColor()
+    private function getNoiseColor(): int
     {
         switch ($this->config['noise_color']) {
             case 1:
@@ -339,10 +330,7 @@ class VisualCaptcha
         }
     }
 
-    /**
-     * @return int
-     */
-    private function chooseRandomColor()
+    private function chooseRandomColor(): int
     {
         do {
             $red = mt_rand(0, 255);
@@ -354,11 +342,7 @@ class VisualCaptcha
         return $color;
     }
 
-    /**
-     * @param int $color
-     * @return bool
-     */
-    private function isValidRandomColor($color)
+    private function isValidRandomColor(int $color): bool
     {
         switch ($this->config['char_color_random_level']) {
             case 1: // very dark
@@ -439,10 +423,9 @@ class VisualCaptcha
     }
 
     /**
-     * @param string $text
      * @return resource|GdImage
      */
-    public function createErrorImage($text)
+    public function createErrorImage(string $text)
     {
         $text = preg_replace('/(?=\s)(.{1,15})(?:\s|$)/u', "\$1\n", $text);
         $lines = explode("\n", $text);

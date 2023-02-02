@@ -22,18 +22,12 @@
 
 use Cryptographp\Plugin;
 
-/**
- * @return string
- */
-function cryptographp_captcha_display()
+function cryptographp_captcha_display(): string
 {
     return Plugin::renderCaptcha();
 }
 
-/**
- * @return bool
- */
-function cryptographp_captcha_check()
+function cryptographp_captcha_check(): bool
 {
     return Plugin::checkCAPTCHA();
 }

@@ -31,19 +31,15 @@ class AudioCaptcha
      */
     private $audioFolder;
 
-    /**
-     * @param string $audioFolder
-     */
-    public function __construct($audioFolder)
+    public function __construct(string $audioFolder)
     {
         $this->audioFolder = $audioFolder;
     }
 
     /**
-     * @param string $code
      * @return string|null
      */
-    public function createWav($code)
+    public function createWav(string $code)
     {
         if (!($samples = $this->concatenateRawAudio($code))) {
             return null;
@@ -52,28 +48,17 @@ class AudioCaptcha
         return $this->createRiffChunk($dataChunk) . $this->createFmtChunk() . $dataChunk;
     }
 
-    /**
-     * @param string $dataChunk
-     * @return string
-     */
-    private function createRiffChunk($dataChunk)
+    private function createRiffChunk(string $dataChunk): string
     {
         return pack('A4Va4', 'RIFF', 4 + 24 + strlen($dataChunk), 'WAVE');
     }
 
-    /**
-     * @return string
-     */
-    private function createFmtChunk()
+    private function createFmtChunk(): string
     {
         return pack('A4VvvVVvv', 'fmt', 16, 1, 1, 8000, 16000, 2, 16);
     }
 
-    /**
-     * @param string $data
-     * @return string
-     */
-    private function createDataChunk($data)
+    private function createDataChunk(string $data): string
     {
         return pack('A4V', 'data', strlen($data)) . $data;
     }
@@ -82,10 +67,9 @@ class AudioCaptcha
      * The raw audio files are supposed to contain mono *unsigned* 16-bit LPCM
      * samples with a sampling rate of 8000 Hz in little-endian byte order.
      *
-     * @param string $code
      * @return ?int[]
      */
-    private function concatenateRawAudio($code)
+    private function concatenateRawAudio(string $code)
     {
         $data = '';
         for ($i = 0; $i < strlen($code); $i++) {
@@ -103,9 +87,8 @@ class AudioCaptcha
 
     /**
      * @param int[] $samples
-     * @return string
      */
-    private function applyWhiteNoise($samples)
+    private function applyWhiteNoise(array $samples): string
     {
         $gain = (65535 - self::NOISE_PEAK) / $this->getPeak($samples);
         ob_start();
@@ -119,9 +102,8 @@ class AudioCaptcha
 
     /**
      * @param int[] $samples
-     * @return int
      */
-    private function getPeak($samples)
+    private function getPeak(array $samples): int
     {
         $peak = 0;
         foreach ($samples as $sample) {
