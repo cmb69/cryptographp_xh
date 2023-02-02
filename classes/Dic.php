@@ -26,21 +26,25 @@ class Dic
     public static function makeCaptchaController(string $lang): CaptchaController
     {
         global $pth, $sl, $plugin_cf, $plugin_tx;
+        static $instance;
 
-        return new CaptchaController(
-            "{$pth['folder']['plugins']}cryptographp/",
-            $sl,
-            $plugin_tx['cryptographp'],
-            self::makeCodeStore(),
-            new CodeGenerator($plugin_cf['cryptographp']),
-            new VisualCaptcha(
-                $pth['folder']['images'],
-                "{$pth['folder']['plugins']}cryptographp/fonts",
-                $plugin_cf['cryptographp']
-            ),
-            new AudioCaptcha("{$pth['folder']['plugins']}cryptographp/languages/$lang/"),
-            new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"])
-        );
+        if (!isset($instance)) {
+            $instance = new CaptchaController(
+                "{$pth['folder']['plugins']}cryptographp/",
+                $sl,
+                $plugin_tx['cryptographp'],
+                self::makeCodeStore(),
+                new CodeGenerator($plugin_cf['cryptographp']),
+                new VisualCaptcha(
+                    $pth['folder']['images'],
+                    "{$pth['folder']['plugins']}cryptographp/fonts",
+                    $plugin_cf['cryptographp']
+                ),
+                new AudioCaptcha("{$pth['folder']['plugins']}cryptographp/languages/$lang/"),
+                new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"])
+            );
+        }
+        return $instance;
     }
 
     public static function makeInfoController(): InfoController

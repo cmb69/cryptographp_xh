@@ -29,7 +29,7 @@ class CaptchaController
     /**
      * @var bool
      */
-    private static $isJavaScriptEmitted = false;
+    private $isJavaScriptEmitted = false;
 
     /**
      * @var string
@@ -114,12 +114,12 @@ class CaptchaController
     {
         global $bjs;
 
-        if (!self::$isJavaScriptEmitted) {
+        if (!$this->isJavaScriptEmitted) {
             $bjs .= sprintf(
                 '<script type="text/javascript" src="%s"></script>',
                 "{$this->pluginFolder}cryptographp.min.js"
             );
-            self::$isJavaScriptEmitted = true;
+            $this->isJavaScriptEmitted = true;
         }
     }
 
