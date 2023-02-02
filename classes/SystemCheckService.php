@@ -33,13 +33,17 @@ class SystemCheckService
      */
     private $lang;
 
+    /** @var SystemChecker */
+    private $systemChecker;
+
     /**
      * @param array<string,string> $lang
      */
-    public function __construct(string $pluginFolder, array $lang)
+    public function __construct(string $pluginFolder, array $lang, SystemChecker $systemChecker)
     {
         $this->pluginFolder = $pluginFolder;
         $this->lang = $lang;
+        $this->systemChecker = $systemChecker;
     }
 
     /**
@@ -65,7 +69,7 @@ class SystemCheckService
      */
     private function checkPhpVersion($version)
     {
-        $state = version_compare(PHP_VERSION, $version, 'ge') ? 'success' : 'fail';
+        $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_phpversion'], $version);
         $stateLabel = $this->lang["syscheck_$state"];
         return compact('state', 'label', 'stateLabel');
@@ -77,7 +81,7 @@ class SystemCheckService
      */
     private function checkExtension($extension)
     {
-        $state = extension_loaded($extension) ? 'success' : 'fail';
+        $state = $this->systemChecker->checkExtension($extension) ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_extension'], $extension);
         $stateLabel = $this->lang["syscheck_$state"];
         return compact('state', 'label', 'stateLabel');
@@ -88,7 +92,7 @@ class SystemCheckService
      */
     private function checkGdFreetype()
     {
-        $state = gd_info()['FreeType Support'] ? 'success' : 'fail';
+        $state = $this->systemChecker->checkGdFreetype() ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_gd_feature'], 'TrueType');
         $stateLabel = $this->lang["syscheck_$state"];
         return compact('state', 'label', 'stateLabel');
@@ -99,7 +103,7 @@ class SystemCheckService
      */
     private function checkGdPng()
     {
-        $state = (imagetypes() & IMG_PNG) ? 'success' : 'fail';
+        $state = $this->systemChecker->checkGdPng() ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_gd_feature'], 'PNG');
         $stateLabel = $this->lang["syscheck_$state"];
         return compact('state', 'label', 'stateLabel');
@@ -111,7 +115,9 @@ class SystemCheckService
      */
     private function checkXhVersion($version)
     {
-        $state = version_compare(CMSIMPLE_XH_VERSION, "CMSimple_XH $version", 'ge') ? 'success' : 'fail';
+        $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version")
+            ? 'success'
+            : 'fail';
         $label = sprintf($this->lang['syscheck_xhversion'], $version);
         $stateLabel = $this->lang["syscheck_$state"];
         return compact('state', 'label', 'stateLabel');
@@ -123,7 +129,7 @@ class SystemCheckService
      */
     private function checkWritability($folder)
     {
-        $state = is_writable($folder) ? 'success' : 'warning';
+        $state = $this->systemChecker->checkWritability($folder) ? 'success' : 'warning';
         $label = sprintf($this->lang['syscheck_writable'], $folder);
         $stateLabel = $this->lang["syscheck_$state"];
         return compact('state', 'label', 'stateLabel');

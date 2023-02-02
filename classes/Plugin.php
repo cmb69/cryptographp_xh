@@ -66,7 +66,8 @@ class Plugin
         $view = new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"]);
         $systemCheckService = new SystemCheckService(
             "{$pth['folder']['plugins']}cryptographp",
-            $plugin_tx["cryptographp"]
+            $plugin_tx["cryptographp"],
+            new SystemChecker()
         );
         return $view->render('info', [
             'version' => self::VERSION,
