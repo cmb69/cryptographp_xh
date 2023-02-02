@@ -34,7 +34,7 @@
 
     <target name="compat"
             description="checks PHP requirements">
-        <exec command="phpcompatinfo analyser:run --alias current" logoutput="true"/>
+        <exec command="phpcompatinfo analyser:run classes" passthru="true"/>
     </target>
 
     <target name="unit-tests" description="runs all unit tests">
@@ -79,7 +79,6 @@
                 <exclude name="build.xml"/>
                 <exclude name="composer.*"/>
                 <exclude name="coverage.xml"/>
-                <exclude name="phpcompatinfo.*"/>
                 <exclude name="phpstan.*"/>
                 <exclude name="teplad.xml"/>
             </fileset>
