@@ -23,17 +23,13 @@ namespace Cryptographp;
 
 class Url
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $path;
 
     /** @var string */
     private $page;
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     private $params;
 
     public static function current(): self
@@ -48,9 +44,7 @@ class Url
         return new self($sn, $su, $params);
     }
 
-    /**
-     * @param array<string,string> $params
-     */
+    /** @param array<string,string> $params */
     private function __construct(string $path, string $page, array $params)
     {
         $this->path = $path;

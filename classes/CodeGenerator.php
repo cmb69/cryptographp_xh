@@ -24,14 +24,10 @@ namespace Cryptographp;
 
 class CodeGenerator
 {
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     private $config;
 
-    /**
-     * @param array<string,string> $config
-     */
+    /** @param array<string,string> $config */
     public function __construct(array $config)
     {
         $this->config = $config;

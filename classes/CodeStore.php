@@ -70,9 +70,7 @@ final class CodeStore
         $this->retention = $retention;
     }
 
-    /**
-     * @return string|null
-     */
+    /** @return string|null */
     public function find(string $key)
     {
         assert(strlen($key) <= self::KEY_SIZE);
@@ -89,9 +87,7 @@ final class CodeStore
         return $result;
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     public function put(string $key, string $code)
     {
         assert(strlen($key) <= self::KEY_SIZE);
@@ -118,9 +114,7 @@ final class CodeStore
         $this->commit();
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     public function invalidate(string $key)
     {
         assert(strlen($key) <= self::KEY_SIZE);
@@ -135,9 +129,7 @@ final class CodeStore
         $this->commit();
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function rebuild()
     {
         $all = $this->all();
@@ -160,9 +152,7 @@ final class CodeStore
         }
     }
 
-    /**
-     * @return array{occupied:bool,key:string,timestamp:int,code:string}[]
-     */
+    /** @return array<array{occupied:bool,key:string,timestamp:int,code:string}> */
     private function all(): array
     {
         $results = [];
@@ -187,17 +177,13 @@ final class CodeStore
         return $slot;
     }
 
-    /**
-     * @param array{occupied:bool,key:string,timestamp:int,code:string} $record
-     */
+    /** @param array{occupied:bool,key:string,timestamp:int,code:string} $record */
     private function isExpired(array $record): bool
     {
         return $record["timestamp"] + $this->retention < $this->timestamp;
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function begin(bool $exclusive)
     {
         $this->stream = fopen($this->filename, "c+");
@@ -214,18 +200,14 @@ final class CodeStore
         $this->occupied = $header["occupied"];
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function commit()
     {
         flock($this->stream, LOCK_UN);
         fclose($this->stream);
     }
 
-    /**
-     * @return array{occupied:bool,key:string,timestamp:int,code:string}
-     */
+    /** @return array{occupied:bool,key:string,timestamp:int,code:string} */
     private function readRecord(int $slot): array
     {
         fseek($this->stream, self::HEADER_SIZE + $slot * self::RECORD_SIZE);

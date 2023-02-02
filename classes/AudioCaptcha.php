@@ -26,9 +26,7 @@ class AudioCaptcha
 {
     const NOISE_PEAK = 4000;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $audioFolder;
 
     public function __construct(string $audioFolder)
@@ -36,9 +34,7 @@ class AudioCaptcha
         $this->audioFolder = $audioFolder;
     }
 
-    /**
-     * @return string|null
-     */
+    /** @return string|null */
     public function createWav(string $code)
     {
         if (!($samples = $this->concatenateRawAudio($code))) {
@@ -67,7 +63,7 @@ class AudioCaptcha
      * The raw audio files are supposed to contain mono *unsigned* 16-bit LPCM
      * samples with a sampling rate of 8000 Hz in little-endian byte order.
      *
-     * @return ?int[]
+     * @return array<int>|null
      */
     private function concatenateRawAudio(string $code)
     {
@@ -85,9 +81,7 @@ class AudioCaptcha
         return $binary;
     }
 
-    /**
-     * @param int[] $samples
-     */
+    /** @param array<int> $samples */
     private function applyWhiteNoise(array $samples): string
     {
         $gain = (65535 - self::NOISE_PEAK) / $this->getPeak($samples);
@@ -100,9 +94,7 @@ class AudioCaptcha
         return $string;
     }
 
-    /**
-     * @param int[] $samples
-     */
+    /** @param array<int> $samples */
     private function getPeak(array $samples): int
     {
         $peak = 0;

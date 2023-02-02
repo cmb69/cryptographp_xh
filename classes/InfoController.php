@@ -50,9 +50,7 @@ class InfoController
         ]);
     }
 
-    /**
-     * @return array<array{state:string,label:string,stateLabel:string}>
-     */
+    /** @return array<array{state:string,label:string,stateLabel:string}> */
     private function getChecks()
     {
         return array(
@@ -67,9 +65,7 @@ class InfoController
         );
     }
 
-    /**
-     * @return array{state:string,label:string,stateLabel:string}
-     */
+    /** @return array{state:string,label:string,stateLabel:string} */
     private function checkPhpVersion(string $version)
     {
         $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? 'success' : 'fail';
@@ -78,9 +74,7 @@ class InfoController
         return compact('state', 'label', 'stateLabel');
     }
 
-    /**
-     * @return array{state:string,label:string,stateLabel:string}
-     */
+    /** @return array{state:string,label:string,stateLabel:string} */
     private function checkExtension(string $extension)
     {
         $state = $this->systemChecker->checkExtension($extension) ? 'success' : 'fail';
@@ -89,9 +83,7 @@ class InfoController
         return compact('state', 'label', 'stateLabel');
     }
 
-    /**
-     * @return array{state:string,label:string,stateLabel:string}
-     */
+    /** @return array{state:string,label:string,stateLabel:string} */
     private function checkGdFreetype()
     {
         $state = $this->systemChecker->checkGdFreetype() ? 'success' : 'fail';
@@ -100,9 +92,7 @@ class InfoController
         return compact('state', 'label', 'stateLabel');
     }
 
-    /**
-     * @return array{state:string,label:string,stateLabel:string}
-     */
+    /** @return array{state:string,label:string,stateLabel:string} */
     private function checkGdPng()
     {
         $state = $this->systemChecker->checkGdPng() ? 'success' : 'fail';
@@ -111,9 +101,7 @@ class InfoController
         return compact('state', 'label', 'stateLabel');
     }
 
-    /**
-     * @return array{state:string,label:string,stateLabel:string}
-     */
+    /** @return array{state:string,label:string,stateLabel:string} */
     private function checkXhVersion(string $version)
     {
         $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version")
@@ -124,9 +112,7 @@ class InfoController
         return compact('state', 'label', 'stateLabel');
     }
 
-    /**
-     * @return array{state:string,label:string,stateLabel:string}
-     */
+    /** @return array{state:string,label:string,stateLabel:string} */
     private function checkWritability(string $folder)
     {
         $state = $this->systemChecker->checkWritability($folder) ? 'success' : 'warning';

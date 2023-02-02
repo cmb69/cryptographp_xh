@@ -26,9 +26,7 @@ class Plugin
 {
     const VERSION = '1.0beta6';
 
-    /**
-     * @return void
-     */
+    /** @return void */
     public static function run()
     {
         if (XH_ADM) { // @phpstan-ignore-line
@@ -39,9 +37,7 @@ class Plugin
         }
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private static function handleAdministration()
     {
         global $admin, $o;

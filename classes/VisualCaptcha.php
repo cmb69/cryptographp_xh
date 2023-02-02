@@ -26,59 +26,37 @@ use GdImage;
 
 class VisualCaptcha
 {
-    /**
-     * @var resource|GdImage
-     */
+    /** @var resource|GdImage */
     private $image;
 
-    /**
-     * @var array<Char>
-     */
+    /** @var array<Char> */
     private $word;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $ink;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $bg;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $xOffset;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $code;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $imageFolder;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $fontFolder;
 
-    /**
-     * @var string[]
-     */
+    /** @var array<string> */
     private $fonts;
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     private $config;
 
-    /**
-     * @param array<string,string> $config
-     */
+    /** @param array<string,string> $config */
     public function __construct(string $imageFolder, string $fontFolder, array $config)
     {
         $this->imageFolder = $imageFolder;
@@ -87,9 +65,7 @@ class VisualCaptcha
         $this->fonts = explode(';', $this->config['char_fonts']);
     }
 
-    /**
-     * @return resource|GdImage
-     */
+    /** @return resource|GdImage */
     public function createImage(string $code)
     {
         $this->code = $code;
@@ -119,9 +95,7 @@ class VisualCaptcha
         return $this->image;
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function precalculate()
     {
         $image = imagecreatetruecolor((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
@@ -172,9 +146,7 @@ class VisualCaptcha
         imagedestroy($image);
     }
 
-    /**
-     * @param resource|GdImage $image
-     */
+    /** @param resource|GdImage $image */
     private function calculateTextWidth($image, int $blank): int
     {
         $width = (int) $this->config['crypt_width'];
@@ -189,9 +161,7 @@ class VisualCaptcha
         return $xend - $xbegin;
     }
 
-    /**
-     * @param resource|GdImage $image
-     */
+    /** @param resource|GdImage $image */
     private function scanColumn($image, int $x, int $blank): int
     {
         for ($y = 0; $y < $this->config['crypt_height']; $y++) {
@@ -202,9 +172,7 @@ class VisualCaptcha
         return 0;
     }
     
-    /**
-     * @return string|false
-     */
+    /** @return string|false */
     private function findBackgroundImage()
     {
         if ($this->config['bg_image']) {
@@ -235,9 +203,7 @@ class VisualCaptcha
         }
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function paintBackground()
     {
         $bgimg = $this->findBackgroundImage();
@@ -275,9 +241,7 @@ class VisualCaptcha
         }
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function paintStaticBackground()
     {
         $color = imagecolorallocate(
@@ -294,9 +258,7 @@ class VisualCaptcha
         }
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function paintCharacters()
     {
         $ink = imagecolorallocatealpha(
@@ -358,9 +320,7 @@ class VisualCaptcha
         }
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function paintNoise()
     {
         $nbpx = mt_rand((int) $this->config['noise_pixel_min'], (int) $this->config['noise_pixel_max']);
@@ -400,9 +360,7 @@ class VisualCaptcha
         }
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function paintFrame()
     {
         $color = imagecolorallocate(
@@ -422,9 +380,7 @@ class VisualCaptcha
         );
     }
 
-    /**
-     * @return resource|GdImage
-     */
+    /** @return resource|GdImage */
     public function createErrorImage(string $text)
     {
         $text = preg_replace('/(?=\s)(.{1,15})(?:\s|$)/u', "\$1\n", $text);

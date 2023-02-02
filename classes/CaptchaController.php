@@ -26,24 +26,16 @@ use GdImage;
 
 class CaptchaController
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $isJavaScriptEmitted = false;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $pluginFolder;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $currentLang;
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     private $lang;
 
     /** @var CodeStore */
@@ -61,9 +53,7 @@ class CaptchaController
     /** @var View */
     private $view;
 
-    /**
-     * @param array<string,string> $lang
-     */
+    /** @param array<string,string> $lang */
     public function __construct(
         string $pluginFolder,
         string $currentLang,
@@ -84,9 +74,7 @@ class CaptchaController
         $this->view = $view;
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     public function defaultAction()
     {
         $code = $this->codeGenerator->createCode();
@@ -105,9 +93,7 @@ class CaptchaController
         ]);
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function emitJavaScript()
     {
         global $bjs;
@@ -121,9 +107,7 @@ class CaptchaController
         }
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     public function videoAction()
     {
         if (!isset($_GET['cryptographp_nonce'])) {
@@ -148,9 +132,7 @@ class CaptchaController
         exit;
     }
 
-    /**
-     * @return never
-     */
+    /** @return never */
     public function audioAction()
     {
         if (!isset($_GET['cryptographp_nonce'])) {
