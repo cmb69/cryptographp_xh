@@ -22,8 +22,6 @@
 
 namespace Cryptographp;
 
-use stdClass;
-
 class VisualCaptcha
 {
     /**
@@ -32,7 +30,7 @@ class VisualCaptcha
     private $image;
 
     /**
-     * @var object[]
+     * @var array<Char>
      */
     private $word;
 
@@ -135,7 +133,7 @@ class VisualCaptcha
 
         $x = 10;
         for ($i = 0; $i < strlen($this->code); $i++) {
-            $char = new stdClass;
+            $char = new Char();
             $char->font =  $this->fonts[mt_rand(0, count($this->fonts) - 1)];
             $char->angle = mt_rand(1, 2) == 1
                 ? mt_rand(0, (int) $this->config['char_angle_max'])
