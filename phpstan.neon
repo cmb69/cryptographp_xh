@@ -6,7 +6,7 @@ parameters:
     - captcha.php
     - index.php
   bootstrapFiles:
-    - constants.php
+    - phpstan.php
   scanFiles:
     - ../../cmsimple/adminfuncs.php
     - ../../cmsimple/functions.php

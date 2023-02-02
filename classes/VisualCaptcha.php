@@ -22,10 +22,12 @@
 
 namespace Cryptographp;
 
+use GdImage;
+
 class VisualCaptcha
 {
     /**
-     * @var resource
+     * @var resource|GdImage
      */
     private $image;
 
@@ -172,7 +174,7 @@ class VisualCaptcha
     }
 
     /**
-     * @param resource $image
+     * @param resource|GdImage $image
      * @param int $blank
      * @return int
      */
@@ -191,7 +193,7 @@ class VisualCaptcha
     }
 
     /**
-     * @param resource $image
+     * @param resource|GdImage $image
      * @param int $x
      * @param int $blank
      * @return int
@@ -438,7 +440,7 @@ class VisualCaptcha
 
     /**
      * @param string $text
-     * @return resource
+     * @return resource|GdImage
      */
     public function createErrorImage($text)
     {

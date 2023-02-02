@@ -75,12 +75,11 @@
                 <exclude name="help/template.htm"/>
                 <exclude name="README.md"/>
                 <exclude name="README_DE.md"/>
-                <exclude name="constants.php"/>
                 <exclude name="build.xml"/>
                 <exclude name="composer.*"/>
                 <exclude name="coverage.xml"/>
                 <exclude name="phpcompatinfo.*"/>
-                <exclude name="phpstan.neon"/>
+                <exclude name="phpstan.*"/>
                 <exclude name="tests/**"/>
             </fileset>
         </move>

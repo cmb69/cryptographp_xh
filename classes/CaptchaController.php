@@ -22,6 +22,8 @@
 
 namespace Cryptographp;
 
+use GdImage;
+
 class CaptchaController
 {
     /**
@@ -135,7 +137,7 @@ class CaptchaController
     }
 
     /**
-     * @param resource $image
+     * @param resource|GdImage $image
      * @return never
      */
     private function deliverImage($image)
