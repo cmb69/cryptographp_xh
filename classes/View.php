@@ -76,7 +76,7 @@ class View
     {
         extract($_data);
         ob_start();
-        echo "<!-- {$_template} -->", PHP_EOL;
+        echo "<!-- {$_template} -->\n";
         include "{$this->templateDir}/{$_template}.php";
         return ob_get_clean();
     }
