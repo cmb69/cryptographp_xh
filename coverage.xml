@@ -8,6 +8,7 @@
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">classes</directory>
+            <directory suffix=".php">views</directory>
             <file>captcha.php</file>
             <file>index.php</file>
         </whitelist>
