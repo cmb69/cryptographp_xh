@@ -22,7 +22,6 @@
 namespace Cryptographp;
 
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStream;
