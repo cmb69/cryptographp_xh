@@ -38,7 +38,7 @@ class SystemCheckServiceTest extends TestCase
         define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.7.0');
         $this->setUpVfs();
         $this->subject = new SystemCheckService(
-            vfsStream::url("test/plugins/cryptographp"),
+            vfsStream::url("test/plugins/cryptographp/"),
             $this->getLanguage(),
             new SystemChecker()
         );

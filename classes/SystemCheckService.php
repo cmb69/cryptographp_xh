@@ -57,9 +57,9 @@ class SystemCheckService
             $this->checkGdFreetype(),
             $this->checkGdPng(),
             $this->checkXhVersion('1.7.0'),
-            $this->checkWritability("$this->pluginFolder/config/"),
-            $this->checkWritability("$this->pluginFolder/css/"),
-            $this->checkWritability("$this->pluginFolder/languages/")
+            $this->checkWritability("{$this->pluginFolder}config/"),
+            $this->checkWritability("{$this->pluginFolder}css/"),
+            $this->checkWritability("{$this->pluginFolder}languages/")
         );
     }
 

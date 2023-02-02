@@ -49,30 +49,11 @@ class Plugin
         $o .= print_plugin_admin('off');
         switch ($admin) {
             case '':
-                $o .= self::renderInfo();
+                $o .= Dic::makeInfoController()();
                 break;
             default:
                 $o .= plugin_admin_common();
         }
-    }
-
-    /**
-     * @return string
-     */
-    private static function renderInfo()
-    {
-        global $pth, $plugin_tx;
-
-        $view = new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"]);
-        $systemCheckService = new SystemCheckService(
-            "{$pth['folder']['plugins']}cryptographp",
-            $plugin_tx["cryptographp"],
-            new SystemChecker()
-        );
-        return $view->render('info', [
-            'version' => self::VERSION,
-            'checks' => $systemCheckService->getChecks(),
-        ]);
     }
 
     public static function renderCaptcha(): string

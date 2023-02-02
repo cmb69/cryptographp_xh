@@ -43,6 +43,17 @@ class Dic
         );
     }
 
+    public static function makeInfoController(): InfoController
+    {
+        global $pth, $plugin_tx;
+
+        return new InfoController(
+            "{$pth['folder']['plugins']}cryptographp/",
+            $plugin_tx["cryptographp"],
+            new SystemChecker()
+        );
+    }
+
     public static function makeCodeStore(): CodeStore
     {
         global $pth, $plugin_cf;
