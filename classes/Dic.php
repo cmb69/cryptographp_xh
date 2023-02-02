@@ -30,7 +30,6 @@ class Dic
         return new CaptchaController(
             "{$pth['folder']['plugins']}cryptographp/",
             $sl,
-            $plugin_cf['cryptographp'],
             $plugin_tx['cryptographp'],
             self::makeCodeStore(),
             new CodeGenerator($plugin_cf['cryptographp']),

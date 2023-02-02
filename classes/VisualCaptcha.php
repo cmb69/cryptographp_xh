@@ -402,7 +402,7 @@ class VisualCaptcha
             );
         }
         for ($i = 0; $i < $nbcircle; $i++) {
-            $diameter = mt_rand(5, $this->config['crypt_width'] / 3);
+            $diameter = mt_rand(5, (int) $this->config['crypt_width'] / 3);
             imagearc(
                 $this->image,
                 mt_rand(0, (int) $this->config['crypt_width'] - 1),

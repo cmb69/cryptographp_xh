@@ -255,7 +255,6 @@ final class CodeStore
         for ($i = PHP_INT_SIZE - 1; $i >= 0; $i--) {
             $hash += (256 ** $i) * ($i === PHP_INT_SIZE - 1 ? ord($key[$i]) & 0x7f : ord($key[$i]));
         }
-        assert(is_int($hash) && $hash >= 0);
         return $hash;
     }
 }

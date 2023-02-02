@@ -42,11 +42,6 @@ class CaptchaController
     /**
      * @var array<string,string>
      */
-    private $config;
-
-    /**
-     * @var array<string,string>
-     */
     private $lang;
 
     /** @var CodeStore */
@@ -67,13 +62,11 @@ class CaptchaController
     /**
      * @param string $pluginFolder
      * @param string $currentLang
-     * @param array<string,string> $config
      * @param array<string,string> $lang
      */
     public function __construct(
         $pluginFolder,
         $currentLang,
-        array $config,
         array $lang,
         CodeStore $codeStore,
         CodeGenerator $codeGenerator,
@@ -83,7 +76,6 @@ class CaptchaController
     ) {
         $this->pluginFolder = $pluginFolder;
         $this->currentLang = $currentLang;
-        $this->config = $config;
         $this->lang = $lang;
         $this->codeStore = $codeStore;
         $this->codeGenerator = $codeGenerator;
