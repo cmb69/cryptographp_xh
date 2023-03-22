@@ -109,14 +109,12 @@ class VisualCaptcha
         $x = 10;
         for ($i = 0; $i < strlen($this->code); $i++) {
             $char = new Char();
-            $char->font =  $this->fonts[mt_rand(0, count($this->fonts) - 1)];
-            $char->angle = mt_rand(1, 2) == 1
-                ? mt_rand(0, (int) $this->config['char_angle_max'])
-                : mt_rand(360 - (int) $this->config['char_angle_max'], 360);
+            $char->font =  $this->fonts[$this->randomFont(count($this->fonts))];
+            $char->angle = $this->randomAngle((int) $this->config['char_angle_max']);
 
             $char->element = $this->code[$i];
 
-            $char->size = mt_rand((int) $this->config['char_size_min'], (int) $this->config['char_size_max']);
+            $char->size = $this->randomCharSize((int) $this->config['char_size_min'], (int) $this->config['char_size_max']);
             $font = $this->fontFolder . $char->font;
             $bbox = imagettfbbox($char->size, $char->angle, $font, $char->element);
             assert($bbox !== false);
@@ -125,7 +123,7 @@ class VisualCaptcha
             $delta = $this->config['crypt_height'] - $max + $min;
             $char->y = $delta / 2 + abs($min) - 1;
             if ($this->config['char_displace']) {
-                $char->y += mt_rand(-intval($delta / 2), intval($delta / 2));
+                $char->y += $this->randomDisplacement(-intval($delta / 2), intval($delta / 2));
             }
             imagettftext(
                 $image,
@@ -181,7 +179,7 @@ class VisualCaptcha
                 $files = array_values(array_filter(scandir($filename), function ($basename) {
                     return preg_match('/\.(gif|jpg|png)$/', $basename);
                 }));
-                return $filename . '/' . $files[mt_rand(0, count($files) - 1)];
+                return $filename . '/' . $files[$this->randomBackgroundImage(count($files))];
             } elseif (is_file($filename)) {
                 return $filename;
             }
@@ -197,7 +195,7 @@ class VisualCaptcha
             case 2:
                 return $this->bg;
             default:
-                $color = imagecolorallocate($this->image, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
+                $color = imagecolorallocate($this->image, ...$this->randomNoiseColor());
                 assert($color !== false);
                 return $color;
         }
@@ -295,9 +293,7 @@ class VisualCaptcha
     private function chooseRandomColor(): int
     {
         do {
-            $red = mt_rand(0, 255);
-            $green = mt_rand(0, 255);
-            $blue = mt_rand(0, 255);
+            [$red, $green, $blue] = $this->randomCharColor();
         } while (!$this->isValidRandomColor($red + $green + $blue));
         $color = imagecolorallocatealpha($this->image, $red, $green, $blue, (int) $this->config['char_clear']);
         assert($color !== false);
@@ -323,34 +319,36 @@ class VisualCaptcha
     /** @return void */
     private function paintNoise()
     {
-        $nbpx = mt_rand((int) $this->config['noise_pixel_min'], (int) $this->config['noise_pixel_max']);
-        $nbline = mt_rand((int) $this->config['noise_line_min'], (int) $this->config['noise_line_max']);
-        $nbcircle = mt_rand((int) $this->config['noise_circle_min'], (int) $this->config['noise_circle_max']);
+        $nbpx = $this->randomPointCount((int) $this->config['noise_pixel_min'], (int) $this->config['noise_pixel_max']);
+        $nbline = $this->randomLineCount((int) $this->config['noise_line_min'], (int) $this->config['noise_line_max']);
+        $nbcircle = $this->randomCircleCount((int) $this->config['noise_circle_min'], (int) $this->config['noise_circle_max']);
         for ($i = 0; $i < $nbpx; $i++) {
+            [$x, $y] = $this->randomPoint((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
             imagesetpixel(
                 $this->image,
-                mt_rand(0, (int) $this->config['crypt_width'] - 1),
-                mt_rand(0, (int) $this->config['crypt_height'] - 1),
+                $x,
+                $y,
                 $this->getNoiseColor()
             );
         }
         imagesetthickness($this->image, (int) $this->config['noise_brush_size']);
         for ($i = 0; $i < $nbline; $i++) {
+            [$x1, $y1, $x2, $y2] = $this->randomLine((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
             imageline(
                 $this->image,
-                mt_rand(0, (int) $this->config['crypt_width'] - 1),
-                mt_rand(0, (int) $this->config['crypt_height'] - 1),
-                mt_rand(0, (int) $this->config['crypt_width'] - 1),
-                mt_rand(0, (int) $this->config['crypt_height'] - 1),
+                $x1,
+                $y1,
+                $x2,
+                $y2,
                 $this->getNoiseColor()
             );
         }
         for ($i = 0; $i < $nbcircle; $i++) {
-            $diameter = mt_rand(5, (int) $this->config['crypt_width'] / 3);
+            [$x, $y, $diameter] = $this->randomCircle((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
             imagearc(
                 $this->image,
-                mt_rand(0, (int) $this->config['crypt_width'] - 1),
-                mt_rand(0, (int) $this->config['crypt_height'] - 1),
+                $x,
+                $y,
                 $diameter,
                 $diameter,
                 0,
@@ -403,5 +401,101 @@ class VisualCaptcha
         imagefilledrectangle($img, 0, 0, $width-1, $height-1, $bg);
         imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text);
         return $img;
+    }
+
+    /** @codeCoverageIgnore */
+    protected function randomFont(int $count): int
+    {
+        return mt_rand(0, $count - 1);
+    }
+
+    /** @codeCoverageIgnore */
+    protected function randomAngle(int $max): int
+    {
+        return mt_rand(1, 2) == 1
+            ? mt_rand(0, $max)
+            : mt_rand(360 - $max, 360);
+    }
+
+    /** @codeCoverageIgnore */
+    protected function randomCharSize(int $min, int $max): int
+    {
+        return mt_rand($min, $max);
+    }
+
+    /** @codeCoverageIgnore */
+    protected function randomDisplacement(int $min, int $max): int
+    {
+        return mt_rand($min, $max);
+    }
+
+    /** @codeCoverageIgnore */
+    protected function randomBackgroundImage(int $count): int
+    {
+        return mt_rand(0, $count - 1);
+    }
+
+    /**
+     * @return array{int,int,int}
+     * @codeCoverageIgnore
+     */
+    protected function randomNoiseColor(): array
+    {
+        return [mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255)];
+    }
+
+    /**
+     * @return array{int,int,int}
+     * @codeCoverageIgnore
+     */
+    protected function randomCharColor(): array
+    {
+        return [mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255)];
+    }
+
+    /** @codeCoverageIgnore */
+    protected function randomPointCount(int $min, int $max): int
+    {
+        return mt_rand($min, $max);
+    }
+
+    /** @codeCoverageIgnore */
+    protected function randomLineCount(int $min, int $max): int
+    {
+        return mt_rand($min, $max);
+    }
+
+    /** @codeCoverageIgnore */
+    protected function randomCircleCount(int $min, int $max): int
+    {
+        return mt_rand($min, $max);
+    }
+
+    /**
+     * @return array{int,int}
+     * @codeCoverageIgnore
+     */
+    protected function randomPoint(int $width, int $height): array
+    {
+        return [mt_rand(0, $width - 1), mt_rand(0, $height - 1)];
+    }
+
+    /**
+     * @return array{int,int,int,int}
+     * @codeCoverageIgnore
+     */
+    protected function randomLine(int $width, int $height): array
+    {
+        return [mt_rand(0, $width - 1), mt_rand(0, $height - 1),mt_rand(0, $width - 1), mt_rand(0, $height - 1)];
+    }
+
+    /**
+     * @return array{int,int,int}
+     * @codeCoverageIgnore
+     */
+    protected function randomCircle(int $width, int $height): array
+    {
+        $diameter = mt_rand(5, $width / 3);
+        return [mt_rand(0, $width - 1), mt_rand(0, $height - 1), $diameter];
     }
 }

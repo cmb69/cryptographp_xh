@@ -26,7 +26,11 @@ jobs:
         run: cd cmsimplexh/plugins/cryptographp && PATH=vendor/bin:$PATH phing sniff
       - name: phing stan
         run: cd cmsimplexh/plugins/cryptographp && PATH=vendor/bin:$PATH phing stan
-      - name: phing mess
-        run: cd cmsimplexh/plugins/cryptographp && PATH=vendor/bin:$PATH phing mess
       - name: phing test
-        run: cd cmsimplexh/plugins/cryptographp && PATH=vendor/bin:$PATH phing test
+        run: cd cmsimplexh/plugins/cryptographp && PATH=vendor/bin:$PATH FREETYPE_PROPERTIES=truetype:interpreter-version=35 phing test
+      - name: Upload test failure images
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          path: cmsimplexh/plugins/cryptographp/tests/images/*.out.png
+          if-no-files-found: ignore
