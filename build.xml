@@ -14,14 +14,7 @@
       <arg file="captcha.php"/>
       <arg file="index.php"/>
       <arg file="classes"/>
-      <arg file="tests"/>
       <arg value="--ignore=tests/bootstrap.php"/>
-    </exec>
-  </target>
-
-  <target name="mess" description="detects code flaws">
-    <exec executable="phpmd" passthru="true" checkreturn="true">
-      <arg line="captcha.php,index.php,classes ansi codesize,unusedcode"/>
     </exec>
   </target>
 
@@ -32,14 +25,11 @@
     </exec>
   </target>
 
-  <target name="compat"
-      description="checks PHP requirements">
-    <exec command="phpcompatinfo analyser:run classes" passthru="true"/>
-  </target>
-
   <target name="test" description="runs all developer tests">
     <exec executable="phpunit" passthru="true" checkreturn="true"/>
   </target>
+
+  <target name="check" description="runs all checks" depends="sniff,stan,test"/>
 
   <target name="coverage" description="generates coverage report">
     <exec executable="phpunit" passthru="true" checkreturn="true">
@@ -71,6 +61,7 @@
     <move todir="dist">
       <fileset dir="export">
         <exclude name=".github/**"/>
+        <exclude name=".phive/**"/>
         <exclude name="help/template.htm"/>
         <exclude name="tests/**"/>
         <exclude name="README*.md"/>
@@ -82,11 +73,9 @@
       </fileset>
     </move>
     <delete dir="export"/>
-    <copy file="dist/config/config.php"
-        tofile="dist/config/defaultconfig.php"/>
+    <copy file="dist/config/config.php" tofile="dist/config/defaultconfig.php"/>
     <copy file="dist/languages/en.php" tofile="dist/languages/default.php"/>
-    <zip destfile="Cryptographp_XH-1.0beta6.zip" basedir="dist"
-       prefix="cryptographp/"/>
+    <zip destfile="Cryptographp_XH-1.0beta6.zip" basedir="dist" prefix="cryptographp/"/>
     <delete dir="dist"/>
   </target>
 
