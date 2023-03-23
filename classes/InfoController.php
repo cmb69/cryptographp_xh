@@ -46,7 +46,7 @@ class InfoController
 
     public function __invoke(): string
     {
-        $view = new View("{$this->pluginFolder}views", $this->lang);
+        $view = new View("{$this->pluginFolder}views/", $this->lang);
         return $view->render('info', [
             'version' => CRYPTOGRAPHP_VERSION,
             'checks' => $this->getChecks(),

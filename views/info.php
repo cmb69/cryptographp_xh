@@ -7,13 +7,12 @@ use Cryptographp\Infra\View;
  * @var string $version
  * @var array<array{state:string,label:string,stateLabel:string}> $checks
  */
-
 ?>
-
-<h1>Cryptographp <?=$this->esc($version)?></h1>
+<!-- cryptographp plugin info -->
+<h1>Cryptographp <?=$version?></h1>
 <h2><?=$this->text('syscheck_title')?></h2>
 <ul class="cryptographp_syscheck">
-<?php foreach ($checks as $check):?>
-  <li class="xh_<?=$this->esc($check['state'])?>"><?=$this->text('syscheck_message', $check['label'], $check['stateLabel'])?></li>
-<?php endforeach?>
+<?foreach ($checks as $check):?>
+  <li class="xh_<?=$check['state']?>"><?=$this->text('syscheck_message', $check['label'], $check['stateLabel'])?></li>
+<?endforeach?>
 </ul>

@@ -90,9 +90,9 @@ class CaptchaController
         $url = $request->url();
         $nonce = Util::encodeBase64url($key);
         return Response::create($this->view->render("captcha", [
-            "imageUrl" => $url->with("cryptographp_action", "video")->with("cryptographp_nonce", $nonce),
+            "imageUrl" => $url->with("cryptographp_action", "video")->with("cryptographp_nonce", $nonce)->relative(),
             "audioUrl" => $url->with("cryptographp_action", "audio")->with("cryptographp_nonce", $nonce)
-                ->with("cryptographp_download", "yes"),
+                ->with("cryptographp_download", "yes")->relative(),
             "audioImage" => $this->pluginFolder . "images/audio.png",
             "reloadImage" => $this->pluginFolder . "images/reload.png",
             "nonce" => $nonce,

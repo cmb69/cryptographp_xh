@@ -21,70 +21,56 @@
 
 namespace Cryptographp\Infra;
 
-use Cryptographp\Value\Html;
-
 class View
 {
-    /** @var string $templateDir */
-    private $templateDir;
+    /** @var string */
+    private $templateFolder;
 
     /** @var array<string,string> */
-    private $lang;
+    private $text;
 
-    /** @param array<string,string> $lang */
-    public function __construct(string $templateDir, array $lang)
+    /** @param array<string,string> $text */
+    public function __construct(string $templateFolder, array $text)
     {
-        $this->templateDir = $templateDir;
-        $this->lang = $lang;
+        $this->templateFolder = $templateFolder;
+        $this->text = $text;
     }
 
-    /** @param mixed $args */
+    /** @param scalar $args */
     public function text(string $key, ...$args): string
     {
-        $args = array_map([$this, "esc"], $args);
-        return sprintf($this->esc($this->lang[$key]), ...$args);
+        return sprintf($this->esc($this->text[$key]), ...$args);
     }
 
     /** @param scalar $args */
     public function plain(string $key, ...$args): string
     {
-        return sprintf($this->lang[$key], ...$args);
-    }
-
-    /** @param mixed $args */
-    public function plural(string $key, int $count, ...$args): string
-    {
-        if ($count == 0) {
-            $key .= '_0';
-        } else {
-            $key .= XH_numberSuffix($count);
-        }
-        $args = array_map([$this, "esc"], $args);
-        return sprintf($this->esc($this->lang[$key]), $count, ...$args);
+        return sprintf($this->text[$key], ...$args);
     }
 
     /** @param array<string,mixed> $_data */
     public function render(string $_template, array $_data): string
     {
+        array_walk_recursive($_data, function (&$value) {
+            assert(is_null($value) || is_scalar($value) || is_array($value));
+            if (is_string($value)) {
+                $value = $this->esc($value);
+            }
+        });
         extract($_data);
         ob_start();
-        echo "<!-- {$_template} -->\n";
-        include "{$this->templateDir}/{$_template}.php";
+        include $this->templateFolder . $_template . ".php";
         return ob_get_clean();
     }
 
     public function renderScript(string $filename): string
     {
+        $filename = $this->esc($filename);
         return "<script src=\"$filename\"></script>\n";
     }
 
-    /** @param string|Html $value */
-    public function esc($value): string
+    public function esc(string $string): string
     {
-        if ($value instanceof Html) {
-            return $value->toString();
-        } else {
-            return XH_hsc($value);
-        }
+        return XH_hsc($string);
     }
 }
