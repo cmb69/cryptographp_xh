@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Copyright 2006-2007 Sylvain Brison
- * Copyright 2011-2021 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Cryptographp_XH.
  *
@@ -20,22 +19,32 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp;
+namespace Cryptographp\Infra;
 
-class Char
+class SystemChecker
 {
-    /** @var string */
-    public $font;
+    public function checkVersion(string $actual, string $minimum): bool
+    {
+        return version_compare($actual, $minimum) >= 0;
+    }
 
-    /** @var int */
-    public $angle;
+    public function checkExtension(string $extension): bool
+    {
+        return extension_loaded($extension);
+    }
 
-    /** @var string */
-    public $element;
+    public function checkGdFreetype(): bool
+    {
+        return gd_info()['FreeType Support'];
+    }
 
-    /** @var int */
-    public $size;
+    public function checkGdPng(): bool
+    {
+        return (bool) (imagetypes() & IMG_PNG);
+    }
 
-    /** @var int */
-    public $y;
+    public function checkWritability(string $path): bool
+    {
+        return is_writable($path);
+    }
 }

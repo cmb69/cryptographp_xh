@@ -20,6 +20,4 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Cryptographp\Plugin;
-
-Plugin::run();
+const CRYPTOGRAPHP_VERSION = "1.0beta6";

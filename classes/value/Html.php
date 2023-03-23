@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Copyright 2006-2007 Sylvain Brison
- * Copyright 2011-2021 Christoph M. Becker
+ * Copyright 2016-2021 Christoph M. Becker
  *
  * This file is part of Cryptographp_XH.
  *
@@ -20,16 +19,20 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Cryptographp\Dic;
-use Cryptographp\Infra\Request;
-use Cryptographp\Infra\Responder;
+namespace Cryptographp\Value;
 
-function cryptographp_captcha_display(): string
+class Html
 {
-    return Responder::respond(Dic::makeCaptchaController()(Request::current()));
-}
+    /** @var string */
+    private $value;
 
-function cryptographp_captcha_check(): bool
-{
-    return Dic::makeCaptchaController()->verifyCaptcha();
+    public function __construct(string $string)
+    {
+        $this->value = $string;
+    }
+
+    public function toString(): string
+    {
+        return $this->value;
+    }
 }

@@ -1,6 +1,8 @@
 <?php
 
 const CMSIMPLE_XH_VERSION = "CMSimple_XH 1.7.5";
+const CMSIMPLE_URL = "http://example.com/";
+const CRYPTOGRAPHP_VERSION = "1.0beta6";
 
 require_once './vendor/autoload.php';
 require_once "../../cmsimple/functions.php";

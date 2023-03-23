@@ -19,7 +19,7 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp;
+namespace Cryptographp\Infra;
 
 class FakeVisualCaptcha extends VisualCaptcha
 {

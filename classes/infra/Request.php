@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016-2021 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Cryptographp_XH.
  *
@@ -19,20 +19,39 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp;
+namespace Cryptographp\Infra;
 
-class HtmlString
+use Cryptographp\Value\Url;
+
+class Request
 {
-    /** @var string */
-    private $value;
-
-    public function __construct(string $string)
+    /** @codeCoverageIgnore */
+    public static function current(): self
     {
-        $this->value = $string;
+        return new self;
     }
 
-    public function toString(): string
+    public function url(): Url
     {
-        return $this->value;
+        $rest = $this->query();
+        if ($rest !== "") {
+            $rest = "?" . $rest;
+        }
+        return Url::from(CMSIMPLE_URL . $rest);
+    }
+
+    public function action(): string
+    {
+        $action = $this->url()->param("cryptographp_action");
+        if (!is_string($action)) {
+            return "";
+        }
+        return $action;
+    }
+
+    /** @codeCoverageIgnore */
+    protected function query(): string
+    {
+        return $_SERVER["QUERY_STRING"];
     }
 }

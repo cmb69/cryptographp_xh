@@ -1,6 +1,6 @@
 <?php
 
-use Cryptographp\View;
+use Cryptographp\Infra\View;
 
 /**
  * @var View $this

@@ -19,10 +19,10 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp;
+namespace Cryptographp\Infra;
 
-use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
 class AudioCaptchaTest extends TestCase
 {
@@ -34,7 +34,7 @@ class AudioCaptchaTest extends TestCase
     public function setUp(): void
     {
         $this->setUpFilesystem();
-        $this->subject = new AudioCaptcha(vfsStream::url('test/cryptographp/languages/en/'));
+        $this->subject = new AudioCaptcha(vfsStream::url('test/cryptographp/languages/'));
     }
 
     private function setUpFilesystem()
@@ -49,11 +49,11 @@ class AudioCaptchaTest extends TestCase
 
     public function testCreateWav()
     {
-        $this->assertStringStartsWith('RIFF', $this->subject->createWav('abc'));
+        $this->assertStringStartsWith('RIFF', $this->subject->createWav("en", 'abc'));
     }
 
     public function testCreateWavFails()
     {
-        $this->assertNull($this->subject->createWav('xyz'));
+        $this->assertNull($this->subject->createWav("en", 'xyz'));
     }
 }

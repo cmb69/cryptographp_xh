@@ -19,7 +19,7 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp;
+namespace Cryptographp\Infra;
 
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -140,13 +140,13 @@ class VisualCaptchaTest extends TestCase
     }
 
     /**
-     * @param resource $actual
+     * @param string $data
      * @return void
      */
-    private function assertImageEquals(string $expected, $actual)
+    private function assertImageEquals(string $expected, $data)
     {
-        $im1 = imagecreatefrompng(__DIR__ . "/images/$expected.png");
-        $im2 = $actual;
+        $im1 = imagecreatefrompng(__DIR__ . "/../images/$expected.png");
+        $im2 = imagecreatefromstring($data);
 
         $w1 = imagesx($im1);
         $h1 = imagesy($im1);
@@ -187,7 +187,7 @@ class VisualCaptchaTest extends TestCase
 
         if ($difference > 0.0) {
             imagesavealpha($im2, true);
-            imagepng($im2, __DIR__ . "/images/$expected.out.png");
+            imagepng($im2, __DIR__ . "/../images/$expected.out.png");
         }
 
         return $this->assertEqualsWithDelta(0.0, $difference / ($w1 * $h1), 0.02);

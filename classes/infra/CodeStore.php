@@ -19,7 +19,7 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp;
+namespace Cryptographp\Infra;
 
 /**
  * A persistent hashtable with expiration
@@ -27,7 +27,7 @@ namespace Cryptographp;
  * Based on ideas an algorithms of
  * <https://en.wikipedia.org/wiki/Open_addressing>
  */
-final class CodeStore
+class CodeStore
 {
     const START_SIZE = 255;
 

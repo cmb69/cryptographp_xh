@@ -21,17 +21,23 @@
 
 namespace Cryptographp;
 
+use Cryptographp\Infra\AudioCaptcha;
+use Cryptographp\Infra\CodeGenerator;
+use Cryptographp\Infra\CodeStore;
+use Cryptographp\Infra\SystemChecker;
+use Cryptographp\Infra\View;
+use Cryptographp\Infra\VisualCaptcha;
+
 class Dic
 {
-    public static function makeCaptchaController(string $lang): CaptchaController
+    public static function makeCaptchaController(): CaptchaController
     {
-        global $pth, $sl, $plugin_cf, $plugin_tx;
+        global $pth, $plugin_cf, $plugin_tx;
         static $instance;
 
         if (!isset($instance)) {
             $instance = new CaptchaController(
                 "{$pth['folder']['plugins']}cryptographp/",
-                $sl,
                 $plugin_tx['cryptographp'],
                 self::makeCodeStore(),
                 new CodeGenerator($plugin_cf['cryptographp']),
@@ -40,7 +46,7 @@ class Dic
                     "{$pth['folder']['plugins']}cryptographp/fonts",
                     $plugin_cf['cryptographp']
                 ),
-                new AudioCaptcha("{$pth['folder']['plugins']}cryptographp/languages/$lang/"),
+                new AudioCaptcha("{$pth['folder']['plugins']}cryptographp/languages/"),
                 new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"])
             );
         }
@@ -58,7 +64,7 @@ class Dic
         );
     }
 
-    public static function makeCodeStore(): CodeStore
+    private static function makeCodeStore(): CodeStore
     {
         global $pth, $plugin_cf;
 

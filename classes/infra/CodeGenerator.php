@@ -20,7 +20,7 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp;
+namespace Cryptographp\Infra;
 
 class CodeGenerator
 {
@@ -56,5 +56,11 @@ class CodeGenerator
     private function getRandomCharOf(string $string): string
     {
         return $string[mt_rand(0, strlen($string) - 1)];
+    }
+
+    /** @codeCoverageIgnore */
+    public function randomKey(): string
+    {
+        return random_bytes(15);
     }
 }

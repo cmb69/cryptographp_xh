@@ -22,6 +22,9 @@
 
 namespace Cryptographp;
 
+use Cryptographp\Infra\SystemChecker;
+use Cryptographp\Infra\View;
+
 class InfoController
 {
     /** @var string */
@@ -45,7 +48,7 @@ class InfoController
     {
         $view = new View("{$this->pluginFolder}views", $this->lang);
         return $view->render('info', [
-            'version' => Plugin::VERSION,
+            'version' => CRYPTOGRAPHP_VERSION,
             'checks' => $this->getChecks(),
         ]);
     }

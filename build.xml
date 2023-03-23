@@ -11,6 +11,7 @@
     <exec executable="phpcs" passthru="true" checkreturn="true">
       <arg value="--standard=PSR2"/>
       <arg line="--runtime-set ignore_warnings_on_exit true"/>
+      <arg file="admin.php"/>
       <arg file="captcha.php"/>
       <arg file="index.php"/>
       <arg file="classes"/>

@@ -20,8 +20,9 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp;
+namespace Cryptographp\Infra;
 
+use Cryptographp\Value\Char;
 use GdImage;
 
 class VisualCaptcha
@@ -65,7 +66,7 @@ class VisualCaptcha
         $this->fonts = explode(';', $this->config['char_fonts']);
     }
 
-    /** @return resource|GdImage */
+    /** @return string */
     public function createImage(string $code)
     {
         $this->code = $code;
@@ -91,8 +92,9 @@ class VisualCaptcha
         if ($this->config['crypt_gaussian_blur']) {
             imagefilter($this->image, IMG_FILTER_GAUSSIAN_BLUR);
         }
-
-        return $this->image;
+        ob_start();
+        imagepng($this->image);
+        return ob_get_clean();
     }
 
     /** @return void */
@@ -378,7 +380,7 @@ class VisualCaptcha
         );
     }
 
-    /** @return resource|GdImage */
+    /** @return string */
     public function createErrorImage(string $text)
     {
         $text = preg_replace('/(?=\s)(.{1,15})(?:\s|$)/u', "\$1\n", $text);
@@ -400,7 +402,9 @@ class VisualCaptcha
         assert($fg !== false);
         imagefilledrectangle($img, 0, 0, $width-1, $height-1, $bg);
         imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text);
-        return $img;
+        ob_start();
+        imagepng($img);
+        return ob_get_clean();
     }
 
     /** @codeCoverageIgnore */

@@ -20,7 +20,7 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp;
+namespace Cryptographp\Infra;
 
 class AudioCaptcha
 {
@@ -35,9 +35,9 @@ class AudioCaptcha
     }
 
     /** @return string|null */
-    public function createWav(string $code)
+    public function createWav(string $lang, string $code)
     {
-        if (!($samples = $this->concatenateRawAudio($code))) {
+        if (!($samples = $this->concatenateRawAudio($lang, $code))) {
             return null;
         }
         $dataChunk = $this->createDataChunk($this->applyWhiteNoise($samples));
@@ -65,11 +65,11 @@ class AudioCaptcha
      *
      * @return array<int>|null
      */
-    private function concatenateRawAudio(string $code)
+    private function concatenateRawAudio(string $lang, string $code)
     {
         $data = '';
         for ($i = 0; $i < strlen($code); $i++) {
-            $filename = $this->audioFolder . strtolower($code[$i]) . '.raw';
+            $filename = $this->audioFolder . "$lang/" . strtolower($code[$i]) . '.raw';
             if (is_readable($filename) && ($contents = file_get_contents($filename))) {
                 $data .= $contents;
             } else {

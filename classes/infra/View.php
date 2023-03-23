@@ -19,7 +19,9 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp;
+namespace Cryptographp\Infra;
+
+use Cryptographp\Value\Html;
 
 class View
 {
@@ -65,10 +67,10 @@ class View
         return ob_get_clean();
     }
 
-    /** @param string|HtmlString $value */
+    /** @param string|Html $value */
     public function esc($value): string
     {
-        if ($value instanceof HtmlString) {
+        if ($value instanceof Html) {
             return $value->toString();
         } else {
             return XH_hsc($value);

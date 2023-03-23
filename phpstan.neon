@@ -3,6 +3,7 @@ parameters:
   paths:
     - classes/
     - views
+    - admin.php
     - captcha.php
     - index.php
   bootstrapFiles:

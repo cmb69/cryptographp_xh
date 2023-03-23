@@ -22,7 +22,13 @@
 
 namespace Cryptographp;
 
-use GdImage;
+use Cryptographp\Infra\AudioCaptcha;
+use Cryptographp\Infra\CodeGenerator;
+use Cryptographp\Infra\CodeStore;
+use Cryptographp\Infra\Request;
+use Cryptographp\Infra\View;
+use Cryptographp\Infra\VisualCaptcha;
+use Cryptographp\Value\Response;
 
 class CaptchaController
 {
@@ -31,9 +37,6 @@ class CaptchaController
 
     /** @var string */
     private $pluginFolder;
-
-    /** @var string */
-    private $currentLang;
 
     /** @var array<string,string> */
     private $lang;
@@ -56,7 +59,6 @@ class CaptchaController
     /** @param array<string,string> $lang */
     public function __construct(
         string $pluginFolder,
-        string $currentLang,
         array $lang,
         CodeStore $codeStore,
         CodeGenerator $codeGenerator,
@@ -65,7 +67,6 @@ class CaptchaController
         View $view
     ) {
         $this->pluginFolder = $pluginFolder;
-        $this->currentLang = $currentLang;
         $this->lang = $lang;
         $this->codeStore = $codeStore;
         $this->codeGenerator = $codeGenerator;
@@ -74,23 +75,34 @@ class CaptchaController
         $this->view = $view;
     }
 
-    /** @return void */
-    public function defaultAction()
+    public function __invoke(Request $request): Response
+    {
+        switch ($request->action()) {
+            default:
+                return $this->defaultAction($request);
+            case "video":
+                return $this->videoAction();
+            case "audio":
+                return $this->audioAction();
+        }
+    }
+
+    private function defaultAction(Request $request): Response
     {
         $code = $this->codeGenerator->createCode();
-        $key = random_bytes(15);
+        $key = $this->codeGenerator->randomKey();
         $this->codeStore->put($key, $code);
         $this->emitJavaScript();
-        $url = Url::current();
-        $nonce = rtrim(base64_encode($key), "=");
-        echo $this->view->render('captcha', [
+        $url = $request->url();
+        $nonce = rtrim(str_replace(["+", "/"], ["-", "_"], base64_encode($key)), "=");
+        return Response::create($this->view->render('captcha', [
             'imageUrl' => $url->with('cryptographp_action', 'video')->with('cryptographp_nonce', $nonce),
             'audioUrl' => $url->with('cryptographp_action', 'audio')->with('cryptographp_nonce', $nonce)
-                ->with('cryptographp_lang', $this->currentLang)->with('cryptographp_download', 'yes'),
+                ->with('cryptographp_lang', $this->lang())->with('cryptographp_download', 'yes'),
             'audioImage' => "{$this->pluginFolder}images/audio.png",
             'reloadImage' => "{$this->pluginFolder}images/reload.png",
             'nonce' => $nonce,
-        ]);
+        ]));
     }
 
     /** @return void */
@@ -107,52 +119,61 @@ class CaptchaController
         }
     }
 
-    /** @return void */
-    public function videoAction()
+    private function videoAction(): Response
     {
         if (!isset($_GET['cryptographp_nonce'])) {
-            $this->deliverImage($this->visualCaptcha->createErrorImage($this->lang['error_video']));
+            return $this->deliverImage($this->visualCaptcha->createErrorImage($this->lang['error_video']));
         }
-        $code = $this->codeStore->find(base64_decode($_GET['cryptographp_nonce']));
+        $code = $this->codeStore->find(base64_decode(str_replace(["-", "_"], ["+", "/"], $_GET['cryptographp_nonce'])));
         $image = $this->visualCaptcha->createImage($code);
-        $this->deliverImage($image);
+        return $this->deliverImage($image);
     }
 
-    /**
-     * @param resource|GdImage $image
-     * @return never
-     */
-    private function deliverImage($image)
+    private function deliverImage(string $image): Response
     {
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-        header('Content-type: image/png');
-        imagepng($image);
-        exit;
+        return Response::create($image)->withContentType("image/png");
     }
 
-    /** @return never */
-    public function audioAction()
+    private function audioAction(): Response
     {
         if (!isset($_GET['cryptographp_nonce'])) {
-            header('HTTP/1.0 403 Forbidden');
-            exit;
+            return Response::forbid();
         }
-        $code = $this->codeStore->find(base64_decode($_GET['cryptographp_nonce']));
-        $wav = $this->audioCaptcha->createWav($code);
+        $code = $this->codeStore->find(base64_decode(str_replace(["-", "_"], ["+", "/"], $_GET['cryptographp_nonce'])));
+        $wav = $this->audioCaptcha->createWav($this->lang(), $code);
         if (!isset($wav)) {
-            exit($this->lang['error_audio']);
+            return Response::forbid($this->lang['error_audio']);
         }
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-        header('Content-Type: audio/x-wav');
+        $response = Response::create($wav)
+            ->withContentType("audio/x-wav")
+            ->withLength(strlen($wav));
         if (isset($_GET['cryptographp_download'])) {
-            header('Content-Disposition: attachment; filename="captcha.wav"');
+            $response = $response->withAttachment("captcha.wav");
         }
-        header('Content-Length: ' . strlen($wav));
-        echo $wav;
-        exit;
+        return $response;
+    }
+
+    private function lang(): string
+    {
+        $lang = basename($_GET['cryptographp_lang'] ?? "en");
+        if (!is_dir($this->pluginFolder . "languages/$lang")) {
+            $lang = 'en';
+        }
+        return $lang;
+    }
+
+    public function verifyCaptcha(): bool
+    {
+        $code = $_POST['cryptographp-captcha'] ?? "";
+        if (!isset($_POST['cryptographp_nonce'])) {
+            return false;
+        }
+        $nonce = base64_decode(str_replace(["-", "_"], ["+", "/"], $_POST['cryptographp_nonce']));
+        $storedCode = $this->codeStore->find($nonce);
+        if ($code !== $storedCode) {
+            return false;
+        }
+        $this->codeStore->invalidate($nonce);
+        return true;
     }
 }
