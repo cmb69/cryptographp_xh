@@ -21,39 +21,33 @@
 
 namespace Cryptographp\Infra;
 
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
 class AudioCaptchaTest extends TestCase
 {
-    /**
-     * @var AudioCaptcha
-     */
-    private $subject;
-
-    public function setUp(): void
+    public function testCreatesWav()
     {
-        $this->setUpFilesystem();
-        $this->subject = new AudioCaptcha(vfsStream::url('test/cryptographp/languages/'));
+        $sut = $this->sut();
+        $wav = $sut->createWav("en", "gevo");
+        $this->assertStringEqualsFile(__DIR__ . "/../audios/gevo.wav", $wav);
     }
 
-    private function setUpFilesystem()
+    public function testCreatesEnglishWavIfTranslationIsMissing()
     {
-        vfsStream::setup('test');
-        $folder = vfsStream::url('test/cryptographp/languages/en/');
-        mkdir($folder, 0777, true);
-        file_put_contents("{$folder}a.raw", 'foo');
-        file_put_contents("{$folder}b.raw", 'bar');
-        file_put_contents("{$folder}c.raw", 'baz');
+        $sut = $this->sut();
+        $wav = $sut->createWav("de", "gevo");
+        $this->assertStringEqualsFile(__DIR__ . "/../audios/gevo.wav", $wav);
     }
 
-    public function testCreateWav()
+    public function testFailsToCreateWav()
     {
-        $this->assertStringStartsWith('RIFF', $this->subject->createWav("en", 'abc'));
+        $sut = $this->sut();
+        $wav = $sut->createWav("en", "!");
+        $this->assertNull($wav);
     }
 
-    public function testCreateWavFails()
+    private function sut()
     {
-        $this->assertNull($this->subject->createWav("en", 'xyz'));
+        return new FakeAudioCaptcha("./languages/");
     }
 }

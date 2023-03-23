@@ -24,7 +24,18 @@ namespace Cryptographp\Infra;
 
 class AudioCaptcha
 {
-    const NOISE_PEAK = 4000;
+    private const NOISE_PEAK = 4000;
+    private const RIFF_TAG = "RIFF";
+    private const RIFF_TYPE = "WAVE";
+    private const FMT_TAG = "fmt ";
+    private const FMT_CHUNK_SIZE = 16;
+    private const PCM_FORMAT = 1;
+    private const CHANNELS = 1;
+    private const SAMPLES_PER_SEC = 8000;
+    private const BYTES_PER_SAMPLE = 2;
+    private const BITS_PER_SAMPLE = self::BYTES_PER_SAMPLE * 8;
+    private const BYTES_PER_SEC = self::SAMPLES_PER_SEC * self::BYTES_PER_SAMPLE;
+    private const DATA_TAG = "data";
 
     /** @var string */
     private $audioFolder;
@@ -34,10 +45,10 @@ class AudioCaptcha
         $this->audioFolder = $audioFolder;
     }
 
-    /** @return string|null */
-    public function createWav(string $lang, string $code)
+    public function createWav(string $lang, string $code): ?string
     {
-        if (!($samples = $this->concatenateRawAudio($lang, $code))) {
+        $samples = $this->concatenateRawAudio($lang, $code);
+        if ($samples === null) {
             return null;
         }
         $dataChunk = $this->createDataChunk($this->applyWhiteNoise($samples));
@@ -46,17 +57,27 @@ class AudioCaptcha
 
     private function createRiffChunk(string $dataChunk): string
     {
-        return pack('A4Va4', 'RIFF', 4 + 24 + strlen($dataChunk), 'WAVE');
+        return pack("A4Va4", self::RIFF_TAG, 4 + 24 + strlen($dataChunk), self::RIFF_TYPE);
     }
 
     private function createFmtChunk(): string
     {
-        return pack('A4VvvVVvv', 'fmt', 16, 1, 1, 8000, 16000, 2, 16);
+        return pack(
+            "A4VvvVVvv",
+            self::FMT_TAG,
+            self::FMT_CHUNK_SIZE,
+            self::PCM_FORMAT,
+            self::CHANNELS,
+            self::SAMPLES_PER_SEC,
+            self::BYTES_PER_SEC,
+            self::BYTES_PER_SAMPLE,
+            self::BITS_PER_SAMPLE
+        );
     }
 
     private function createDataChunk(string $data): string
     {
-        return pack('A4V', 'data', strlen($data)) . $data;
+        return pack("A4V", self::DATA_TAG, strlen($data)) . $data;
     }
 
     /**
@@ -65,41 +86,46 @@ class AudioCaptcha
      *
      * @return array<int>|null
      */
-    private function concatenateRawAudio(string $lang, string $code)
+    private function concatenateRawAudio(string $lang, string $code): ?array
     {
         if (!is_dir($this->audioFolder . $lang)) {
             $lang = "en";
         }
-        $data = '';
+        $data = "";
         for ($i = 0; $i < strlen($code); $i++) {
-            $filename = $this->audioFolder . "$lang/" . strtolower($code[$i]) . '.raw';
-            if (is_readable($filename) && ($contents = file_get_contents($filename))) {
-                $data .= $contents;
-            } else {
+            $filename = $this->audioFolder . $lang . "/" . strtolower($code[$i]) . ".raw";
+            if (!is_readable($filename)) {
                 return null;
             }
+            $contents = file_get_contents($filename);
+            if ($contents === false) {
+                return null;
+            }
+            $data .= $contents;
         }
-        $binary = unpack('v*', $data);
-        assert($binary !== false);
+        $binary = unpack("v*", $data);
+        if ($binary === false) {
+            return null;
+        }
         return $binary;
     }
 
     /** @param array<int> $samples */
     private function applyWhiteNoise(array $samples): string
     {
-        $gain = (65535 - self::NOISE_PEAK) / $this->getPeak($samples);
-        ob_start();
+        $gain = ((1 << self::BITS_PER_SAMPLE) - 1 - self::NOISE_PEAK) / $this->peak($samples);
+        // loop instead of array_map() for performance reasons
+        $new = [];
         foreach ($samples as $sample) {
-            echo pack('v', (int) ($gain * $sample) + mt_rand(0, self::NOISE_PEAK) - 32768);
+            $new[] = pack("v", (int) ($gain * $sample) + $this->randomGain() - (1 << self::BITS_PER_SAMPLE) / 2);
         }
-        $string = ob_get_clean();
-        assert($string !== false);
-        return $string;
+        return implode("", $new);
     }
 
     /** @param array<int> $samples */
-    private function getPeak(array $samples): int
+    private function peak(array $samples): int
     {
+        // loop instead of array_reduce() for performance reasons
         $peak = 0;
         foreach ($samples as $sample) {
             if ($sample > $peak) {
@@ -107,5 +133,11 @@ class AudioCaptcha
             }
         }
         return $peak;
+    }
+
+    /** @codeCoverageIgnore */
+    protected function randomGain(): int
+    {
+        return mt_rand(0, self::NOISE_PEAK);
     }
 }
