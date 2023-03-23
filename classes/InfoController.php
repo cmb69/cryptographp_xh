@@ -58,7 +58,7 @@ class InfoController
                 $this->checkWritability($this->pluginFolder . "css/"),
                 $this->checkWritability($this->pluginFolder . "languages/")
             ],
-        ]));
+        ]))->withTitle($this->view->esc("Cryptographp " . CRYPTOGRAPHP_VERSION));
     }
 
     /** @return array{class:string,key:string,arg:string,statekey:string} */

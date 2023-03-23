@@ -28,7 +28,7 @@ class Responder
     /** @return string|never */
     public static function respond(Response $response): string
     {
-        global $bjs;
+        global $title, $bjs;
         if ($response->forbidden()) {
             self::purgeOutputBuffers();
             header("HTTP/1.1 403 Forbidden");
@@ -46,6 +46,9 @@ class Responder
             header("Content-Type: " . $response->contentType());
             echo $response->output();
             exit;
+        }
+        if ($response->title() !== null) {
+            $title = $response->title();
         }
         if ($response->bjs() !== null) {
             $bjs .= $response->bjs();

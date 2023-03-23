@@ -42,6 +42,9 @@ class Response
     private $output;
 
     /** @var string|null */
+    private $title = null;
+
+    /** @var string|null */
     private $bjs = null;
 
     /** @var bool */
@@ -55,6 +58,13 @@ class Response
 
     /** @var int|null */
     private $length = null;
+
+    public function withTitle(string $title): self
+    {
+        $that = clone $this;
+        $that->title = $title;
+        return $that;
+    }
 
     public function withBjs(string $bjs): self
     {
@@ -87,6 +97,11 @@ class Response
     public function output(): string
     {
         return $this->output;
+    }
+
+    public function title(): ?string
+    {
+        return $this->title;
     }
 
     public function bjs(): ?string

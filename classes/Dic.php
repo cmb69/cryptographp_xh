@@ -76,6 +76,6 @@ class Dic
     private static function makeView(): View
     {
         global $pth, $plugin_tx;
-        return new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"]);
+        return new View("{$pth['folder']['plugins']}cryptographp/views/", $plugin_tx["cryptographp"]);
     }
 }
