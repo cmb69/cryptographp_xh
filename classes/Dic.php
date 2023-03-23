@@ -32,7 +32,7 @@ class Dic
 {
     public static function makeCaptchaController(): CaptchaController
     {
-        global $pth, $plugin_cf, $plugin_tx;
+        global $pth, $plugin_cf;
         static $instance;
 
         if (!isset($instance)) {
@@ -46,7 +46,7 @@ class Dic
                     $plugin_cf['cryptographp']
                 ),
                 new AudioCaptcha("{$pth['folder']['plugins']}cryptographp/languages/"),
-                new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"])
+                self::makeView()
             );
         }
         return $instance;
@@ -54,12 +54,11 @@ class Dic
 
     public static function makeInfoController(): InfoController
     {
-        global $pth, $plugin_tx;
-
+        global $pth;
         return new InfoController(
             "{$pth['folder']['plugins']}cryptographp/",
-            $plugin_tx["cryptographp"],
-            new SystemChecker()
+            new SystemChecker(),
+            self::makeView()
         );
     }
 
@@ -72,5 +71,11 @@ class Dic
             time(),
             (int) $plugin_cf['cryptographp']['crypt_expiration']
         );
+    }
+
+    private static function makeView(): View
+    {
+        global $pth, $plugin_tx;
+        return new View("{$pth['folder']['plugins']}cryptographp/views", $plugin_tx["cryptographp"]);
     }
 }

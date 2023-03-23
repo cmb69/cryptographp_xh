@@ -7,16 +7,15 @@ $plugin_tx['cryptographp']['alt_logo']="Prohibition sign";
 
 $plugin_tx['cryptographp']['message_enter_code']="Enter the anti spam code:";
 
-$plugin_tx['cryptographp']['syscheck_extension']="extension '%s' is loaded";
+$plugin_tx['cryptographp']['syscheck_extension']="PHP extension '%s' is loaded: ";
 $plugin_tx['cryptographp']['syscheck_fail']="failure";
-$plugin_tx['cryptographp']['syscheck_gd_feature']="%s support is available";
-$plugin_tx['cryptographp']['syscheck_message']="Checking that %1\$s … %2\$s";
-$plugin_tx['cryptographp']['syscheck_phpversion']="PHP version ≥ %s";
+$plugin_tx['cryptographp']['syscheck_gd_feature']="%s support is available: ";
+$plugin_tx['cryptographp']['syscheck_phpversion']="PHP version ≥ %s: ";
 $plugin_tx['cryptographp']['syscheck_success']="okay";
 $plugin_tx['cryptographp']['syscheck_title']="System check";
 $plugin_tx['cryptographp']['syscheck_warning']="warning";
-$plugin_tx['cryptographp']['syscheck_writable']="'%s' is writable";
-$plugin_tx['cryptographp']['syscheck_xhversion']="CMSimple_XH version ≥ %s";
+$plugin_tx['cryptographp']['syscheck_writable']="'%s' is writable: ";
+$plugin_tx['cryptographp']['syscheck_xhversion']="CMSimple_XH version ≥ %s: ";
 
 $plugin_tx['cryptographp']['error_video']="Invalid nonce!";
 $plugin_tx['cryptographp']['error_audio']="The audio CAPTCHA couldn't be generated! Please get a new challenge and try again.";

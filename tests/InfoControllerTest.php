@@ -23,22 +23,27 @@ namespace Cryptographp;
 
 use ApprovalTests\Approvals;
 use Cryptographp\Infra\SystemChecker;
+use Cryptographp\Infra\View;
 use PHPUnit\Framework\TestCase;
 
 class InfoControllerTest extends TestCase
 {
     public function testRendersPluginInfo(): void
     {
-        $plugin_tx = XH_includeVar("./languages/en.php", 'plugin_tx');
-        $lang = $plugin_tx['cryptographp'];
-        $systemChecker = $this->createStub(SystemChecker::class);
-        $systemChecker->method('checkVersion')->willReturn(true);
-        $systemChecker->method('checkExtension')->willReturn(true);
-        $systemChecker->method('checkGdFreetype')->willReturn(true);
-        $systemChecker->method('checkGdPng')->willReturn(true);
-        $systemChecker->method('checkWritability')->willReturn(true);
-        $sut = new InfoController("./", $lang, $systemChecker);
+        $sut = $this->sut();
         $response = $sut();
-        Approvals::verifyHtml($response);
+        Approvals::verifyHtml($response->output());
+    }
+
+    private function sut()
+    {
+        $systemChecker = $this->createStub(SystemChecker::class);
+        $systemChecker->method("checkVersion")->willReturn(false);
+        $systemChecker->method("checkExtension")->willReturn(false);
+        $systemChecker->method("checkGdFreetype")->willReturn(false);
+        $systemChecker->method("checkGdPng")->willReturn(false);
+        $systemChecker->method("checkWritability")->willReturn(false);
+        $view = new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["cryptographp"]);
+        return new InfoController("./", $systemChecker, $view);
     }
 }

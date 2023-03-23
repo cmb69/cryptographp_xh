@@ -7,16 +7,15 @@ $plugin_tx['cryptographp']['alt_logo']="Verbotsschild";
 
 $plugin_tx['cryptographp']['message_enter_code']="Geben Sie den Anti-Spam-Code ein:";
 
-$plugin_tx['cryptographp']['syscheck_extension']="die Erweiterung '%s' geladen ist";
-$plugin_tx['cryptographp']['syscheck_gd_feature']="%s unterstützt wird";
+$plugin_tx['cryptographp']['syscheck_extension']="PHP-Erweiterung '%s' ist geladen: ";
+$plugin_tx['cryptographp']['syscheck_gd_feature']="%s wird unterstützt: ";
 $plugin_tx['cryptographp']['syscheck_fail']="Fehler";
-$plugin_tx['cryptographp']['syscheck_message']="Prüfe, dass %1\$s … %2\$s";
-$plugin_tx['cryptographp']['syscheck_phpversion']="die PHP-Version ≥ %s";
+$plugin_tx['cryptographp']['syscheck_phpversion']="PHP-Version ≥ %s: ";
 $plugin_tx['cryptographp']['syscheck_success']="OK";
 $plugin_tx['cryptographp']['syscheck_title']="System-Prüfung";
 $plugin_tx['cryptographp']['syscheck_warning']="Warnung";
-$plugin_tx['cryptographp']['syscheck_writable']="'%s' schreibbar ist";
-$plugin_tx['cryptographp']['syscheck_xhversion']="die CMSimple_XH-Version ≥ %s";
+$plugin_tx['cryptographp']['syscheck_writable']="'%s' ist schreibbar: ";
+$plugin_tx['cryptographp']['syscheck_xhversion']="CMSimple_XH-Version ≥ %s: ";
 
 $plugin_tx['cryptographp']['error_video']="Ungültiges Nonce!";
 $plugin_tx['cryptographp']['error_audio']="Das Audio-CAPTCHA konnte nicht erzeugt werden! Bitte versuchen Sie es mit einer neuen Aufgabe noch einmal.";
