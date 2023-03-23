@@ -46,7 +46,7 @@ class Url
     /** @var string */
     private $page;
 
-    /** @var array<string,string> */
+    /** @var array<string,string|array<string>> */
     private $params;
 
     /** @param string|array<string> $value */
@@ -64,7 +64,8 @@ class Url
         return $that;
     }
 
-    public function param(string $key): ?string
+    /** @return string|array<string>|null */
+    public function param(string $key)
     {
         return $this->params[$key] ?? null;
     }

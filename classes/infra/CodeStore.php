@@ -186,9 +186,12 @@ class CodeStore
     /** @return void */
     private function begin(bool $exclusive)
     {
-        $this->stream = fopen($this->filename, "c+");
+        $stream = fopen($this->filename, "c+");
+        assert($stream !== false);
+        $this->stream = $stream;
         flock($this->stream, $exclusive ? LOCK_EX : LOCK_SH);
         $bytes = fread($this->stream, self::HEADER_SIZE);
+        assert($bytes !== false);
         if (strlen($bytes) < self::HEADER_SIZE) {
             $bytes = pack("VV", self::START_SIZE, 0);
             fwrite($this->stream, $bytes);
@@ -211,8 +214,10 @@ class CodeStore
     private function readRecord(int $slot): array
     {
         fseek($this->stream, self::HEADER_SIZE + $slot * self::RECORD_SIZE);
-        $result = unpack("coccupied/a15key/Vtimestamp/a12code", fread($this->stream, self::RECORD_SIZE));
-        assert(is_array($result));
+        $data = fread($this->stream, self::RECORD_SIZE);
+        assert($data !== false);
+        $result = unpack("coccupied/a15key/Vtimestamp/a12code", $data);
+        assert(is_array($result) && isset($result["occupied"]) && isset($result["key"]) && isset($result["timestamp"]));
         $result["occupied"] = (bool) $result["occupied"];
         $result["code"] = rtrim($result["code"], "\0");
         return $result;

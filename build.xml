@@ -20,10 +20,19 @@
   </target>
 
   <target name="stan" description="run static analysis">
-    <exec executable="phpstan" passthru="true" checkreturn="true">
-      <arg value="--ansi"/>
-      <arg value="analyze"/>
-    </exec>
+    <if>
+      <versioncompare version="${php.version}" desiredVersion="8.0.0" operator="ge"/>
+      <then>
+        <exec executable="phpstan" passthru="true" checkreturn="true">
+          <arg line="--ansi analyze"/>
+        </exec>
+      </then>
+      <else>
+        <exec executable="phpstan" passthru="true" checkreturn="true">
+          <arg line="--ansi -cphpstan7.neon analyze"/>
+        </exec>
+      </else>
+    </if>
   </target>
 
   <target name="test" description="runs all developer tests">

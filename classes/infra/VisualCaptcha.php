@@ -27,7 +27,7 @@ use GdImage;
 
 class VisualCaptcha
 {
-    /** @var resource|GdImage */
+    /** @var GdImage */
     private $image;
 
     /** @var array<Char> */
@@ -94,7 +94,7 @@ class VisualCaptcha
         }
         ob_start();
         imagepng($this->image);
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     /** @return void */
@@ -146,7 +146,7 @@ class VisualCaptcha
         imagedestroy($image);
     }
 
-    /** @param resource|GdImage $image */
+    /** @param GdImage $image */
     private function calculateTextWidth($image, int $blank): int
     {
         $width = (int) $this->config['crypt_width'];
@@ -161,7 +161,7 @@ class VisualCaptcha
         return $xend - $xbegin;
     }
 
-    /** @param resource|GdImage $image */
+    /** @param GdImage $image */
     private function scanColumn($image, int $x, int $blank): int
     {
         for ($y = 0; $y < $this->config['crypt_height']; $y++) {
@@ -178,7 +178,11 @@ class VisualCaptcha
         if ($this->config['bg_image']) {
             $filename = $this->imageFolder . $this->config['bg_image'];
             if (is_dir($filename)) {
-                $files = array_values(array_filter(scandir($filename), function ($basename) {
+                $entries = scandir($filename);
+                if ($entries === false) {
+                    return false;
+                }
+                $files = array_values(array_filter($entries, function ($basename) {
                     return preg_match('/\.(gif|jpg|png)$/', $basename);
                 }));
                 return $filename . '/' . $files[$this->randomBackgroundImage(count($files))];
@@ -208,7 +212,12 @@ class VisualCaptcha
     {
         $bgimg = $this->findBackgroundImage();
         if ($bgimg) {
-            list($getwidth, $getheight, $gettype) = getimagesize($bgimg);
+            $imagesize = getimagesize($bgimg);
+            if ($imagesize === false) {
+                $this->paintStaticBackground();
+                return;
+            }
+            [$getwidth, $getheight, $gettype] = $imagesize;
             switch ($gettype) {
                 case IMAGETYPE_GIF:
                     $imgread = imagecreatefromgif($bgimg);
@@ -220,8 +229,11 @@ class VisualCaptcha
                     $imgread = imagecreatefrompng($bgimg);
                     break;
                 default:
-                    $this->paintStaticBackground();
-                    return;
+                    $imgread = false;
+            }
+            if ($imgread === false) {
+                $this->paintStaticBackground();
+                return;
             }
             imagecopyresampled(
                 $this->image,
@@ -383,7 +395,7 @@ class VisualCaptcha
     /** @return string */
     public function createErrorImage(string $text)
     {
-        $text = preg_replace('/(?=\s)(.{1,15})(?:\s|$)/u', "\$1\n", $text);
+        $text = (string) preg_replace('/(?=\s)(.{1,15})(?:\s|$)/u', "\$1\n", $text);
         $lines = explode("\n", $text);
         $font = "{$this->fontFolder}DejaVuSans.ttf";
         $fontsize = 12;
@@ -404,7 +416,7 @@ class VisualCaptcha
         imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text);
         ob_start();
         imagepng($img);
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     /** @codeCoverageIgnore */

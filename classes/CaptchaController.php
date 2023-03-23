@@ -116,6 +116,10 @@ class CaptchaController
                 ->withContentType("image/png");
         }
         $code = $this->codeStore->find(Util::decodeBase64url($nonce));
+        if ($code === null) {
+            return Response::create($this->visualCaptcha->createErrorImage($this->view->plain("error_video")))
+                ->withContentType("image/png");
+        }
         $image = $this->visualCaptcha->createImage($code);
         return Response::create($image)->withContentType("image/png");
     }
@@ -127,6 +131,9 @@ class CaptchaController
             return Response::forbid();
         }
         $code = $this->codeStore->find(Util::decodeBase64url($nonce));
+        if ($code === null) {
+            return Response::forbid($this->view->plain("error_audio"));
+        }
         $wav = $this->audioCaptcha->createWav($request->sl(), $code);
         if (!isset($wav)) {
             return Response::forbid($this->view->plain("error_audio"));
@@ -148,7 +155,7 @@ class CaptchaController
         }
         $nonce = Util::decodeBase64url($nonce);
         $storedCode = $this->codeStore->find($nonce);
-        if (!hash_equals($storedCode, $code)) {
+        if ($storedCode === null || !hash_equals($storedCode, $code)) {
             return false;
         }
         $this->codeStore->invalidate($nonce);

@@ -60,7 +60,7 @@ class View
         extract($_data);
         ob_start();
         include $this->templateFolder . $_template . ".php";
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     public function renderScript(string $filename): string
