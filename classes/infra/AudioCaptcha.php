@@ -67,6 +67,9 @@ class AudioCaptcha
      */
     private function concatenateRawAudio(string $lang, string $code)
     {
+        if (!is_dir($this->audioFolder . $lang)) {
+            $lang = "en";
+        }
         $data = '';
         for ($i = 0; $i < strlen($code); $i++) {
             $filename = $this->audioFolder . "$lang/" . strtolower($code[$i]) . '.raw';

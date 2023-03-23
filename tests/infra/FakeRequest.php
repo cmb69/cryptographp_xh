@@ -30,8 +30,18 @@ class FakeRequest extends Request
         $this->opts = $opts;
     }
 
+    public function sl(): string
+    {
+        return $this->opts["sl"] ?? "en";
+    }
+
     protected function query(): string
     {
         return $this->opts["query"] ?? "";
+    }
+
+    protected function post(): array
+    {
+        return $this->opts["post"] ?? [];
     }
 }

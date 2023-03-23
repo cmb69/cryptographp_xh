@@ -45,6 +45,12 @@ class View
         return sprintf($this->esc($this->lang[$key]), ...$args);
     }
 
+    /** @param scalar $args */
+    public function plain(string $key, ...$args): string
+    {
+        return sprintf($this->lang[$key], ...$args);
+    }
+
     /** @param mixed $args */
     public function plural(string $key, int $count, ...$args): string
     {
@@ -65,6 +71,11 @@ class View
         echo "<!-- {$_template} -->\n";
         include "{$this->templateDir}/{$_template}.php";
         return ob_get_clean();
+    }
+
+    public function renderScript(string $filename): string
+    {
+        return "<script src=\"$filename\"></script>\n";
     }
 
     /** @param string|Html $value */

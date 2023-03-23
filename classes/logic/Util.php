@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Copyright 2006-2007 Sylvain Brison
- * Copyright 2011-2021 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Cryptographp_XH.
  *
@@ -20,16 +19,19 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Cryptographp\Dic;
-use Cryptographp\Infra\Request;
-use Cryptographp\Infra\Responder;
+namespace Cryptographp\Logic;
 
-function cryptographp_captcha_display(): string
+class Util
 {
-    return Responder::respond(Dic::makeCaptchaController()(Request::current()));
-}
+    public static function encodeBase64url(string $string): string
+    {
+        assert(strlen($string) % 3 === 0);
+        return str_replace(["+", "/"], ["-", "_"], base64_encode($string));
+    }
 
-function cryptographp_captcha_check(): bool
-{
-    return Dic::makeCaptchaController()->verifyCaptcha(Request::current());
+    public static function decodeBase64url(string $string): string
+    {
+        assert(strlen($string) % 4 === 0);
+        return base64_decode(str_replace(["-", "_"], ["+", "/"], $string));
+    }
 }

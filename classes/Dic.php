@@ -38,7 +38,6 @@ class Dic
         if (!isset($instance)) {
             $instance = new CaptchaController(
                 "{$pth['folder']['plugins']}cryptographp/",
-                $plugin_tx['cryptographp'],
                 self::makeCodeStore(),
                 new CodeGenerator($plugin_cf['cryptographp']),
                 new VisualCaptcha(

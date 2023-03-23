@@ -28,6 +28,7 @@ use Cryptographp\Infra\CodeStore;
 use Cryptographp\Infra\Request;
 use Cryptographp\Infra\View;
 use Cryptographp\Infra\VisualCaptcha;
+use Cryptographp\Logic\Util;
 use Cryptographp\Value\Response;
 
 class CaptchaController
@@ -37,9 +38,6 @@ class CaptchaController
 
     /** @var string */
     private $pluginFolder;
-
-    /** @var array<string,string> */
-    private $lang;
 
     /** @var CodeStore */
     private $codeStore;
@@ -56,10 +54,8 @@ class CaptchaController
     /** @var View */
     private $view;
 
-    /** @param array<string,string> $lang */
     public function __construct(
         string $pluginFolder,
-        array $lang,
         CodeStore $codeStore,
         CodeGenerator $codeGenerator,
         VisualCaptcha $visualCaptcha,
@@ -67,7 +63,6 @@ class CaptchaController
         View $view
     ) {
         $this->pluginFolder = $pluginFolder;
-        $this->lang = $lang;
         $this->codeStore = $codeStore;
         $this->codeGenerator = $codeGenerator;
         $this->visualCaptcha = $visualCaptcha;
@@ -81,9 +76,9 @@ class CaptchaController
             default:
                 return $this->defaultAction($request);
             case "video":
-                return $this->videoAction();
+                return $this->videoAction($request);
             case "audio":
-                return $this->audioAction();
+                return $this->audioAction($request);
         }
     }
 
@@ -92,85 +87,68 @@ class CaptchaController
         $code = $this->codeGenerator->createCode();
         $key = $this->codeGenerator->randomKey();
         $this->codeStore->put($key, $code);
-        $this->emitJavaScript();
         $url = $request->url();
-        $nonce = rtrim(str_replace(["+", "/"], ["-", "_"], base64_encode($key)), "=");
-        return Response::create($this->view->render('captcha', [
-            'imageUrl' => $url->with('cryptographp_action', 'video')->with('cryptographp_nonce', $nonce),
-            'audioUrl' => $url->with('cryptographp_action', 'audio')->with('cryptographp_nonce', $nonce)
-                ->with('cryptographp_lang', $this->lang())->with('cryptographp_download', 'yes'),
-            'audioImage' => "{$this->pluginFolder}images/audio.png",
-            'reloadImage' => "{$this->pluginFolder}images/reload.png",
-            'nonce' => $nonce,
-        ]));
+        $nonce = Util::encodeBase64url($key);
+        return Response::create($this->view->render("captcha", [
+            "imageUrl" => $url->with("cryptographp_action", "video")->with("cryptographp_nonce", $nonce),
+            "audioUrl" => $url->with("cryptographp_action", "audio")->with("cryptographp_nonce", $nonce)
+                ->with("cryptographp_download", "yes"),
+            "audioImage" => $this->pluginFolder . "images/audio.png",
+            "reloadImage" => $this->pluginFolder . "images/reload.png",
+            "nonce" => $nonce,
+        ]))->withBjs($this->bjs());
     }
 
-    /** @return void */
-    private function emitJavaScript()
+    private function bjs(): string
     {
-        global $bjs;
-
-        if (!$this->isJavaScriptEmitted) {
-            $bjs .= sprintf(
-                '<script type="text/javascript" src="%s"></script>',
-                "{$this->pluginFolder}cryptographp.min.js"
-            );
-            $this->isJavaScriptEmitted = true;
+        if ($this->isJavaScriptEmitted) {
+            return "";
         }
+        $this->isJavaScriptEmitted = true;
+        return $this->view->renderScript($this->pluginFolder . "cryptographp.min.js");
     }
 
-    private function videoAction(): Response
+    private function videoAction(Request $request): Response
     {
-        if (!isset($_GET['cryptographp_nonce'])) {
-            return $this->deliverImage($this->visualCaptcha->createErrorImage($this->lang['error_video']));
+        $nonce = $request->url()->param("cryptographp_nonce");
+        if (!is_string($nonce) || strlen($nonce) % 4 !== 0) {
+            return Response::create($this->visualCaptcha->createErrorImage($this->view->plain("error_video")))
+                ->withContentType("image/png");
         }
-        $code = $this->codeStore->find(base64_decode(str_replace(["-", "_"], ["+", "/"], $_GET['cryptographp_nonce'])));
+        $code = $this->codeStore->find(Util::decodeBase64url($nonce));
         $image = $this->visualCaptcha->createImage($code);
-        return $this->deliverImage($image);
-    }
-
-    private function deliverImage(string $image): Response
-    {
         return Response::create($image)->withContentType("image/png");
     }
 
-    private function audioAction(): Response
+    private function audioAction(Request $request): Response
     {
-        if (!isset($_GET['cryptographp_nonce'])) {
+        $nonce = $request->url()->param("cryptographp_nonce");
+        if (!is_string($nonce) || strlen($nonce) % 4 !== 0) {
             return Response::forbid();
         }
-        $code = $this->codeStore->find(base64_decode(str_replace(["-", "_"], ["+", "/"], $_GET['cryptographp_nonce'])));
-        $wav = $this->audioCaptcha->createWav($this->lang(), $code);
+        $code = $this->codeStore->find(Util::decodeBase64url($nonce));
+        $wav = $this->audioCaptcha->createWav($request->sl(), $code);
         if (!isset($wav)) {
-            return Response::forbid($this->lang['error_audio']);
+            return Response::forbid($this->view->plain("error_audio"));
         }
         $response = Response::create($wav)
             ->withContentType("audio/x-wav")
             ->withLength(strlen($wav));
-        if (isset($_GET['cryptographp_download'])) {
+        if (is_string($request->url()->param("cryptographp_download"))) {
             $response = $response->withAttachment("captcha.wav");
         }
         return $response;
     }
 
-    private function lang(): string
+    public function verifyCaptcha(Request $request): bool
     {
-        $lang = basename($_GET['cryptographp_lang'] ?? "en");
-        if (!is_dir($this->pluginFolder . "languages/$lang")) {
-            $lang = 'en';
-        }
-        return $lang;
-    }
-
-    public function verifyCaptcha(): bool
-    {
-        $code = $_POST['cryptographp-captcha'] ?? "";
-        if (!isset($_POST['cryptographp_nonce'])) {
+        [$code, $nonce] = $request->captchaPost();
+        if ($nonce === "" || strlen($nonce) % 4 !== 0) {
             return false;
         }
-        $nonce = base64_decode(str_replace(["-", "_"], ["+", "/"], $_POST['cryptographp_nonce']));
+        $nonce = Util::decodeBase64url($nonce);
         $storedCode = $this->codeStore->find($nonce);
-        if ($code !== $storedCode) {
+        if (!hash_equals($storedCode, $code)) {
             return false;
         }
         $this->codeStore->invalidate($nonce);

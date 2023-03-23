@@ -49,9 +49,40 @@ class Request
         return $action;
     }
 
+    /** @return array{string,string} */
+    public function captchaPost(): array
+    {
+        return [
+            $this->trimmedPostString("cryptographp-captcha"),
+            $this->trimmedPostString("cryptographp_nonce"),
+        ];
+    }
+
+    private function trimmedPostString(string $key): string
+    {
+        $post = $this->post();
+        return isset($post[$key]) && is_string($post[$key]) ? trim($post[$key]) : "";
+    }
+
+    /** @codeCoverageIgnore */
+    public function sl(): string
+    {
+        global $sl;
+        return $sl;
+    }
+
     /** @codeCoverageIgnore */
     protected function query(): string
     {
         return $_SERVER["QUERY_STRING"];
+    }
+
+    /**
+     * @return array<string|array<string>>
+     * @codeCoverageIgnore
+     */
+    protected function post(): array
+    {
+        return $_POST;
     }
 }

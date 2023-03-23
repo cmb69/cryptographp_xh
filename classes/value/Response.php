@@ -41,6 +41,9 @@ class Response
     /** @var string */
     private $output;
 
+    /** @var string|null */
+    private $bjs = null;
+
     /** @var bool */
     private $forbidden = false;
 
@@ -52,6 +55,13 @@ class Response
 
     /** @var int|null */
     private $length = null;
+
+    public function withBjs(string $bjs): self
+    {
+        $that = clone $this;
+        $that->bjs = $bjs;
+        return $that;
+    }
 
     public function withContentType(string $contentType): self
     {
@@ -77,6 +87,11 @@ class Response
     public function output(): string
     {
         return $this->output;
+    }
+
+    public function bjs(): ?string
+    {
+        return $this->bjs;
     }
 
     public function forbidden(): bool
