@@ -22,37 +22,16 @@
 
 namespace Cryptographp\Infra;
 
-use Cryptographp\Value\Char;
+use Cryptographp\Value\Glyph;
 use GdImage;
 
 class VisualCaptcha
 {
-    /** @var GdImage */
-    private $image;
-
-    /** @var array<Char> */
-    private $word;
-
-    /** @var int */
-    private $ink;
-
-    /** @var int */
-    private $bg;
-
-    /** @var int */
-    private $xOffset;
-
-    /** @var string */
-    private $code;
-
     /** @var string */
     private $imageFolder;
 
     /** @var string */
     private $fontFolder;
-
-    /** @var array<string> */
-    private $fonts;
 
     /** @var array<string,string> */
     private $config;
@@ -61,95 +40,122 @@ class VisualCaptcha
     public function __construct(string $imageFolder, string $fontFolder, array $config)
     {
         $this->imageFolder = $imageFolder;
-        $this->fontFolder = realpath($fontFolder) . "/";
+        $this->fontFolder = realpath($fontFolder) . "/"; // ZTS builds won't find relative paths
         $this->config = $config;
-        $this->fonts = explode(';', $this->config['char_fonts']);
     }
 
-    /** @return string */
-    public function createImage(string $code)
+    public function createImage(string $code): ?string
     {
-        $this->code = $code;
-        $this->precalculate();
+        $result = $this->precalculate($code);
+        if ($result === null) {
+            return null;
+        }
+        [$word, $xOffset] = $result;
 
-        $image = imagecreatetruecolor((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
-        assert($image !== false);
-        $this->image = $image;
-        $this->paintBackground();
+        $image = imagecreatetruecolor(...$this->dimensions());
+        if ($image === false) {
+            return null;
+        }
+        $charColor = $this->allocateColor(
+            $image,
+            (int) $this->config['char_rgb_red'],
+            (int) $this->config['char_rgb_green'],
+            (int) $this->config['char_rgb_blue'],
+            (int) $this->config['char_clear']
+        );
+        $backgroundColor = $this->allocateColor(
+            $image,
+            (int) $this->config['bg_rgb_red'],
+            (int) $this->config['bg_rgb_green'],
+            (int) $this->config['bg_rgb_blue']
+        );
+        if (!$this->paintBackground($image, $backgroundColor)) {
+            return null;
+        }
         if ($this->config['noise_above']) {
-            $this->paintCharacters();
-            $this->paintNoise();
+            if (!$this->paintCharacters($image, $word, $xOffset, $charColor)) {
+                return null;
+            }
+            if (!$this->paintNoise($image, $charColor, $backgroundColor)) {
+                return null;
+            }
         } else {
-            $this->paintNoise();
-            $this->paintCharacters();
+            if (!$this->paintNoise($image, $charColor, $backgroundColor)) {
+                return null;
+            }
+            if (!$this->paintCharacters($image, $word, $xOffset, $charColor)) {
+                return null;
+            }
         }
         if ($this->config['bg_frame']) {
-            $this->paintFrame();
+            if (!$this->paintFrame($image)) {
+                return null;
+            }
         }
         if ($this->config['crypt_gray_scale']) {
-            imagefilter($this->image, IMG_FILTER_GRAYSCALE);
+            if (!imagefilter($image, IMG_FILTER_GRAYSCALE)) {
+                return null;
+            }
         }
         if ($this->config['crypt_gaussian_blur']) {
-            imagefilter($this->image, IMG_FILTER_GAUSSIAN_BLUR);
+            if (!imagefilter($image, IMG_FILTER_GAUSSIAN_BLUR)) {
+                return null;
+            }
         }
-        ob_start();
-        imagepng($this->image);
-        return (string) ob_get_clean();
+        return $this->imageData($image);
     }
 
-    /** @return void */
-    private function precalculate()
+    /** @return array{list<Glyph>,int} */
+    private function precalculate(string $code): ?array
     {
-        $image = imagecreatetruecolor((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
-        assert($image !== false);
-        $blank = imagecolorallocate($image, 255, 255, 255);
-        assert($blank !== false);
-        $black = imagecolorallocate($image, 0, 0, 0);
-        assert($black !== false);
-        imagefill($image, 0, 0, $blank);
-
+        $image = imagecreatetruecolor(...$this->dimensions());
+        if ($image === false) {
+            return null;
+        }
+        $blank = $this->allocateColor($image, 255, 255, 255);
+        $black = $this->allocateColor($image, 0, 0, 0);
+        if (!imagefill($image, 0, 0, $blank)) {
+            return null;
+        }
+        $word = [];
         $x = 10;
-        for ($i = 0; $i < strlen($this->code); $i++) {
-            $char = new Char();
-            $char->font =  $this->fonts[$this->randomFont(count($this->fonts))];
-            $char->angle = $this->randomAngle((int) $this->config['char_angle_max']);
+        $fonts = explode(";", $this->config['char_fonts']);
+        for ($i = 0; $i < strlen($code); $i++) {
+            $font = $fonts[$this->randomFont(count($fonts))];
+            $angle = $this->randomAngle((int) $this->config['char_angle_max']);
 
-            $char->element = $this->code[$i];
+            $char = $code[$i];
 
-            $char->size = $this->randomCharSize((int) $this->config['char_size_min'], (int) $this->config['char_size_max']);
-            $font = $this->fontFolder . $char->font;
-            $bbox = imagettfbbox($char->size, $char->angle, $font, $char->element);
-            assert($bbox !== false);
+            $size = $this->randomCharSize(...$this->charSizeRange());
+            $bbox = imagettfbbox($size, $angle, $this->fontFolder . $font, $char);
+            if ($bbox === false) {
+                return null;
+            }
             $min = min($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
             $max = max($bbox[1], $bbox[3], $bbox[5], $bbox[7]);
-            $delta = $this->config['crypt_height'] - $max + $min;
-            $char->y = $delta / 2 + abs($min) - 1;
+            assert(is_int($min) && is_int($max));
+            [, $height] = $this->dimensions();
+            $delta = $height - $max + $min;
+            $y = intdiv($delta, 2) + abs($min) - 1;
             if ($this->config['char_displace']) {
-                $char->y += $this->randomDisplacement(-intval($delta / 2), intval($delta / 2));
+                $y += $this->randomDisplacement(-intdiv($delta, 2), intdiv($delta, 2));
             }
-            imagettftext(
-                $image,
-                $char->size,
-                $char->angle,
-                $x,
-                $char->y,
-                $black,
-                $font,
-                $char->element
-            );
-            $this->word[] = $char;
+            if (!imagettftext($image, $size, $angle, $x, $y, $black, $this->fontFolder . $font, $char)) {
+                return null;
+            }
+            $word[] = new Glyph($font, $angle, $char, $size, $y);
             $x += $this->config['char_space'];
         }
-
-        $width = $this->calculateTextWidth($image, $blank);
-        $this->xOffset = (int) round(((int) $this->config['crypt_width'] - $width) / 2);
-        imagedestroy($image);
+        [$width] = $this->dimensions();
+        $textWidth = $this->calculateTextWidth($image, $blank);
+        $xOffset = intdiv($width - $textWidth, 2);
+        return [$word, $xOffset];
     }
 
     /** @param GdImage $image */
     private function calculateTextWidth($image, int $blank): int
     {
-        $width = (int) $this->config['crypt_width'];
+        [$width] = $this->dimensions();
         $xbegin = 0;
         for ($x = 0; $x < $width && !$xbegin; $x++) {
             $xbegin = $this->scanColumn($image, $x, $blank);
@@ -164,154 +170,126 @@ class VisualCaptcha
     /** @param GdImage $image */
     private function scanColumn($image, int $x, int $blank): int
     {
-        for ($y = 0; $y < $this->config['crypt_height']; $y++) {
-            if (imagecolorat($image, $x, $y) != $blank) {
+        [, $height] = $this->dimensions();
+        for ($y = 0; $y < $height; $y++) {
+            if (imagecolorat($image, $x, $y) !== $blank) {
                 return $x;
             }
         }
         return 0;
     }
     
-    /** @return string|false */
-    private function findBackgroundImage()
+    private function findBackgroundImage(): ?string
     {
-        if ($this->config['bg_image']) {
-            $filename = $this->imageFolder . $this->config['bg_image'];
-            if (is_dir($filename)) {
-                $entries = scandir($filename);
-                if ($entries === false) {
-                    return false;
-                }
-                $files = array_values(array_filter($entries, function ($basename) {
-                    return (bool) preg_match('/\.(gif|jpg|png)$/', $basename);
-                }));
-                return $filename . '/' . $files[$this->randomBackgroundImage(count($files))];
-            } elseif (is_file($filename)) {
-                return $filename;
-            }
+        if (!$this->config['bg_image']) {
+            return null;
         }
-        return false;
+        $filename = $this->imageFolder . $this->config['bg_image'];
+        if (is_file($filename)) {
+            return $filename;
+        }
+        if (!is_dir($filename)) {
+            return null;
+        }
+        $entries = scandir($filename);
+        if ($entries === false) {
+            return null;
+        }
+        $files = array_values(array_filter($entries, function ($basename) {
+            return (bool) preg_match('/\.(gif|jpg|png)$/', $basename);
+        }));
+        return $filename . '/' . $files[$this->randomBackgroundImage(count($files))];
     }
 
-    private function getNoiseColor(): int
+    /** @param GdImage $image */
+    private function getNoiseColor($image, int $charColor, int $backgroundColor): int
     {
         switch ($this->config['noise_color']) {
             case 1:
-                return $this->ink;
+                return $charColor;
             case 2:
-                return $this->bg;
+                return $backgroundColor;
             default:
-                $color = imagecolorallocate($this->image, ...$this->randomNoiseColor());
-                assert($color !== false);
-                return $color;
+                return $this->allocateColor($image, ...$this->randomNoiseColor());
         }
     }
 
-    /** @return void */
-    private function paintBackground()
+    /** @param GdImage $image */
+    private function paintBackground($image, int $color): bool
     {
         $bgimg = $this->findBackgroundImage();
-        if ($bgimg) {
-            $imagesize = getimagesize($bgimg);
-            if ($imagesize === false) {
-                $this->paintStaticBackground();
-                return;
-            }
-            [$getwidth, $getheight, $gettype] = $imagesize;
-            switch ($gettype) {
-                case IMAGETYPE_GIF:
-                    $imgread = imagecreatefromgif($bgimg);
-                    break;
-                case IMAGETYPE_JPEG:
-                    $imgread = imagecreatefromjpeg($bgimg);
-                    break;
-                case IMAGETYPE_PNG:
-                    $imgread = imagecreatefrompng($bgimg);
-                    break;
-                default:
-                    $imgread = false;
-            }
-            if ($imgread === false) {
-                $this->paintStaticBackground();
-                return;
-            }
-            imagecopyresampled(
-                $this->image,
-                $imgread,
-                0,
-                0,
-                0,
-                0,
-                (int) $this->config['crypt_width'],
-                (int) $this->config['crypt_height'],
-                $getwidth,
-                $getheight
-            );
-            imagedestroy($imgread);
-        } else {
-            $this->paintStaticBackground();
+        if ($bgimg === null) {
+            return $this->paintStaticBackground($image, $color);
         }
+        $imagesize = getimagesize($bgimg);
+        if ($imagesize === false) {
+            return $this->paintStaticBackground($image, $color);
+        }
+        [$getwidth, $getheight, $gettype] = $imagesize;
+        switch ($gettype) {
+            case IMAGETYPE_GIF:
+                $imgread = imagecreatefromgif($bgimg);
+                break;
+            case IMAGETYPE_JPEG:
+                $imgread = imagecreatefromjpeg($bgimg);
+                break;
+            case IMAGETYPE_PNG:
+                $imgread = imagecreatefrompng($bgimg);
+                break;
+            default:
+                $imgread = false;
+        }
+        if ($imgread === false) {
+            return $this->paintStaticBackground($image, $color);
+        }
+        [$width, $height] = $this->dimensions();
+        if (!imagecopyresampled($image, $imgread, 0, 0, 0, 0, $width, $height, $getwidth, $getheight)) {
+            return false;
+        }
+        return true;
     }
 
-    /** @return void */
-    private function paintStaticBackground()
+    /** @param GdImage $image */
+    private function paintStaticBackground($image, int $color): bool
     {
-        $color = imagecolorallocate(
-            $this->image,
-            (int) $this->config['bg_rgb_red'],
-            (int) $this->config['bg_rgb_green'],
-            (int) $this->config['bg_rgb_blue']
-        );
-        assert($color !== false);
-        $this->bg = $color;
-        imagefill($this->image, 0, 0, $this->bg);
+        if (!imagefill($image, 0, 0, $color)) {
+            return false;
+        }
         if ($this->config['bg_clear']) {
-            imagecolortransparent($this->image, $this->bg);
+            imagecolortransparent($image, $color);
         }
+        return true;
     }
 
-    /** @return void */
-    private function paintCharacters()
+    /**
+     * @param GdImage $image
+     * @param list<Glyph> $word
+     */
+    private function paintCharacters($image, array $word, int $xOffset, int $color): bool
     {
-        $ink = imagecolorallocatealpha(
-            $this->image,
-            (int) $this->config['char_rgb_red'],
-            (int) $this->config['char_rgb_green'],
-            (int) $this->config['char_rgb_blue'],
-            (int) $this->config['char_clear']
-        );
-        assert($ink !== false);
-        $this->ink = $ink;
-
-        $x = $this->xOffset;
-        foreach ($this->word as $char) {
+        $x = $xOffset;
+        foreach ($word as $glyph) {
             if ($this->config['char_color_random']) {
-                $ink = $this->chooseRandomColor();
+                $ink = $this->chooseRandomColor($image);
             } else {
-                $ink = $this->ink;
+                $ink = $color;
             }
-            imagettftext(
-                $this->image,
-                $char->size,
-                $char->angle,
-                $x,
-                $char->y,
-                $ink,
-                $this->fontFolder . $char->font,
-                $char->element
-            );
+            $font = $this->fontFolder . $glyph->font();
+            if (!imagettftext($image, $glyph->size(), $glyph->angle(), $x, $glyph->y(), $ink, $font, $glyph->char())) {
+                return false;
+            }
             $x += $this->config['char_space'];
         }
+        return true;
     }
 
-    private function chooseRandomColor(): int
+    /** @param GdImage $image */
+    private function chooseRandomColor($image): int
     {
         do {
             [$red, $green, $blue] = $this->randomCharColor();
         } while (!$this->isValidRandomColor($red + $green + $blue));
-        $color = imagecolorallocatealpha($this->image, $red, $green, $blue, (int) $this->config['char_clear']);
-        assert($color !== false);
-        return $color;
+        return $this->allocateColor($image, $red, $green, $blue, (int) $this->config['char_clear']);
     }
 
     private function isValidRandomColor(int $color): bool
@@ -330,70 +308,56 @@ class VisualCaptcha
         }
     }
 
-    /** @return void */
-    private function paintNoise()
+    /** @param GdImage $image */
+    private function paintNoise($image, int $charColor, int $backgroundColor): bool
     {
-        $nbpx = $this->randomPointCount((int) $this->config['noise_pixel_min'], (int) $this->config['noise_pixel_max']);
-        $nbline = $this->randomLineCount((int) $this->config['noise_line_min'], (int) $this->config['noise_line_max']);
-        $nbcircle = $this->randomCircleCount((int) $this->config['noise_circle_min'], (int) $this->config['noise_circle_max']);
+        $nbpx = $this->randomPointCount(...$this->noisePixelRange());
+        $nbline = $this->randomLineCount(...$this->noiseLineRange());
+        $nbcircle = $this->randomCircleCount(...$this->noiseCircleRange());
         for ($i = 0; $i < $nbpx; $i++) {
-            [$x, $y] = $this->randomPoint((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
-            imagesetpixel(
-                $this->image,
-                $x,
-                $y,
-                $this->getNoiseColor()
-            );
+            [$x, $y] = $this->randomPoint(...$this->dimensions());
+            $color = $this->getNoiseColor($image, $charColor, $backgroundColor);
+            if (!imagesetpixel($image, $x, $y, $color)) {
+                return false;
+            }
         }
-        imagesetthickness($this->image, (int) $this->config['noise_brush_size']);
+        if (!imagesetthickness($image, (int) $this->config['noise_brush_size'])) {
+            return false;
+        }
         for ($i = 0; $i < $nbline; $i++) {
-            [$x1, $y1, $x2, $y2] = $this->randomLine((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
-            imageline(
-                $this->image,
-                $x1,
-                $y1,
-                $x2,
-                $y2,
-                $this->getNoiseColor()
-            );
+            [$x1, $y1, $x2, $y2] = $this->randomLine(...$this->dimensions());
+            $color = $this->getNoiseColor($image, $charColor, $backgroundColor);
+            if (!imageline($image, $x1, $y1, $x2, $y2, $color)) {
+                return false;
+            }
         }
         for ($i = 0; $i < $nbcircle; $i++) {
-            [$x, $y, $diameter] = $this->randomCircle((int) $this->config['crypt_width'], (int) $this->config['crypt_height']);
-            imagearc(
-                $this->image,
-                $x,
-                $y,
-                $diameter,
-                $diameter,
-                0,
-                359,
-                $this->getNoiseColor()
-            );
+            [$x, $y, $diameter] = $this->randomCircle(...$this->dimensions());
+            $color = $this->getNoiseColor($image, $charColor, $backgroundColor);
+            if (!imagearc($image, $x, $y, $diameter, $diameter, 0, 359, $color)) {
+                return false;
+            }
         }
+        return true;
     }
 
-    /** @return void */
-    private function paintFrame()
+    /** @param GdImage $image */
+    private function paintFrame($image): bool
     {
-        $color = imagecolorallocate(
-            $this->image,
-            ((int) $this->config['bg_rgb_red'] * 3 + (int) $this->config['char_rgb_red']) / 4,
-            ((int) $this->config['bg_rgb_green'] * 3 + (int) $this->config['char_rgb_green']) / 4,
-            ((int) $this->config['bg_rgb_blue'] * 3 + (int) $this->config['char_rgb_blue']) / 4
+        $color = $this->allocateColor(
+            $image,
+            intdiv(((int) $this->config['bg_rgb_red'] * 3 + (int) $this->config['char_rgb_red']), 4),
+            intdiv(((int) $this->config['bg_rgb_green'] * 3 + (int) $this->config['char_rgb_green']), 4),
+            intdiv(((int) $this->config['bg_rgb_blue'] * 3 + (int) $this->config['char_rgb_blue']), 4)
         );
-        assert($color !== false);
-        imagerectangle(
-            $this->image,
-            0,
-            0,
-            (int) $this->config['crypt_width'] - 1,
-            (int) $this->config['crypt_height'] - 1,
-            $color
-        );
+        [$width, $height] = $this->dimensions();
+        if (!imagerectangle($image, 0, 0, $width - 1, $height - 1, $color)) {
+            return false;
+        }
+        return true;
     }
 
-    /** @return string */
-    public function createErrorImage(string $text)
+    public function createErrorImage(string $text): ?string
     {
         $text = (string) preg_replace('/(?=\s)(.{1,15})(?:\s|$)/u', "\$1\n", $text);
         $lines = explode("\n", $text);
@@ -401,22 +365,78 @@ class VisualCaptcha
         $fontsize = 12;
         $padding = 5;
         $bbox = imagettfbbox($fontsize, 0, $font, $text);
-        assert($bbox !== false);
+        if ($bbox === false) {
+            return null;
+        }
         $width = $bbox[2] - $bbox[0] + 1 + 2 * $padding;
         $height = $bbox[1] - $bbox[7] + 1 + 2 * $padding;
         $bbox = imagettfbbox($fontsize, 0, $font, $lines[0]);
-        assert($bbox !== false);
+        if ($bbox === false) {
+            return null;
+        }
         $img = imagecreatetruecolor($width, $height);
-        assert($img != false);
-        $bg = imagecolorallocate($img, 255, 255, 255);
-        assert($bg !== false);
-        $fg = imagecolorallocate($img, 192, 0, 0);
-        assert($fg !== false);
-        imagefilledrectangle($img, 0, 0, $width-1, $height-1, $bg);
-        imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text);
+        if ($img === false) {
+            return null;
+        }
+        $bg = $this->allocateColor($img, 255, 255, 255);
+        $fg = $this->allocateColor($img, 192, 0, 0);
+        if (!imagefilledrectangle($img, 0, 0, $width-1, $height-1, $bg)) {
+            return null;
+        }
+        if (!imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text)) {
+            return null;
+        }
+        return $this->imageData($img);
+    }
+
+    /** @return array{int,int} */
+    private function dimensions(): array
+    {
+        return [(int) $this->config['crypt_width'], (int) $this->config['crypt_height']];
+    }
+
+    /** @return array{int,int} */
+    private function charSizeRange(): array
+    {
+        return [(int) $this->config['char_size_min'], (int) $this->config['char_size_max']];
+    }
+
+    /** @return array{int,int} */
+    private function noisePixelRange(): array
+    {
+        return [(int) $this->config['noise_pixel_min'], (int) $this->config['noise_pixel_max']];
+    }
+
+    /** @return array{int,int} */
+    private function noiseLineRange(): array
+    {
+        return [(int) $this->config['noise_line_min'], (int) $this->config['noise_line_max']];
+    }
+
+    /** @return array{int,int} */
+    private function noiseCircleRange(): array
+    {
+        return [(int) $this->config['noise_circle_min'], (int) $this->config['noise_circle_max']];
+    }
+
+    /** @param GdImage $image */
+    private function allocateColor($image, int $red, int $green, int $blue, int $alpha = 0): int
+    {
+        $color = imagecolorallocatealpha($image, $red, $green, $blue, $alpha);
+        assert($color !== false);
+        return $color;
+    }
+
+    /** @param GdImage $image */
+    private function imageData($image): ?string
+    {
         ob_start();
-        imagepng($img);
-        return (string) ob_get_clean();
+        $res = imagepng($image);
+        $output = ob_get_clean();
+        if (!$res || $output === false) {
+            return null;
+        }
+        return $output;
     }
 
     /** @codeCoverageIgnore */
@@ -511,7 +531,7 @@ class VisualCaptcha
      */
     protected function randomCircle(int $width, int $height): array
     {
-        $diameter = mt_rand(5, $width / 3);
+        $diameter = mt_rand(5, intdiv($width, 3));
         return [mt_rand(0, $width - 1), mt_rand(0, $height - 1), $diameter];
     }
 }

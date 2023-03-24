@@ -22,20 +22,54 @@
 
 namespace Cryptographp\Value;
 
-class Char
+class Glyph
 {
     /** @var string */
-    public $font;
+    private $font;
 
     /** @var int */
-    public $angle;
+    private $angle;
 
     /** @var string */
-    public $element;
+    private $char;
 
     /** @var int */
-    public $size;
+    private $size;
 
     /** @var int */
-    public $y;
+    private $y;
+
+    public function __construct(string $font, int $angle, string $char, int $size, int $y)
+    {
+        $this->font = $font;
+        $this->angle = $angle;
+        $this->char = $char;
+        $this->size = $size;
+        $this->y = $y;
+    }
+
+    public function font(): string
+    {
+        return $this->font;
+    }
+
+    public function angle(): int
+    {
+        return $this->angle;
+    }
+
+    public function char(): string
+    {
+        return $this->char;
+    }
+
+    public function size(): int
+    {
+        return $this->size;
+    }
+
+    public function y(): int
+    {
+        return $this->y;
+    }
 }

@@ -30,6 +30,7 @@ use Cryptographp\Infra\View;
 use Cryptographp\Infra\VisualCaptcha;
 use Cryptographp\Logic\Util;
 use Cryptographp\Value\Response;
+use Exception;
 
 class CaptchaController
 {
@@ -112,15 +113,28 @@ class CaptchaController
     {
         $nonce = $request->url()->param("cryptographp_nonce");
         if (!is_string($nonce) || strlen($nonce) % 4 !== 0) {
-            return Response::create($this->visualCaptcha->createErrorImage($this->view->plain("error_video")))
-                ->withContentType("image/png");
+            $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
+            if ($image === null) {
+                throw new Exception("ugh, what now?");
+            }
+            return Response::create($image)->withContentType("image/png");
         }
         $code = $this->codeStore->find(Util::decodeBase64url($nonce));
         if ($code === null) {
-            return Response::create($this->visualCaptcha->createErrorImage($this->view->plain("error_video")))
-                ->withContentType("image/png");
+            $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
+            if ($image === null) {
+                throw new Exception("ugh, what now?");
+            }
+            return Response::create($image)->withContentType("image/png");
         }
         $image = $this->visualCaptcha->createImage($code);
+        if ($image === null) {
+            $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
+            if ($image === null) {
+                throw new Exception("ugh, what now?");
+            }
+            return Response::create($image)->withContentType("image/png");
+        }
         return Response::create($image)->withContentType("image/png");
     }
 
