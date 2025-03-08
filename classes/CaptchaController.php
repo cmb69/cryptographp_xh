@@ -137,7 +137,7 @@ class CaptchaController
         if ($code === null) {
             return Response::forbid($this->view->plain("error_audio"));
         }
-        $wav = $this->audioCaptcha->createWav($request->sl(), $code);
+        $wav = $this->audioCaptcha->createWav($request->language(), $code);
         if (!isset($wav)) {
             return Response::forbid($this->view->plain("error_audio"));
         }

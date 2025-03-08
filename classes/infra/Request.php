@@ -55,7 +55,7 @@ class Request
     }
 
     /** @codeCoverageIgnore */
-    public function sl(): string
+    public function language(): string
     {
         global $sl;
         return $sl;

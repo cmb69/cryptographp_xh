@@ -30,7 +30,7 @@ class FakeRequest extends Request
         $this->opts = $opts;
     }
 
-    public function sl(): string
+    public function language(): string
     {
         return $this->opts["sl"] ?? "en";
     }
