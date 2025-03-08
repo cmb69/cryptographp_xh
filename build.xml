@@ -3,7 +3,9 @@
 <project name="Cryptographp" default="help">
 
   <target name="help" description="lists available targets">
-    <exec command="phing -l" outputProperty="help"/>
+    <exec executable="phing" outputProperty="help">
+      <arg value="-l"/>
+    </exec>
     <echo>${help}</echo>
   </target>
 
