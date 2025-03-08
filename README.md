@@ -23,6 +23,10 @@ to deter spambots from successfully submitting forms.
 Cryptographp\_XH is a plugin for [CMSimple\_XH](https://www.cmsimple-xh.org/).
 It requires CMSimple\_XH ≥ 1.7.0
 and PHP ≥ 7.0.0 with the gd extension.
+Cryptographp_XH also requires the [Plib_XH](https://github.com/cmb69/Plib_XH) plugin;
+if that is not already installed (see *Settings*→*Info*),
+get the [lastest release](https://github.com/cmb69/plib_xh/releases/latest),
+and install it.
 
 ## Download
 
