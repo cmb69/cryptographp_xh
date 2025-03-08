@@ -22,8 +22,8 @@
 namespace Cryptographp;
 
 use ApprovalTests\Approvals;
-use Cryptographp\Infra\SystemChecker;
 use PHPUnit\Framework\TestCase;
+use Plib\SystemChecker;
 use Plib\View;
 
 class InfoControllerTest extends TestCase

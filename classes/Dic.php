@@ -24,8 +24,8 @@ namespace Cryptographp;
 use Cryptographp\Infra\AudioCaptcha;
 use Cryptographp\Infra\CodeGenerator;
 use Cryptographp\Infra\CodeStore;
-use Cryptographp\Infra\SystemChecker;
 use Cryptographp\Infra\VisualCaptcha;
+use Plib\SystemChecker;
 use Plib\View;
 
 class Dic
