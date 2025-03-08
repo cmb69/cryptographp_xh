@@ -42,5 +42,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
+          name: images-${{matrix.php}}
           path: cmsimplexh/plugins/cryptographp/tests/images/*.out.png
           if-no-files-found: ignore
