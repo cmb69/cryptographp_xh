@@ -183,7 +183,7 @@ class VisualCaptcha
                     return false;
                 }
                 $files = array_values(array_filter($entries, function ($basename) {
-                    return preg_match('/\.(gif|jpg|png)$/', $basename);
+                    return (bool) preg_match('/\.(gif|jpg|png)$/', $basename);
                 }));
                 return $filename . '/' . $files[$this->randomBackgroundImage(count($files))];
             } elseif (is_file($filename)) {
