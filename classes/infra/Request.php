@@ -21,7 +21,7 @@
 
 namespace Cryptographp\Infra;
 
-use Cryptographp\Value\Url;
+use Plib\Url;
 
 class Request
 {
@@ -33,11 +33,9 @@ class Request
 
     public function url(): Url
     {
-        $rest = $this->query();
-        if ($rest !== "") {
-            $rest = "?" . $rest;
-        }
-        return Url::from(CMSIMPLE_URL . $rest);
+        global $su;
+
+        return new Url(CMSIMPLE_URL, $su, $su ? array_slice($_GET, 1) : $_GET);
     }
 
     public function action(): string
@@ -46,6 +44,14 @@ class Request
             return "";
         }
         return $_GET["cryptographp_action"];
+    }
+
+    public function get(string $key): ?string
+    {
+        if (!isset($_GET[$key]) || !is_string($_GET[$key])) {
+            return null;
+        }
+        return trim($_GET[$key]);
     }
 
     /** @return array{string,string} */

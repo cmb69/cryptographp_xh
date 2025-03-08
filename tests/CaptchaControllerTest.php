@@ -34,6 +34,9 @@ class CaptchaControllerTest extends TestCase
 {
     public function testRendersCaptcha(): void
     {
+        global $su;
+
+        $su = "Page";
         $sut = $this->sut();
         $request = new FakeRequest(["query" => "Page"]);
         $response = $sut($request);
@@ -43,7 +46,7 @@ class CaptchaControllerTest extends TestCase
     public function testDeliversCaptchaImage(): void
     {
         $sut = $this->sut();
-        $_GET = ["cryptographp_action" => "video"];
+        $_GET = ["cryptographp_action" => "video", "cryptographp_nonce" => "PjPIXZ5y1-8tzTZ_sjHu"];
         $request = new FakeRequest(["query" => "Page&cryptographp_action=video&cryptographp_nonce=PjPIXZ5y1-8tzTZ_sjHu"]);
         $response = $sut($request);
         $this->assertEquals("some image data", $response->output());
@@ -63,7 +66,11 @@ class CaptchaControllerTest extends TestCase
     public function testDeliversCaptchaAudio(): void
     {
         $sut = $this->sut();
-        $_GET = ["cryptographp_action" => "audio"];
+        $_GET = [
+            "cryptographp_action" => "audio",
+            "cryptographp_nonce" => "PjPIXZ5y1-8tzTZ_sjHu",
+            "cryptographp_download" => ""
+        ];
         $request = new FakeRequest([
             "query" => "Page&cryptographp_action=audio&cryptographp_nonce=PjPIXZ5y1-8tzTZ_sjHu&cryptographp_download"
         ]);
@@ -86,7 +93,7 @@ class CaptchaControllerTest extends TestCase
     public function testDeniesAccessOnFailureToCreateWav(): void
     {
         $sut = $this->sut(["createWav" => null]);
-        $_GET = ["cryptographp_action" => "audio"];
+        $_GET = ["cryptographp_action" => "audio", "cryptographp_nonce" => "PjPIXZ5y1-8tzTZ_sjHu"];
         $request = new FakeRequest([
             "query" => "Page&cryptographp_action=audio&cryptographp_nonce=PjPIXZ5y1-8tzTZ_sjHu"
         ]);

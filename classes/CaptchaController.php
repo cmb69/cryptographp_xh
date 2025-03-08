@@ -100,8 +100,8 @@ class CaptchaController
 
     private function videoAction(Request $request): Response
     {
-        $nonce = $request->url()->param("cryptographp_nonce");
-        if (!is_string($nonce) || strlen($nonce) % 4 !== 0) {
+        $nonce = $request->get("cryptographp_nonce");
+        if ($nonce === null || strlen($nonce) % 4 !== 0) {
             $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
             if ($image === null) {
                 throw new Exception("ugh, what now?");
@@ -129,8 +129,8 @@ class CaptchaController
 
     private function audioAction(Request $request): Response
     {
-        $nonce = $request->url()->param("cryptographp_nonce");
-        if (!is_string($nonce) || strlen($nonce) % 4 !== 0) {
+        $nonce = $request->get("cryptographp_nonce");
+        if ($nonce === null || strlen($nonce) % 4 !== 0) {
             return Response::forbid();
         }
         $code = $this->codeStore->find(Util::decodeBase64url($nonce));
@@ -144,7 +144,7 @@ class CaptchaController
         $response = Response::create($wav)
             ->withContentType("audio/x-wav")
             ->withLength(strlen($wav));
-        if (is_string($request->url()->param("cryptographp_download"))) {
+        if ($request->get("cryptographp_download") !== null) {
             $response = $response->withAttachment("captcha.wav");
         }
         return $response;
