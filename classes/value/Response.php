@@ -44,9 +44,6 @@ class Response
     /** @var string|null */
     private $title = null;
 
-    /** @var string|null */
-    private $bjs = null;
-
     /** @var bool */
     private $forbidden = false;
 
@@ -63,13 +60,6 @@ class Response
     {
         $that = clone $this;
         $that->title = $title;
-        return $that;
-    }
-
-    public function withBjs(string $bjs): self
-    {
-        $that = clone $this;
-        $that->bjs = $bjs;
         return $that;
     }
 
@@ -102,11 +92,6 @@ class Response
     public function title(): ?string
     {
         return $this->title;
-    }
-
-    public function bjs(): ?string
-    {
-        return $this->bjs;
     }
 
     public function forbidden(): bool

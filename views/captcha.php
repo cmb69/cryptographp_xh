@@ -4,6 +4,7 @@ use Cryptographp\Infra\View;
 
 /**
  * @var View $this
+ * @var string $js
  * @var string $imageUrl
  * @var string $audioUrl
  * @var string $audioImage
@@ -12,6 +13,7 @@ use Cryptographp\Infra\View;
  */
 ?>
 <!-- cryptographp captcha -->
+<script type="module" src="<?=$js?>"></script>
 <div class="cryptographp">
   <img class="cryptographp_image" src="<?=$imageUrl?>" alt="<?=$this->text('alt_image')?>">
   <a class="cryptographp_audio" href="<?=$audioUrl?>">

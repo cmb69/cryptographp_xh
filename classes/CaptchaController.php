@@ -34,9 +34,6 @@ use Exception;
 
 class CaptchaController
 {
-    /** @var bool */
-    private $isJavaScriptEmitted = false;
-
     /** @var string */
     private $pluginFolder;
 
@@ -91,22 +88,14 @@ class CaptchaController
         $url = $request->url();
         $nonce = Util::encodeBase64url($key);
         return Response::create($this->view->render("captcha", [
+            "js" => $this->pluginFolder . "cryptographp.min.js",
             "imageUrl" => $url->with("cryptographp_action", "video")->with("cryptographp_nonce", $nonce)->relative(),
             "audioUrl" => $url->with("cryptographp_action", "audio")->with("cryptographp_nonce", $nonce)
                 ->with("cryptographp_download", "yes")->relative(),
             "audioImage" => $this->pluginFolder . "images/audio.png",
             "reloadImage" => $this->pluginFolder . "images/reload.png",
             "nonce" => $nonce,
-        ]))->withBjs($this->bjs());
-    }
-
-    private function bjs(): string
-    {
-        if ($this->isJavaScriptEmitted) {
-            return "";
-        }
-        $this->isJavaScriptEmitted = true;
-        return $this->view->renderScript($this->pluginFolder . "cryptographp.min.js");
+        ]));
     }
 
     private function videoAction(Request $request): Response

@@ -37,7 +37,6 @@ class CaptchaControllerTest extends TestCase
         $sut = $this->sut();
         $request = new FakeRequest(["query" => "Page"]);
         $response = $sut($request);
-        $this->assertEquals("<script src=\"./plugins/cryptographp.min.js\"></script>\n", $response->bjs());
         Approvals::verifyHtml($response->output());
     }
 

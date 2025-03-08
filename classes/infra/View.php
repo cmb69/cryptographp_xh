@@ -63,12 +63,6 @@ class View
         return (string) ob_get_clean();
     }
 
-    public function renderScript(string $filename): string
-    {
-        $filename = $this->esc($filename);
-        return "<script src=\"$filename\"></script>\n";
-    }
-
     public function esc(string $string): string
     {
         return XH_hsc($string);
