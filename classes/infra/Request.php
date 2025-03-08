@@ -42,11 +42,10 @@ class Request
 
     public function action(): string
     {
-        $action = $this->url()->param("cryptographp_action");
-        if (!is_string($action)) {
+        if (!isset($_GET["cryptographp_action"]) || !is_string($_GET["cryptographp_action"])) {
             return "";
         }
-        return $action;
+        return $_GET["cryptographp_action"];
     }
 
     /** @return array{string,string} */

@@ -43,6 +43,7 @@ class CaptchaControllerTest extends TestCase
     public function testDeliversCaptchaImage(): void
     {
         $sut = $this->sut();
+        $_GET = ["cryptographp_action" => "video"];
         $request = new FakeRequest(["query" => "Page&cryptographp_action=video&cryptographp_nonce=PjPIXZ5y1-8tzTZ_sjHu"]);
         $response = $sut($request);
         $this->assertEquals("some image data", $response->output());
@@ -52,6 +53,7 @@ class CaptchaControllerTest extends TestCase
     public function testDeliversErrorImageOnMissingNonce(): void
     {
         $sut = $this->sut();
+        $_GET = ["cryptographp_action" => "video"];
         $request = new FakeRequest(["query" => "Page&cryptographp_action=video"]);
         $response = $sut($request);
         $this->assertEquals("some error image data", $response->output());
@@ -61,6 +63,7 @@ class CaptchaControllerTest extends TestCase
     public function testDeliversCaptchaAudio(): void
     {
         $sut = $this->sut();
+        $_GET = ["cryptographp_action" => "audio"];
         $request = new FakeRequest([
             "query" => "Page&cryptographp_action=audio&cryptographp_nonce=PjPIXZ5y1-8tzTZ_sjHu&cryptographp_download"
         ]);
@@ -74,6 +77,7 @@ class CaptchaControllerTest extends TestCase
     public function testDeniesAccessOnMissingNonce(): void
     {
         $sut = $this->sut();
+        $_GET = ["cryptographp_action" => "audio"];
         $request = new FakeRequest(["query" => "Page&cryptographp_action=audio"]);
         $response = $sut($request);
         $this->assertTrue($response->forbidden());
@@ -82,6 +86,7 @@ class CaptchaControllerTest extends TestCase
     public function testDeniesAccessOnFailureToCreateWav(): void
     {
         $sut = $this->sut(["createWav" => null]);
+        $_GET = ["cryptographp_action" => "audio"];
         $request = new FakeRequest([
             "query" => "Page&cryptographp_action=audio&cryptographp_nonce=PjPIXZ5y1-8tzTZ_sjHu"
         ]);
