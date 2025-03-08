@@ -70,7 +70,7 @@ class CaptchaController
 
     public function __invoke(Request $request): Response
     {
-        switch ($request->action()) {
+        switch ($request->get("cryptographp_action") ?? "") {
             default:
                 return $this->defaultAction($request);
             case "video":

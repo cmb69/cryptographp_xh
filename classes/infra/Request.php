@@ -38,14 +38,6 @@ class Request
         return new Url(CMSIMPLE_URL, $su, $su ? array_slice($_GET, 1) : $_GET);
     }
 
-    public function action(): string
-    {
-        if (!isset($_GET["cryptographp_action"]) || !is_string($_GET["cryptographp_action"])) {
-            return "";
-        }
-        return $_GET["cryptographp_action"];
-    }
-
     public function get(string $key): ?string
     {
         if (!isset($_GET[$key]) || !is_string($_GET[$key])) {
