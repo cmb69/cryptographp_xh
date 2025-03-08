@@ -18,12 +18,12 @@ jobs:
           curl -fsSL -o CMSimple_XH-1.7.5.zip https://github.com/cmsimple-xh/cmsimple-xh/releases/download/1.7.5/CMSimple_XH-1.7.5.zip
           unzip -q CMSimple_XH-1.7.5.zip
       - name: Checkout Cryptographp_XH
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: 'cmsimplexh/plugins/cryptographp'
       - name: Cache tools
         id: cache-tools
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: cmsimplexh/plugins/cryptographp/tools
           key: tools-${{matrix.php}}-${{hashFiles('cmsimplexh/plugins/cryptographp/.phive')}}
@@ -40,7 +40,7 @@ jobs:
         run: cd cmsimplexh/plugins/cryptographp && PATH=tools:vendor/bin:$PATH FREETYPE_PROPERTIES=truetype:interpreter-version=35 phing test
       - name: Upload test failure images
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: cmsimplexh/plugins/cryptographp/tests/images/*.out.png
           if-no-files-found: ignore
