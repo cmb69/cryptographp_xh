@@ -25,20 +25,27 @@ use ApprovalTests\Approvals;
 use Cryptographp\Infra\AudioCaptcha;
 use Cryptographp\Infra\CodeGenerator;
 use Cryptographp\Infra\CodeStore;
-use Cryptographp\Infra\FakeRequest;
+use Cryptographp\Infra\Request;
 use Cryptographp\Infra\VisualCaptcha;
 use PHPUnit\Framework\TestCase;
 use Plib\View;
 
 class CaptchaControllerTest extends TestCase
 {
+    public function setUp(): void
+    {
+        global $sl;
+
+        $sl = "en";
+    }
+
     public function testRendersCaptcha(): void
     {
         global $su;
 
         $su = "Page";
         $sut = $this->sut();
-        $request = new FakeRequest();
+        $request = Request::current();
         $response = $sut($request);
         Approvals::verifyHtml($response->output());
     }
@@ -47,7 +54,7 @@ class CaptchaControllerTest extends TestCase
     {
         $sut = $this->sut();
         $_GET = ["cryptographp_action" => "video", "cryptographp_nonce" => "PjPIXZ5y1-8tzTZ_sjHu"];
-        $request = new FakeRequest();
+        $request = Request::current();
         $response = $sut($request);
         $this->assertEquals("some image data", $response->output());
         $this->assertEquals("image/png", $response->contentType());
@@ -57,7 +64,7 @@ class CaptchaControllerTest extends TestCase
     {
         $sut = $this->sut();
         $_GET = ["cryptographp_action" => "video"];
-        $request = new FakeRequest();
+        $request = Request::current();
         $response = $sut($request);
         $this->assertEquals("some error image data", $response->output());
         $this->assertEquals("image/png", $response->contentType());
@@ -71,7 +78,7 @@ class CaptchaControllerTest extends TestCase
             "cryptographp_nonce" => "PjPIXZ5y1-8tzTZ_sjHu",
             "cryptographp_download" => ""
         ];
-        $request = new FakeRequest();
+        $request = Request::current();
         $response = $sut($request);
         $this->assertEquals("some audio data", $response->output());
         $this->assertEquals("audio/x-wav", $response->contentType());
@@ -83,7 +90,7 @@ class CaptchaControllerTest extends TestCase
     {
         $sut = $this->sut();
         $_GET = ["cryptographp_action" => "audio"];
-        $request = new FakeRequest();
+        $request = Request::current();
         $response = $sut($request);
         $this->assertTrue($response->forbidden());
     }
@@ -92,7 +99,7 @@ class CaptchaControllerTest extends TestCase
     {
         $sut = $this->sut(["createWav" => null]);
         $_GET = ["cryptographp_action" => "audio", "cryptographp_nonce" => "PjPIXZ5y1-8tzTZ_sjHu"];
-        $request = new FakeRequest();
+        $request = Request::current();
         $response = $sut($request);
         $this->assertTrue($response->forbidden());
         $this->assertEquals(
@@ -108,21 +115,21 @@ class CaptchaControllerTest extends TestCase
             "cryptographp-captcha" => "GEVO",
             "cryptographp_nonce" => "PjPIXZ5y1-8tzTZ_sjHu"
         ];
-        $result = $sut->verifyCaptcha(new FakeRequest());
+        $result = $sut->verifyCaptcha(Request::current());
         $this->assertTrue($result);
     }
 
     public function testVerificationsFailsOnMissingNonce(): void
     {
         $sut = $this->sut();
-        $result = $sut->verifyCaptcha(new FakeRequest());
+        $result = $sut->verifyCaptcha(Request::current());
         $this->assertFalse($result);
     }
 
     public function testVerificationsFailsOnWrongCaptcha(): void
     {
         $sut = $this->sut();
-        $result = $sut->verifyCaptcha(new FakeRequest());
+        $result = $sut->verifyCaptcha(Request::current());
         $this->assertFalse($result);
     }
 
