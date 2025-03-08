@@ -34,9 +34,4 @@ class FakeRequest extends Request
     {
         return $this->opts["sl"] ?? "en";
     }
-
-    protected function query(): string
-    {
-        return $this->opts["query"] ?? "";
-    }
 }

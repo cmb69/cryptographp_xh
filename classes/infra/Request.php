@@ -60,10 +60,4 @@ class Request
         global $sl;
         return $sl;
     }
-
-    /** @codeCoverageIgnore */
-    protected function query(): string
-    {
-        return $_SERVER["QUERY_STRING"];
-    }
 }
