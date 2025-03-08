@@ -152,7 +152,8 @@ class CaptchaController
 
     public function verifyCaptcha(Request $request): bool
     {
-        [$code, $nonce] = $request->captchaPost();
+        $code = $request->post("cryptographp-captcha") ?? "";
+        $nonce = $request->post("cryptographp_nonce") ?? "";
         if ($nonce === "" || strlen($nonce) % 4 !== 0) {
             return false;
         }

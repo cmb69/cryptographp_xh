@@ -39,9 +39,4 @@ class FakeRequest extends Request
     {
         return $this->opts["query"] ?? "";
     }
-
-    protected function post(): array
-    {
-        return $this->opts["post"] ?? [];
-    }
 }

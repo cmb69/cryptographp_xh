@@ -108,10 +108,11 @@ class CaptchaControllerTest extends TestCase
     public function testVerifiesCaptcha(): void
     {
         $sut = $this->sut();
-        $result = $sut->verifyCaptcha(new FakeRequest(["post" => [
+        $_POST = [
             "cryptographp-captcha" => "GEVO",
             "cryptographp_nonce" => "PjPIXZ5y1-8tzTZ_sjHu"
-        ]]));
+        ];
+        $result = $sut->verifyCaptcha(new FakeRequest());
         $this->assertTrue($result);
     }
 

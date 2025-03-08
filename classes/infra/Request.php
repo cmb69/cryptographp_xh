@@ -54,19 +54,12 @@ class Request
         return trim($_GET[$key]);
     }
 
-    /** @return array{string,string} */
-    public function captchaPost(): array
+    public function post(string $key): ?string
     {
-        return [
-            $this->trimmedPostString("cryptographp-captcha"),
-            $this->trimmedPostString("cryptographp_nonce"),
-        ];
-    }
-
-    private function trimmedPostString(string $key): string
-    {
-        $post = $this->post();
-        return isset($post[$key]) && is_string($post[$key]) ? trim($post[$key]) : "";
+        if (!isset($_POST[$key]) || !is_string($_POST[$key])) {
+            return null;
+        }
+        return trim($_POST[$key]);
     }
 
     /** @codeCoverageIgnore */
@@ -80,14 +73,5 @@ class Request
     protected function query(): string
     {
         return $_SERVER["QUERY_STRING"];
-    }
-
-    /**
-     * @return array<string|array<string>>
-     * @codeCoverageIgnore
-     */
-    protected function post(): array
-    {
-        return $_POST;
     }
 }
