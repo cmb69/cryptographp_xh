@@ -26,11 +26,11 @@ use Cryptographp\Infra\AudioCaptcha;
 use Cryptographp\Infra\CodeGenerator;
 use Cryptographp\Infra\CodeStore;
 use Cryptographp\Infra\Request;
-use Cryptographp\Infra\View;
 use Cryptographp\Infra\VisualCaptcha;
 use Cryptographp\Logic\Util;
 use Cryptographp\Value\Response;
 use Exception;
+use Plib\View;
 
 class CaptchaController
 {

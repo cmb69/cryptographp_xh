@@ -26,9 +26,9 @@ use Cryptographp\Infra\AudioCaptcha;
 use Cryptographp\Infra\CodeGenerator;
 use Cryptographp\Infra\CodeStore;
 use Cryptographp\Infra\FakeRequest;
-use Cryptographp\Infra\View;
 use Cryptographp\Infra\VisualCaptcha;
 use PHPUnit\Framework\TestCase;
+use Plib\View;
 
 class CaptchaControllerTest extends TestCase
 {

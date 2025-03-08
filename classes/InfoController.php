@@ -23,8 +23,8 @@
 namespace Cryptographp;
 
 use Cryptographp\Infra\SystemChecker;
-use Cryptographp\Infra\View;
 use Cryptographp\Value\Response;
+use Plib\View;
 
 class InfoController
 {

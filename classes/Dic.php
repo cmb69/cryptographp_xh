@@ -25,8 +25,8 @@ use Cryptographp\Infra\AudioCaptcha;
 use Cryptographp\Infra\CodeGenerator;
 use Cryptographp\Infra\CodeStore;
 use Cryptographp\Infra\SystemChecker;
-use Cryptographp\Infra\View;
 use Cryptographp\Infra\VisualCaptcha;
+use Plib\View;
 
 class Dic
 {

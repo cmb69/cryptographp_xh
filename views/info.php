@@ -1,6 +1,6 @@
 <?php
 
-use Cryptographp\Infra\View;
+use Plib\View;
 
 /**
  * @var View $this
@@ -9,10 +9,10 @@ use Cryptographp\Infra\View;
  */
 ?>
 <!-- cryptographp plugin info -->
-<h1>Cryptographp <?=$version?></h1>
+<h1>Cryptographp <?=$this->esc($version)?></h1>
 <h2><?=$this->text('syscheck_title')?></h2>
 <ul class="cryptographp_syscheck">
 <?foreach ($checks as $check):?>
-  <li class="<?=$check['class']?>"><?=$this->text($check['key'], $check['arg'])?><?=$this->text($check['statekey'])?></li>
+  <li class="<?=$this->esc($check['class'])?>"><?=$this->text($check['key'], $check['arg'])?><?=$this->text($check['statekey'])?></li>
 <?endforeach?>
 </ul>

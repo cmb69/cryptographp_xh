@@ -11,3 +11,5 @@ parameters:
   scanFiles:
     - ../../cmsimple/adminfuncs.php
     - ../../cmsimple/functions.php
+  scanDirectories:
+    - ../plib/classes
