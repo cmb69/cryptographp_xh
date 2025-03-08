@@ -21,8 +21,8 @@
  */
 
 use Cryptographp\Dic;
-use Cryptographp\Infra\Request;
 use Cryptographp\Infra\Responder;
+use Plib\Request;
 
 function cryptographp_captcha_display(): string
 {

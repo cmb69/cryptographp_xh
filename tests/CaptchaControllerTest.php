@@ -25,25 +25,23 @@ use ApprovalTests\Approvals;
 use Cryptographp\Infra\AudioCaptcha;
 use Cryptographp\Infra\CodeGenerator;
 use Cryptographp\Infra\CodeStore;
-use Cryptographp\Infra\Request;
 use Cryptographp\Infra\VisualCaptcha;
 use PHPUnit\Framework\TestCase;
+use Plib\Request;
 use Plib\View;
 
 class CaptchaControllerTest extends TestCase
 {
     public function setUp(): void
     {
-        global $sl;
+        global $sl, $su;
 
         $sl = "en";
+        $su = "Page";
     }
 
     public function testRendersCaptcha(): void
     {
-        global $su;
-
-        $su = "Page";
         $sut = $this->sut();
         $request = Request::current();
         $response = $sut($request);
