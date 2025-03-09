@@ -21,6 +21,8 @@
 
 namespace Cryptographp\Infra;
 
+use Exception;
+
 /**
  * A persistent hashtable with expiration
  *
@@ -74,58 +76,70 @@ class CodeStore
     {
         assert(strlen($key) <= self::KEY_SIZE);
 
-        $this->begin(false);
-        $slot = $this->findSlot($key);
-        $record = $this->readRecord($slot);
-        if ($record["occupied"] && !$this->isExpired($record)) {
-            $result = $record["code"];
-        } else {
-            $result = null;
+        try {
+            $this->begin(false);
+            $slot = $this->findSlot($key);
+            $record = $this->readRecord($slot);
+            if ($record["occupied"] && !$this->isExpired($record)) {
+                $result = $record["code"];
+            } else {
+                $result = null;
+            }
+            $this->commit();
+            return $result;
+        } catch (Exception $ex) {
+            return null;
         }
-        $this->commit();
-        return $result;
     }
 
-    /** @return void */
-    public function put(string $key, string $code)
+    public function put(string $key, string $code): bool
     {
         assert(strlen($key) <= self::KEY_SIZE);
         assert(strlen($code) <= self::CODE_SIZE);
 
-        $this->begin(true);
-        $slot = $this->findSlot($key);
-        $record = $this->readRecord($slot);
-        if ($record["occupied"]) {
-            $record["timestamp"] = $this->timestamp;
-            $record["code"] = $code;
-            $this->writeRecord($slot, $record);
-        } else {
-            if ($this->occupied / $this->total >= self::MAX_FILL) {
-                $this->rebuild();
-            }
-            $record = ["occupied" => true, "key" => $key, "timestamp" => $this->timestamp, "code" => $code];
+        try {
+            $this->begin(true);
             $slot = $this->findSlot($key);
-            $this->writeRecord($slot, $record);
-            $this->occupied++;
-            rewind($this->stream);
-            fwrite($this->stream, pack("VV", $this->total, $this->occupied));
+            $record = $this->readRecord($slot);
+            if ($record["occupied"]) {
+                $record["timestamp"] = $this->timestamp;
+                $record["code"] = $code;
+                $this->writeRecord($slot, $record);
+            } else {
+                if ($this->occupied / $this->total >= self::MAX_FILL) {
+                    $this->rebuild();
+                }
+                $record = ["occupied" => true, "key" => $key, "timestamp" => $this->timestamp, "code" => $code];
+                $slot = $this->findSlot($key);
+                $this->writeRecord($slot, $record);
+                $this->occupied++;
+                rewind($this->stream);
+                fwrite($this->stream, pack("VV", $this->total, $this->occupied));
+            }
+            $this->commit();
+            return true;
+        } catch (Exception $ex) {
+            return false;
         }
-        $this->commit();
     }
 
-    /** @return void */
-    public function invalidate(string $key)
+    public function invalidate(string $key): bool
     {
         assert(strlen($key) <= self::KEY_SIZE);
 
-        $this->begin(true);
-        $slot = $this->findSlot($key);
-        $record = $this->readRecord($slot);
-        if ($record["occupied"] && !$this->isExpired($record)) {
-            $record["timestamp"] = 0;
-            $this->writeRecord($slot, $record);
+        try {
+            $this->begin(true);
+            $slot = $this->findSlot($key);
+            $record = $this->readRecord($slot);
+            if ($record["occupied"] && !$this->isExpired($record)) {
+                $record["timestamp"] = 0;
+                $this->writeRecord($slot, $record);
+            }
+            $this->commit();
+            return true;
+        } catch (Exception $ex) {
+            return false;
         }
-        $this->commit();
     }
 
     /** @return void */
@@ -186,18 +200,24 @@ class CodeStore
     private function begin(bool $exclusive)
     {
         $stream = fopen($this->filename, "c+");
-        assert($stream !== false);
+        if ($stream === false) {
+            throw new Exception("file could not be opened");
+        }
         $this->stream = $stream;
         flock($this->stream, $exclusive ? LOCK_EX : LOCK_SH);
         $bytes = fread($this->stream, self::HEADER_SIZE);
-        assert($bytes !== false);
+        if ($bytes === false) {
+            throw new Exception("could not read from stream");
+        }
         if (strlen($bytes) < self::HEADER_SIZE) {
             $bytes = pack("VV", self::START_SIZE, 0);
             fwrite($this->stream, $bytes);
             ftruncate($this->stream, self::HEADER_SIZE + self::START_SIZE * self::RECORD_SIZE);
         }
         $header = unpack("Vtotal/Voccupied", $bytes);
-        assert($header !== false);
+        if ($header === false) {
+            throw new Exception("corrupt stream");
+        }
         $this->total = $header["total"];
         $this->occupied = $header["occupied"];
     }
@@ -214,9 +234,13 @@ class CodeStore
     {
         fseek($this->stream, self::HEADER_SIZE + $slot * self::RECORD_SIZE);
         $data = fread($this->stream, self::RECORD_SIZE);
-        assert($data !== false);
+        if ($data === false) {
+            throw new Exception("could not read from stream");
+        }
         $result = unpack("coccupied/a15key/Vtimestamp/a12code", $data);
-        assert(is_array($result) && isset($result["occupied"]) && isset($result["key"]) && isset($result["timestamp"]));
+        if (!is_array($result) || !isset($result["occupied"], $result["key"], $result["timestamp"])) {
+            throw new Exception("corrupt stream");
+        }
         $result["occupied"] = (bool) $result["occupied"];
         $result["code"] = rtrim($result["code"], "\0");
         return $result;

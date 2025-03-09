@@ -137,6 +137,8 @@ class CaptchaControllerTest extends TestCase
         $text = XH_includeVar("./languages/en.php", "plugin_tx")["cryptographp"];
         $codeStore = $this->createStub(CodeStore::class);
         $codeStore->method("find")->willReturn("GEVO");
+        $codeStore->method("put")->willReturn(true);
+        $codeStore->method("invalidate")->willReturn(true);
         $codeGenerator = $this->createStub(CodeGenerator::class);
         $codeGenerator->method("createCode")->willReturn("GEVO");
         $codeGenerator->method("randomKey")->willReturn(hex2bin("3e33c85d9e72d7ef2dcd367fb231ee"));

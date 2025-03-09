@@ -17,6 +17,7 @@ $plugin_tx['cryptographp']['syscheck_warning']="warning";
 $plugin_tx['cryptographp']['syscheck_writable']="'%s' is writable: ";
 $plugin_tx['cryptographp']['syscheck_xhversion']="CMSimple_XH version ≥ %s: ";
 
+$plugin_tx['cryptographp']['error_captcha']="The CAPTCHA couldn't be generated! Please try again.";
 $plugin_tx['cryptographp']['error_video']="The visual CAPTCHA couldn't be generated! Please try again.";
 $plugin_tx['cryptographp']['error_audio']="The audio CAPTCHA couldn't be generated! Please try again.";
 

@@ -84,7 +84,9 @@ class CaptchaController
     {
         $code = $this->codeGenerator->createCode();
         $key = $this->codeGenerator->randomKey();
-        $this->codeStore->put($key, $code);
+        if (!$this->codeStore->put($key, $code)) {
+            return Response::create($this->view->message("fail", "error_captcha"));
+        }
         $url = $request->url();
         $nonce = Util::encodeBase64url($key);
         return Response::create($this->view->render("captcha", [
@@ -162,7 +164,9 @@ class CaptchaController
         if ($storedCode === null || !hash_equals($storedCode, $code)) {
             return false;
         }
-        $this->codeStore->invalidate($nonce);
+        if (!$this->codeStore->invalidate($nonce)) {
+            return false;
+        }
         return true;
     }
 }

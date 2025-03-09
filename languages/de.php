@@ -17,6 +17,7 @@ $plugin_tx['cryptographp']['syscheck_warning']="Warnung";
 $plugin_tx['cryptographp']['syscheck_writable']="'%s' ist schreibbar: ";
 $plugin_tx['cryptographp']['syscheck_xhversion']="CMSimple_XH-Version ≥ %s: ";
 
+$plugin_tx['cryptographp']['error_captcha']="Das CAPTCHA konnte nicht erzeugt werden! Bitte versuchen Sie es noch einmal.";
 $plugin_tx['cryptographp']['error_video']="Das visuelle CAPTCHA konnte nicht erzeugt werden! Bitte versuchen Sie es noch einmal.";
 $plugin_tx['cryptographp']['error_audio']="Das Audio-CAPTCHA konnte nicht erzeugt werden! Bitte versuchen Sie es noch einmal.";
 
