@@ -1,7 +1,7 @@
 <?php
 
 $plugin_tx['cryptographp']['alt_image']="Visual challenge";
-$plugin_tx['cryptographp']['alt_reload']="Get new challenge";
+$plugin_tx['cryptographp']['alt_reload']="Redisplay challenge";
 $plugin_tx['cryptographp']['alt_audio']="Get audio challenge";
 $plugin_tx['cryptographp']['alt_logo']="Prohibition sign";
 

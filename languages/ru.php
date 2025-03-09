@@ -8,7 +8,6 @@
  */
 
 $plugin_tx['cryptographp']['alt_image']="Визуальный запрос";
-$plugin_tx['cryptographp']['alt_reload']="Получить новый запрос";
 $plugin_tx['cryptographp']['alt_audio']="Получить аудио запрос";
 $plugin_tx['cryptographp']['message_enter_code']="Введите код защиты от спама:";
 $plugin_tx['cryptographp']['syscheck_title']="Проверка системы";

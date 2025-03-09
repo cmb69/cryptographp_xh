@@ -1,7 +1,7 @@
 <?php
 
 $plugin_tx['cryptographp']['alt_image']="Visuelle Aufgabe";
-$plugin_tx['cryptographp']['alt_reload']="Neue Aufgabe stellen";
+$plugin_tx['cryptographp']['alt_reload']="Aufgabe anders anzeigen";
 $plugin_tx['cryptographp']['alt_audio']="Höraufgabe stellen";
 $plugin_tx['cryptographp']['alt_logo']="Verbotsschild";
 

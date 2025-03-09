@@ -1,7 +1,6 @@
 <?php
 
 	$plugin_tx['cryptographp']['alt_image']="Grafický výstup";
-	$plugin_tx['cryptographp']['alt_reload']="Obnovit";
 	$plugin_tx['cryptographp']['alt_audio']="Zvukový výstup";
 	$plugin_tx['cryptographp']['message_enter_code']="Vložte antiSPAMový kód!";
 	$plugin_tx['cryptographp']['syscheck_title']="Kontola systému";
