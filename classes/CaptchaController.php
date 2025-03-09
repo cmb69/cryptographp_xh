@@ -104,7 +104,7 @@ class CaptchaController
         if ($nonce === null || strlen($nonce) % 4 !== 0) {
             $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
             if ($image === null) {
-                throw new Exception("ugh, what now?");
+                return Response::error(500, $this->view->plain("error_video"));
             }
             return Response::create($image)->withContentType("image/png");
         }
@@ -112,7 +112,7 @@ class CaptchaController
         if ($code === null) {
             $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
             if ($image === null) {
-                throw new Exception("ugh, what now?");
+                return Response::error(500, $this->view->plain("error_video"));
             }
             return Response::create($image)->withContentType("image/png");
         }
@@ -120,7 +120,7 @@ class CaptchaController
         if ($image === null) {
             $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
             if ($image === null) {
-                throw new Exception("ugh, what now?");
+                return Response::error(500, $this->view->plain("error_video"));
             }
             return Response::create($image)->withContentType("image/png");
         }
@@ -139,7 +139,7 @@ class CaptchaController
         }
         $wav = $this->audioCaptcha->createWav($request->language(), $code);
         if (!isset($wav)) {
-            return Response::error(403, $this->view->plain("error_audio"));
+            return Response::error(500, $this->view->plain("error_audio"));
         }
         $response = Response::create($wav)
             ->withContentType("audio/x-wav")
