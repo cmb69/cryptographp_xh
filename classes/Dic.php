@@ -21,10 +21,10 @@
 
 namespace Cryptographp;
 
-use Cryptographp\Infra\AudioCaptcha;
-use Cryptographp\Infra\CodeGenerator;
-use Cryptographp\Infra\CodeStore;
-use Cryptographp\Infra\VisualCaptcha;
+use Cryptographp\Model\AudioCaptcha;
+use Cryptographp\Model\CodeGenerator;
+use Cryptographp\Model\CodeStore;
+use Cryptographp\Model\VisualCaptcha;
 use Plib\SystemChecker;
 use Plib\View;
 

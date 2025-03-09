@@ -19,7 +19,7 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp\Infra;
+namespace Cryptographp\Model;
 
 class FakeAudioCaptcha extends AudioCaptcha
 {

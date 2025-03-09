@@ -20,9 +20,8 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Cryptographp\Infra;
+namespace Cryptographp\Model;
 
-use Cryptographp\Value\Glyph;
 use GdImage;
 
 class VisualCaptcha

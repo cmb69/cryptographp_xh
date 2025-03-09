@@ -22,10 +22,10 @@
 namespace Cryptographp;
 
 use ApprovalTests\Approvals;
-use Cryptographp\Infra\AudioCaptcha;
-use Cryptographp\Infra\CodeGenerator;
-use Cryptographp\Infra\CodeStore;
-use Cryptographp\Infra\VisualCaptcha;
+use Cryptographp\Model\AudioCaptcha;
+use Cryptographp\Model\CodeGenerator;
+use Cryptographp\Model\CodeStore;
+use Cryptographp\Model\VisualCaptcha;
 use PHPUnit\Framework\TestCase;
 use Plib\Request;
 use Plib\View;
