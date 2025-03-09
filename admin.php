@@ -20,7 +20,6 @@
  */
 
 use Cryptographp\Dic;
-use Cryptographp\Infra\Responder;
 
 /**
  * @var string $admin
@@ -33,7 +32,7 @@ if (XH_wantsPluginAdministration("cryptographp")) {
     $o .= print_plugin_admin("off");
     switch ($admin) {
         case "":
-            $o .= Responder::respond(Dic::makeInfoController()());
+            $o .= Dic::makeInfoController()()->respond();
             break;
         default:
             $o .= plugin_admin_common();

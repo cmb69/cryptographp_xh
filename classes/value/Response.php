@@ -113,4 +113,40 @@ class Response
     {
         return $this->length;
     }
+
+    /** @return string|never */
+    public function respond(): string
+    {
+        global $title;
+        if ($this->forbidden()) {
+            $this->purgeOutputBuffers();
+            header("HTTP/1.1 403 Forbidden");
+            echo $this->output();
+            exit;
+        }
+        if ($this->attachment() !== null) {
+            header("Content-Disposition: attachment; filename=\"" . $this->attachment() . "\"");
+        }
+        if ($this->length() !== null) {
+            header("Content-Length: " . $this->length());
+        }
+        if ($this->contentType() !== null) {
+            $this->purgeOutputBuffers();
+            header("Content-Type: " . $this->contentType());
+            echo $this->output();
+            exit;
+        }
+        if ($this->title() !== null) {
+            $title = $this->title();
+        }
+        return $this->output();
+    }
+
+    /** @return void */
+    private function purgeOutputBuffers()
+    {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+    }
 }

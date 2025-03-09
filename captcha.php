@@ -21,12 +21,11 @@
  */
 
 use Cryptographp\Dic;
-use Cryptographp\Infra\Responder;
 use Plib\Request;
 
 function cryptographp_captcha_display(): string
 {
-    return Responder::respond(Dic::makeCaptchaController()(Request::current()));
+    return Dic::makeCaptchaController()(Request::current())->respond();
 }
 
 function cryptographp_captcha_check(): bool
