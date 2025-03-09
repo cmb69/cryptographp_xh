@@ -178,7 +178,7 @@ class VisualCaptcha
         }
         return 0;
     }
-    
+
     private function findBackgroundImage(): ?string
     {
         if (!$this->config['bg_image']) {
@@ -380,10 +380,10 @@ class VisualCaptcha
         }
         $bg = $this->allocateColor($img, 255, 255, 255);
         $fg = $this->allocateColor($img, 192, 0, 0);
-        if (!imagefilledrectangle($img, 0, 0, $width-1, $height-1, $bg)) {
+        if (!imagefilledrectangle($img, 0, 0, $width - 1, $height - 1, $bg)) {
             return null;
         }
-        if (!imagettftext($img, $fontsize, 0, $padding, $bbox[1]-$bbox[7]+1, $fg, $font, $text)) {
+        if (!imagettftext($img, $fontsize, 0, $padding, $bbox[1] - $bbox[7] + 1, $fg, $font, $text)) {
             return null;
         }
         return $this->imageData($img);
