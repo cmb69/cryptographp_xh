@@ -131,15 +131,15 @@ class CaptchaController
     {
         $nonce = $request->get("cryptographp_nonce");
         if ($nonce === null || strlen($nonce) % 4 !== 0) {
-            return Response::forbid();
+            return Response::error(403);
         }
         $code = $this->codeStore->find(Util::decodeBase64url($nonce));
         if ($code === null) {
-            return Response::forbid($this->view->plain("error_audio"));
+            return Response::error(403, $this->view->plain("error_audio"));
         }
         $wav = $this->audioCaptcha->createWav($request->language(), $code);
         if (!isset($wav)) {
-            return Response::forbid($this->view->plain("error_audio"));
+            return Response::error(403, $this->view->plain("error_audio"));
         }
         $response = Response::create($wav)
             ->withContentType("audio/x-wav")

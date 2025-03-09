@@ -90,7 +90,7 @@ class CaptchaControllerTest extends TestCase
         $_GET = ["cryptographp_action" => "audio"];
         $request = Request::current();
         $response = $sut($request);
-        $this->assertTrue($response->forbidden());
+        $this->assertEquals(403, $response->status());
     }
 
     public function testDeniesAccessOnFailureToCreateWav(): void
@@ -99,7 +99,7 @@ class CaptchaControllerTest extends TestCase
         $_GET = ["cryptographp_action" => "audio", "cryptographp_nonce" => "PjPIXZ5y1-8tzTZ_sjHu"];
         $request = Request::current();
         $response = $sut($request);
-        $this->assertTrue($response->forbidden());
+        $this->assertEquals(403, $response->status());
         $this->assertEquals(
             "The audio CAPTCHA couldn't be generated! Please get a new challenge and try again.",
             $response->output()
