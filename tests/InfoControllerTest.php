@@ -32,7 +32,7 @@ class InfoControllerTest extends TestCase
     {
         $sut = $this->sut();
         $response = $sut();
-        $this->assertEquals("Cryptographp 1.0beta6", $response->title());
+        $this->assertEquals("Cryptographp 1.0", $response->title());
         Approvals::verifyHtml($response->output());
     }
 
