@@ -20,4 +20,4 @@
  * along with Cryptographp_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const CRYPTOGRAPHP_VERSION = "1.0";
+const CRYPTOGRAPHP_VERSION = "1.1-dev";

@@ -99,7 +99,7 @@
     <delete dir="export"/>
     <copy file="dist/config/config.php" tofile="dist/config/defaultconfig.php"/>
     <copy file="dist/languages/en.php" tofile="dist/languages/default.php"/>
-    <zip destfile="Cryptographp_XH-1.0.zip" basedir="dist" prefix="cryptographp/"/>
+    <zip destfile="Cryptographp_XH-1.1-dev.zip" basedir="dist" prefix="cryptographp/"/>
     <delete dir="dist"/>
   </target>
 
