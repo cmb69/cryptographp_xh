@@ -84,7 +84,7 @@ class AudioCaptcha
      * The raw audio files are supposed to contain mono *unsigned* 16-bit LPCM
      * samples with a sampling rate of 8000 Hz in little-endian byte order.
      *
-     * @return array<int>|null
+     * @return ?array<int>
      */
     private function concatenateRawAudio(string $lang, string $code): ?array
     {

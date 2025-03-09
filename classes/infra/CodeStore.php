@@ -29,21 +29,21 @@ namespace Cryptographp\Infra;
  */
 class CodeStore
 {
-    const START_SIZE = 255;
+    private const START_SIZE = 255;
 
-    const MAX_FILL = 0.5;
+    private const MAX_FILL = 0.5;
 
-    const GROTH_FACTOR = 4;
+    private const GROTH_FACTOR = 4;
 
-    const HEADER_SIZE = 4 + 4 + 24;
+    private const HEADER_SIZE = 4 + 4 + 24;
 
-    const KEY_SIZE = 15;
+    private const KEY_SIZE = 15;
 
-    const CODE_SIZE = 12;
+    private const CODE_SIZE = 12;
 
-    const RECORD_SIZE = 1 + self::KEY_SIZE + 4 + self::CODE_SIZE;
+    private const RECORD_SIZE = 1 + self::KEY_SIZE + 4 + self::CODE_SIZE;
 
-    const CHUNK_SIZE = 8192;
+    private const CHUNK_SIZE = 8192;
 
     /** @var string */
     private $filename;
@@ -70,8 +70,7 @@ class CodeStore
         $this->retention = $retention;
     }
 
-    /** @return string|null */
-    public function find(string $key)
+    public function find(string $key): ?string
     {
         assert(strlen($key) <= self::KEY_SIZE);
 

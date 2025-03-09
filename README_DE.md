@@ -23,7 +23,7 @@ um Spam-Bots vom erfolgreichen Versenden von Formularen abzuhalten.
 
 Cryptographp\_XH ist ein Plugin für [CMSimple\_XH](https://www.cmsimple-xh.org/de/).
 Es benötigt CMSimple\_XH ≥ 1.7.0
-und PHP ≥ 7.0.0 mit der gd Extension.
+und PHP ≥ 7.1.0 mit der gd Extension.
 Cryptographp_XH benötigt weiterhin das [Plib_XH](https://github.com/cmb69/Plib_XH) Plugin;
 ist dieses noch nicht installiert (see *Einstellungen*→*Info*),
 laden Sie das [aktuelle Release](https://github.com/cmb69/plib_xh/releases/latest)

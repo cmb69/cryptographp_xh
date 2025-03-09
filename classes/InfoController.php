@@ -49,7 +49,7 @@ class InfoController
         return Response::create($this->view->render("info", [
             "version" => CRYPTOGRAPHP_VERSION,
             "checks" => [
-                $this->checkPhpVersion("7.0.0"),
+                $this->checkPhpVersion("7.1.0"),
                 $this->checkExtension("gd"),
                 $this->checkGdFreetype(),
                 $this->checkGdPng(),
