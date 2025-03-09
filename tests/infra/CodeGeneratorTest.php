@@ -25,39 +25,51 @@ use PHPUnit\Framework\TestCase;
 
 class CodeGeneratorTest extends TestCase
 {
-    /**
-     * @var CodeGenerator
-     */
-    private $subject;
-
-    public function setUp(): void
-    {
-        mt_srand(12345);
-        $this->subject = new CodeGenerator([
-            'char_allowed' => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
-            'char_allowed_consonants' => 'BCDFGHJKLMNPQRSTVWXZ',
-            'char_allowed_vowels' => 'AEIOUY',
-            'char_count_max' => '4',
-            'char_count_min' => '4',
-            'crypt_easy' => 'true',
-        ]);
-    }
-
     public function testCreateCode()
     {
-        $this->assertSame('HOGE', $this->subject->createCode());
+        $subject = $this->getMockBuilder(CodeGenerator::class)
+            ->setConstructorArgs([[
+                'char_allowed' => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
+                'char_allowed_consonants' => 'BCDFGHJKLMNPQRSTVWXZ',
+                'char_allowed_vowels' => 'AEIOUY',
+                'char_count_max' => '4',
+                'char_count_min' => '4',
+                'crypt_easy' => 'true',
+            ]])
+            ->onlyMethods(["randomOffset", "randomBool"])
+            ->getMock();
+        $this->assertSame('BABA', $subject->createCode());
     }
 
     public function testCryptUneasy()
     {
-        $subject = new CodeGenerator([
-            'char_allowed' => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
-            'char_allowed_consonants' => 'BCDFGHJKLMNPQRSTVWXZ',
-            'char_allowed_vowels' => 'AEIOUY',
-            'char_count_max' => '4',
-            'char_count_min' => '4',
-            'crypt_easy' => '',
-        ]);
-        $this->assertSame('7BEK', $subject->createCode());
+        $subject = $this->getMockBuilder(CodeGenerator::class)
+            ->setConstructorArgs([[
+                'char_allowed' => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
+                'char_allowed_consonants' => 'BCDFGHJKLMNPQRSTVWXZ',
+                'char_allowed_vowels' => 'AEIOUY',
+                'char_count_max' => '4',
+                'char_count_min' => '4',
+                'crypt_easy' => '',
+            ]])
+            ->onlyMethods(["randomOffset", "randomBool"])
+            ->getMock();
+        $this->assertSame('AAAA', $subject->createCode());
+    }
+
+    public function testEmptyCharAllowed(): void
+    {
+        $subject = $this->getMockBuilder(CodeGenerator::class)
+            ->setConstructorArgs([[
+                'char_allowed' => '',
+                'char_allowed_consonants' => '',
+                'char_allowed_vowels' => '',
+                'char_count_max' => '4',
+                'char_count_min' => '4',
+                'crypt_easy' => '',
+            ]])
+            ->onlyMethods(["randomOffset", "randomBool"])
+            ->getMock();
+        $this->assertSame('AAAA', $subject->createCode());
     }
 }

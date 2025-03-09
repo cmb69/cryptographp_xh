@@ -36,18 +36,19 @@ class CodeGenerator
     public function createCode(): string
     {
         $code = '';
-        $isVowel = mt_rand(0, 1);
-        $count = mt_rand((int) $this->config['char_count_min'], (int) $this->config['char_count_max']);
+        $isVowel = $this->randomBool();
+        $count = $this->randomCount();
         for ($i = 0; $i < $count; $i++) {
             if ($this->config['crypt_easy']) {
                 if ($isVowel) {
-                    $code .= $this->getRandomCharOf($this->config['char_allowed_vowels']);
+                    $allowed = $this->config['char_allowed_vowels'] ?: "AEIOUY";
                 } else {
-                    $code .= $this->getRandomCharOf($this->config['char_allowed_consonants']);
+                    $allowed = $this->config['char_allowed_consonants'] ?: "BCDFGHJKLMNPQRSTVWXZ";
                 }
             } else {
-                $code .= $this->getRandomCharOf($this->config['char_allowed']);
+                $allowed = $this->config['char_allowed'] ?: "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
             }
+            $code .= $this->getRandomCharOf($allowed);
             $isVowel = !$isVowel;
         }
         return $code;
@@ -55,7 +56,28 @@ class CodeGenerator
 
     private function getRandomCharOf(string $string): string
     {
-        return $string[mt_rand(0, strlen($string) - 1)];
+        return $string[$this->randomOffset($string)];
+    }
+
+    protected function randomOffset(string $string): int
+    {
+        assert(strlen($string) >= 1);
+        return random_int(0, strlen($string) - 1);
+    }
+
+    protected function randomBool(): bool
+    {
+        return (bool) random_int(0, 1);
+    }
+
+    protected function randomCount(): int
+    {
+        $min = (int) $this->config['char_count_min'];
+        $max = (int) $this->config['char_count_max'];
+        if ($min === $max) {
+            return $min;
+        }
+        return random_int($min, $max);
     }
 
     /** @codeCoverageIgnore */

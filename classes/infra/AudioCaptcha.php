@@ -138,6 +138,6 @@ class AudioCaptcha
     /** @codeCoverageIgnore */
     protected function randomGain(): int
     {
-        return mt_rand(0, self::NOISE_PEAK);
+        return random_int(0, self::NOISE_PEAK);
     }
 }

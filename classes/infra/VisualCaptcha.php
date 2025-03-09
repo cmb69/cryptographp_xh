@@ -442,33 +442,33 @@ class VisualCaptcha
     /** @codeCoverageIgnore */
     protected function randomFont(int $count): int
     {
-        return mt_rand(0, $count - 1);
+        return random_int(0, $count - 1);
     }
 
     /** @codeCoverageIgnore */
     protected function randomAngle(int $max): int
     {
-        return mt_rand(1, 2) == 1
-            ? mt_rand(0, $max)
-            : mt_rand(360 - $max, 360);
+        return random_int(1, 2) == 1
+            ? random_int(0, $max)
+            : random_int(360 - $max, 360);
     }
 
     /** @codeCoverageIgnore */
     protected function randomCharSize(int $min, int $max): int
     {
-        return mt_rand($min, $max);
+        return random_int($min, $max);
     }
 
     /** @codeCoverageIgnore */
     protected function randomDisplacement(int $min, int $max): int
     {
-        return mt_rand($min, $max);
+        return random_int($min, $max);
     }
 
     /** @codeCoverageIgnore */
     protected function randomBackgroundImage(int $count): int
     {
-        return mt_rand(0, $count - 1);
+        return random_int(0, $count - 1);
     }
 
     /**
@@ -477,7 +477,7 @@ class VisualCaptcha
      */
     protected function randomNoiseColor(): array
     {
-        return [mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255)];
+        return [random_int(0, 255), random_int(0, 255), random_int(0, 255)];
     }
 
     /**
@@ -486,25 +486,25 @@ class VisualCaptcha
      */
     protected function randomCharColor(): array
     {
-        return [mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255)];
+        return [random_int(0, 255), random_int(0, 255), random_int(0, 255)];
     }
 
     /** @codeCoverageIgnore */
     protected function randomPointCount(int $min, int $max): int
     {
-        return mt_rand($min, $max);
+        return random_int($min, $max);
     }
 
     /** @codeCoverageIgnore */
     protected function randomLineCount(int $min, int $max): int
     {
-        return mt_rand($min, $max);
+        return random_int($min, $max);
     }
 
     /** @codeCoverageIgnore */
     protected function randomCircleCount(int $min, int $max): int
     {
-        return mt_rand($min, $max);
+        return random_int($min, $max);
     }
 
     /**
@@ -513,7 +513,7 @@ class VisualCaptcha
      */
     protected function randomPoint(int $width, int $height): array
     {
-        return [mt_rand(0, $width - 1), mt_rand(0, $height - 1)];
+        return [random_int(0, $width - 1), random_int(0, $height - 1)];
     }
 
     /**
@@ -522,7 +522,12 @@ class VisualCaptcha
      */
     protected function randomLine(int $width, int $height): array
     {
-        return [mt_rand(0, $width - 1), mt_rand(0, $height - 1),mt_rand(0, $width - 1), mt_rand(0, $height - 1)];
+        return [
+            random_int(0, $width - 1),
+            random_int(0, $height - 1),
+            random_int(0, $width - 1),
+            random_int(0, $height - 1)
+        ];
     }
 
     /**
@@ -531,7 +536,7 @@ class VisualCaptcha
      */
     protected function randomCircle(int $width, int $height): array
     {
-        $diameter = mt_rand(5, intdiv($width, 3));
-        return [mt_rand(0, $width - 1), mt_rand(0, $height - 1), $diameter];
+        $diameter = random_int(5, intdiv($width, 3));
+        return [random_int(0, $width - 1), random_int(0, $height - 1), $diameter];
     }
 }
