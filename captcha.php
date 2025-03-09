@@ -25,7 +25,7 @@ use Plib\Request;
 
 function cryptographp_captcha_display(): string
 {
-    return Dic::makeCaptchaController()(Request::current())->respond();
+    return Dic::makeCaptchaController()(Request::current())();
 }
 
 function cryptographp_captcha_check(): bool

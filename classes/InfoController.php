@@ -22,7 +22,7 @@
 
 namespace Cryptographp;
 
-use Cryptographp\Value\Response;
+use Plib\Response;
 use Plib\SystemChecker;
 use Plib\View;
 

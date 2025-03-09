@@ -32,7 +32,7 @@ if (XH_wantsPluginAdministration("cryptographp")) {
     $o .= print_plugin_admin("off");
     switch ($admin) {
         case "":
-            $o .= Dic::makeInfoController()()->respond();
+            $o .= Dic::makeInfoController()()();
             break;
         default:
             $o .= plugin_admin_common();
