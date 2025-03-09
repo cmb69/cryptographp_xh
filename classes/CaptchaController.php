@@ -26,8 +26,7 @@ use Cryptographp\Infra\AudioCaptcha;
 use Cryptographp\Infra\CodeGenerator;
 use Cryptographp\Infra\CodeStore;
 use Cryptographp\Infra\VisualCaptcha;
-use Cryptographp\Logic\Util;
-use Exception;
+use Plib\Codec;
 use Plib\Request;
 use Plib\Response;
 use Plib\View;
@@ -88,7 +87,7 @@ class CaptchaController
             return Response::create($this->view->message("fail", "error_captcha"));
         }
         $url = $request->url();
-        $nonce = Util::encodeBase64url($key);
+        $nonce = Codec::encodeBase64url($key);
         return Response::create($this->view->render("captcha", [
             "js" => $this->pluginFolder . "cryptographp.min.js",
             "imageUrl" => $url->with("cryptographp_action", "video")->with("cryptographp_nonce", $nonce)->relative(),
@@ -104,27 +103,28 @@ class CaptchaController
     {
         $nonce = $request->get("cryptographp_nonce");
         if ($nonce === null || strlen($nonce) % 4 !== 0) {
-            $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
-            if ($image === null) {
-                return Response::error(500, $this->view->plain("error_video"));
-            }
-            return Response::create($image)->withContentType("image/png");
+            return $this->errorImage();
         }
-        $code = $this->codeStore->find(Util::decodeBase64url($nonce));
+        $nonce = Codec::decodeBase64url($nonce);
+        if ($nonce === null) {
+            return $this->errorImage();
+        }
+        $code = $this->codeStore->find($nonce);
         if ($code === null) {
-            $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
-            if ($image === null) {
-                return Response::error(500, $this->view->plain("error_video"));
-            }
-            return Response::create($image)->withContentType("image/png");
+            return $this->errorImage();
         }
         $image = $this->visualCaptcha->createImage($code);
         if ($image === null) {
-            $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
-            if ($image === null) {
-                return Response::error(500, $this->view->plain("error_video"));
-            }
-            return Response::create($image)->withContentType("image/png");
+            return $this->errorImage();
+        }
+        return Response::create($image)->withContentType("image/png");
+    }
+
+    private function errorImage(): Response
+    {
+        $image = $this->visualCaptcha->createErrorImage($this->view->plain("error_video"));
+        if ($image === null) {
+            return Response::error(500, $this->view->plain("error_video"));
         }
         return Response::create($image)->withContentType("image/png");
     }
@@ -135,7 +135,11 @@ class CaptchaController
         if ($nonce === null || strlen($nonce) % 4 !== 0) {
             return Response::error(403);
         }
-        $code = $this->codeStore->find(Util::decodeBase64url($nonce));
+        $nonce = Codec::decodeBase64url($nonce);
+        if ($nonce === null) {
+            return Response::error(403);
+        }
+        $code = $this->codeStore->find($nonce);
         if ($code === null) {
             return Response::error(403, $this->view->plain("error_audio"));
         }
@@ -159,7 +163,10 @@ class CaptchaController
         if ($nonce === "" || strlen($nonce) % 4 !== 0) {
             return false;
         }
-        $nonce = Util::decodeBase64url($nonce);
+        $nonce = Codec::decodeBase64url($nonce);
+        if ($nonce === null) {
+            return false;
+        }
         $storedCode = $this->codeStore->find($nonce);
         if ($storedCode === null || !hash_equals($storedCode, $code)) {
             return false;
