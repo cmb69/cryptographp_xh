@@ -4,6 +4,7 @@ on:
   pull_request:
   schedule:
     - cron: '52 13 * * *'
+  workflow_dispatch:
 jobs:
   checks:
     runs-on: ubuntu-22.04
